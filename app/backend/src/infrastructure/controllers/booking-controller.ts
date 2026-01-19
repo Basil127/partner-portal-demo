@@ -1,6 +1,7 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { BookingService } from '../../application/services/booking-service';
-import { Booking, BookingStatus, CreateBookingData } from '../../domain/models/booking';
+import type { FastifyRequest, FastifyReply } from 'fastify';
+import { BookingService } from '../../application/services/booking-service.js';
+import { BookingStatus } from '../../domain/models/booking.js';
+import type { Booking, CreateBookingData } from '../../domain/models/booking.js';
 import { z } from 'zod';
 
 const CreateBookingSchema = z.object({

@@ -1,8 +1,8 @@
-import { FastifyInstance } from 'fastify';
-import { BookingController } from '../../controllers/booking-controller';
-import { BookingService } from '../../../application/services/booking-service';
-import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl';
-import { createDatabaseAdapter } from '../database';
+import type { FastifyInstance } from 'fastify';
+import { BookingController } from '../../controllers/booking-controller.js';
+import { BookingService } from '../../../application/services/booking-service.js';
+import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
+import { createDatabaseAdapter } from '../database.js';
 
 export function setupRoutes(fastify: FastifyInstance) {
   // Initialize dependencies

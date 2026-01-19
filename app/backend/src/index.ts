@@ -3,10 +3,10 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
-import { config } from './infrastructure/config/config';
-import { setupRoutes } from './infrastructure/adapters/http/routes';
-import { createDatabaseAdapter } from './infrastructure/adapters/database';
-import { initializeDatabase } from './infrastructure/config/database-init';
+import { config } from './infrastructure/config/config.js';
+import { setupRoutes } from './infrastructure/adapters/http/routes.js';
+import { createDatabaseAdapter } from './infrastructure/adapters/database.js';
+import { initializeDatabase } from './infrastructure/config/database-init.js';
 
 async function start() {
   const fastify = Fastify({

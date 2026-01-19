@@ -1,5 +1,5 @@
-import { DatabaseAdapter } from '../adapters/database';
-import { logger } from '../adapters/logger';
+import type { DatabaseAdapter } from '../adapters/database.js';
+import { logger } from '../adapters/logger.js';
 
 export async function initializeDatabase(db: DatabaseAdapter): Promise<void> {
   try {
@@ -20,7 +20,7 @@ export async function initializeDatabase(db: DatabaseAdapter): Promise<void> {
 
     logger.info('Database initialized successfully');
   } catch (error) {
-    logger.error('Failed to initialize database:', error);
+    logger.error(error as Error, 'Failed to initialize database');
     throw error;
   }
 }

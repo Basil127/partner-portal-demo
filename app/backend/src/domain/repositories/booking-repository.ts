@@ -1,4 +1,4 @@
-import { Booking, CreateBookingData } from '../models/booking';
+import type { Booking, CreateBookingData } from '../models/booking.js';
 
 export interface BookingRepository {
   findById(id: string): Promise<Booking | null>;

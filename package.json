@@ -1,11 +1,13 @@
 {
   "name": "partner-portal-demo",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A Demo of a B2B Partner portal for booking management",
   "private": true,
+  "type": "module",
   "workspaces": [
     "app/backend",
-    "app/frontend"
+    "app/frontend",
+    "packages/shared"
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
@@ -21,14 +23,14 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "concurrently": "^8.0.0",
-    "eslint": "^8.0.0",
-    "typescript": "^5.0.0"
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
   }
 }

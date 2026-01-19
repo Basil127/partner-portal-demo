@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import { Pool } from 'pg';
-import { config } from '../config/config';
-import { logger } from '../adapters/logger';
+import { config } from '../config/config.js';
+import { logger } from '../adapters/logger.js';
 
 export interface DatabaseAdapter {
   query(sql: string, params?: unknown[]): Promise<unknown[]>;

@@ -1,6 +1,7 @@
-import { Booking, CreateBookingData, BookingStatus } from '../../domain/models/booking';
-import { BookingRepository } from '../../domain/repositories/booking-repository';
-import { DatabaseAdapter } from '../adapters/database';
+import { BookingStatus } from '../../domain/models/booking.js';
+import type { Booking, CreateBookingData } from '../../domain/models/booking.js';
+import type { BookingRepository } from '../../domain/repositories/booking-repository.js';
+import type { DatabaseAdapter } from '../adapters/database.js';
 import { randomUUID } from 'crypto';
 
 export class BookingRepositoryImpl implements BookingRepository {

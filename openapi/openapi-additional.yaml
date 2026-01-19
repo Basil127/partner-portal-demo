@@ -1,0 +1,22 @@
+# This file contains additional OpenAPI details that are not automatically generated from the backend code.
+# The final openapi.yaml is a merge of the generated output and this file.
+
+info:
+  contact:
+    name: Partner Portal Support
+    email: support@example.com
+    url: https://support.example.com
+
+tags:
+  - name: bookings
+    x-displayName: Booking Operations
+    description: Full lifecycle management of partner bookings.
+  - name: security
+    description: Authentication and Authorization endpoints.
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

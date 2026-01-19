@@ -1,5 +1,5 @@
-import { Booking, CreateBookingData } from '../../domain/models/booking';
-import { BookingRepository } from '../../domain/repositories/booking-repository';
+import type { Booking, CreateBookingData } from '../../domain/models/booking.js';
+import type { BookingRepository } from '../../domain/repositories/booking-repository.js';
 
 export class BookingService {
   constructor(private bookingRepository: BookingRepository) {}

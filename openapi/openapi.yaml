@@ -1,258 +1,244 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: Partner Portal API
-  description: API for Partner Portal booking management system
+  title: Partner Portal API (Generated)
   version: 1.0.0
   contact:
-    name: Partner Portal Team
-servers:
-  - url: http://localhost:3001
-    description: Development server
-  - url: http://localhost:3002
-    description: Test server
-
-tags:
-  - name: health
-    description: Health check endpoints
-  - name: bookings
-    description: Booking management operations
-
+    name: Partner Portal Support
+    email: support@example.com
+    url: https://support.example.com
+components:
+  schemas: {}
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
 paths:
-  /health:
-    get:
-      summary: Health check
-      tags:
-        - health
-      responses:
-        '200':
-          description: Service is healthy
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: ok
-                  timestamp:
-                    type: string
-                    format: date-time
-
   /api/bookings:
     get:
-      summary: Get all bookings
       tags:
         - bookings
+      description: Get all bookings
       responses:
         '200':
-          description: List of all bookings
+          description: Default Response
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Booking'
-    
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    partnerId:
+                      type: string
+                    customerName:
+                      type: string
+                    serviceType:
+                      type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    status:
+                      type: string
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
     post:
-      summary: Create a new booking
       tags:
         - bookings
+      description: Create a new booking
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBooking'
+              type: object
+              required:
+                - partnerId
+                - customerName
+                - serviceType
+                - startDate
+                - endDate
+              properties:
+                partnerId:
+                  type: string
+                customerName:
+                  type: string
+                serviceType:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+        required: true
       responses:
         '201':
-          description: Booking created successfully
+          description: Default Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Booking'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
   /api/bookings/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-    
     get:
-      summary: Get a booking by ID
       tags:
         - bookings
+      description: Get a booking by ID
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
       responses:
         '200':
-          description: Booking details
+          description: Default Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Booking'
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
         '404':
-          description: Booking not found
+          description: Default Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-    
+                type: object
+                properties:
+                  error:
+                    type: string
     put:
-      summary: Update a booking
       tags:
         - bookings
+      description: Update a booking
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBooking'
+              type: object
+              properties:
+                customerName:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - pending
+                    - confirmed
+                    - cancelled
+                    - completed
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
       responses:
         '200':
-          description: Booking updated successfully
+          description: Default Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Booking'
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
         '404':
-          description: Booking not found
+          description: Default Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    
+                type: object
+                properties:
+                  error:
+                    type: string
     delete:
-      summary: Delete a booking
       tags:
         - bookings
+      description: Delete a booking
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
       responses:
         '204':
-          description: Booking deleted successfully
+          description: Default Response
         '404':
-          description: Booking not found
+          description: Default Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-
-components:
-  schemas:
-    Booking:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for the booking
-        partnerId:
-          type: string
-          format: uuid
-          description: ID of the partner who created the booking
-        customerName:
-          type: string
-          description: Name of the customer
-        serviceType:
-          type: string
-          description: Type of service booked
-        startDate:
-          type: string
-          format: date-time
-          description: Start date and time of the booking
-        endDate:
-          type: string
-          format: date-time
-          description: End date and time of the booking
-        status:
-          type: string
-          enum: [pending, confirmed, cancelled, completed]
-          description: Current status of the booking
-        createdAt:
-          type: string
-          format: date-time
-          description: Timestamp when the booking was created
-        updatedAt:
-          type: string
-          format: date-time
-          description: Timestamp when the booking was last updated
-      required:
-        - id
-        - partnerId
-        - customerName
-        - serviceType
-        - startDate
-        - endDate
-        - status
-        - createdAt
-        - updatedAt
-    
-    CreateBooking:
-      type: object
-      properties:
-        partnerId:
-          type: string
-          format: uuid
-          description: ID of the partner creating the booking
-        customerName:
-          type: string
-          description: Name of the customer
-        serviceType:
-          type: string
-          description: Type of service to be booked
-        startDate:
-          type: string
-          format: date-time
-          description: Start date and time of the booking
-        endDate:
-          type: string
-          format: date-time
-          description: End date and time of the booking
-      required:
-        - partnerId
-        - customerName
-        - serviceType
-        - startDate
-        - endDate
-    
-    UpdateBooking:
-      type: object
-      properties:
-        customerName:
-          type: string
-          description: Name of the customer
-        status:
-          type: string
-          enum: [pending, confirmed, cancelled, completed]
-          description: Status of the booking
-        startDate:
-          type: string
-          format: date-time
-          description: Start date and time of the booking
-        endDate:
-          type: string
-          format: date-time
-          description: End date and time of the booking
-    
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        details:
-          type: array
-          items:
-            type: object
-          description: Additional error details (for validation errors)
+                type: object
+                properties:
+                  error:
+                    type: string
+tags:
+  - name: bookings
+    x-displayName: Booking Operations
+    description: Full lifecycle management of partner bookings.
+  - name: security
+    description: Authentication and Authorization endpoints.
