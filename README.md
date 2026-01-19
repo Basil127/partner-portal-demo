@@ -120,10 +120,10 @@ npm test
 
 Run specific test suites:
 ```bash
-npm run test:unit        # Unit tests
-npm run test:functional  # Functional tests
-npm run test:e2e         # End-to-end tests
+npm run test:unit        # Run backend unit tests
 ```
+
+Note: The tests are organized in the `tests/` directory but are run through the backend workspace's Jest configuration. Functional and E2E test placeholders are provided for future implementation.
 
 ## 🔧 Configuration
 
