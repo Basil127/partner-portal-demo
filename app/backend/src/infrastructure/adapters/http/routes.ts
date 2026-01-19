@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { BookingController } from '../../controllers/booking-controller';
 import { BookingService } from '../../../application/services/booking-service';
 import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl';
-import { createDatabaseAdapter } from '../../adapters/database';
+import { createDatabaseAdapter } from '../database';
 
 export function setupRoutes(fastify: FastifyInstance) {
   // Initialize dependencies

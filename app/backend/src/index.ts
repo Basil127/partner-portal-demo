@@ -5,13 +5,25 @@ import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { config } from './infrastructure/config/config';
 import { setupRoutes } from './infrastructure/adapters/http/routes';
-import { logger } from './infrastructure/adapters/logger';
 import { createDatabaseAdapter } from './infrastructure/adapters/database';
 import { initializeDatabase } from './infrastructure/config/database-init';
 
 async function start() {
   const fastify = Fastify({
-    logger: logger,
+    logger: {
+      level: config.logLevel,
+      transport:
+        config.nodeEnv === 'development'
+          ? {
+              target: 'pino-pretty',
+              options: {
+                colorize: true,
+                translateTime: 'HH:MM:ss',
+                ignore: 'pid,hostname',
+              },
+            }
+          : undefined,
+    },
   });
 
   // Initialize database
