@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: Partner Portal API (Generated)
-  version: 1.0.0
+  version: 0.1.0
   contact:
     name: Partner Portal Support
     email: support@example.com

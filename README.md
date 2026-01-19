@@ -10,7 +10,7 @@ This is a fullstack TypeScript application with a modern ESM-first approach:
 - **Frontend**: Next.js with React (App Router)
 - **Shared Package**: `@partner-portal/shared` for central domain types and utilities
 - **Database**: PostgreSQL / SQLite support via adapters
-- **API**: RESTful with automated OpenAPI specification generation
+- **API**: OpenAPI 3.1.0 specification with automated generation and merging logic
 
 ## 📁 Project Structure
 

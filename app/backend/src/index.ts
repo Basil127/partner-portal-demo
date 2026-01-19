@@ -40,10 +40,11 @@ async function start() {
   // Swagger documentation
   await fastify.register(swagger, {
     openapi: {
+      openapi: '3.1.0',
       info: {
         title: 'Partner Portal API',
         description: 'API for Partner Portal booking management',
-        version: '1.0.0',
+        version: '0.1.0',
       },
       servers: [
         {
