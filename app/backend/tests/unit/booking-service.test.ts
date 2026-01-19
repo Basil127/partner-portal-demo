@@ -1,7 +1,7 @@
-import { BookingService } from '../../app/backend/src/application/services/booking-service.js';
-import type { BookingRepository } from '../../app/backend/src/domain/repositories/booking-repository.js';
-import { BookingStatus } from '../../app/backend/src/domain/models/booking.js';
-import type { Booking, CreateBookingData } from '../../app/backend/src/domain/models/booking.js';
+import { BookingService } from '../../src/application/services/booking-service.js';
+import type { BookingRepository } from '../../src/domain/repositories/booking-repository.js';
+import { BookingStatus } from '../../src/domain/models/booking.js';
+import type { Booking, CreateBookingData } from '../../src/domain/models/booking.js';
 
 describe('BookingService', () => {
   let bookingService: BookingService;

@@ -1,8 +1,8 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/tests', '<rootDir>/app'],
-  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  roots: ['<rootDir>/app/backend/tests', '<rootDir>/app/frontend/tests'],
+  testMatch: ['**/tests/**/*.test.ts'],
   collectCoverageFrom: [
     'app/backend/src/**/*.ts',
     '!app/backend/src/**/*.d.ts',
