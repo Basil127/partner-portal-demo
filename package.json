@@ -1,0 +1,36 @@
+{
+  "name": "partner-portal-demo",
+  "version": "1.0.0",
+  "description": "A Demo of a B2B Partner portal for booking management",
+  "private": true,
+  "workspaces": [
+    "app/backend",
+    "app/frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=app/backend",
+    "dev:frontend": "npm run dev --workspace=app/frontend",
+    "build": "npm run build --workspaces",
+    "build:backend": "npm run build --workspace=app/backend",
+    "build:frontend": "npm run build --workspace=app/frontend",
+    "test": "npm run test --workspaces",
+    "test:unit": "npm run test --workspace=tests",
+    "test:functional": "npm run test:functional --workspace=tests",
+    "test:e2e": "npm run test:e2e --workspace=tests",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "concurrently": "^8.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
