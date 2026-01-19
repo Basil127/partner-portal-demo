@@ -1,0 +1,244 @@
+openapi: 3.0.3
+info:
+  title: Partner Portal API (Generated)
+  version: 1.0.0
+  contact:
+    name: Partner Portal Support
+    email: support@example.com
+    url: https://support.example.com
+components:
+  schemas: {}
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+paths:
+  /api/bookings:
+    get:
+      tags:
+        - bookings
+      description: Get all bookings
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    partnerId:
+                      type: string
+                    customerName:
+                      type: string
+                    serviceType:
+                      type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    status:
+                      type: string
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+    post:
+      tags:
+        - bookings
+      description: Create a new booking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - partnerId
+                - customerName
+                - serviceType
+                - startDate
+                - endDate
+              properties:
+                partnerId:
+                  type: string
+                customerName:
+                  type: string
+                serviceType:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+        required: true
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+  /api/bookings/{id}:
+    get:
+      tags:
+        - bookings
+      description: Get a booking by ID
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      tags:
+        - bookings
+      description: Update a booking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerName:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - pending
+                    - confirmed
+                    - cancelled
+                    - completed
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      tags:
+        - bookings
+      description: Delete a booking
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        '204':
+          description: Default Response
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+tags:
+  - name: bookings
+    x-displayName: Booking Operations
+    description: Full lifecycle management of partner bookings.
+  - name: security
+    description: Authentication and Authorization endpoints.
