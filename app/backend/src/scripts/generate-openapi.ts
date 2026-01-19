@@ -35,7 +35,7 @@ async function generateOpenApi() {
     // Basic merge strategy: deep merge objects
     finalSpec = mergeOpenApiSpecs(generatedSpec, additionalSpec);
   } catch (error) {
-    console.warn('Could not load additional OpenAPI details, using generated spec only.');
+    console.warn('Could not load additional OpenAPI details, using generated spec only.', error);
   }
 
   writeFileSync(outputPath, yaml.dump(finalSpec));

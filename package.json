@@ -18,8 +18,8 @@
     "build:frontend": "npm run build --workspace=app/frontend",
     "test": "npm run test --workspace=app/backend",
     "test:unit": "npm run test --workspace=app/backend",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

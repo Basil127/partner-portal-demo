@@ -4,47 +4,54 @@ A Demo of a B2B Partner portal for booking management
 
 ## 🏗️ Architecture
 
-This is a fullstack TypeScript application with:
+This is a fullstack TypeScript application with a modern ESM-first approach:
 
 - **Backend**: Fastify with Hexagonal Architecture (Modular Monolith)
-- **Frontend**: Next.js with React
-- **Database**: PostgreSQL / SQLite support
-- **API**: RESTful with OpenAPI specification
+- **Frontend**: Next.js with React (App Router)
+- **Shared Package**: `@partner-portal/shared` for central domain types and utilities
+- **Database**: PostgreSQL / SQLite support via adapters
+- **API**: RESTful with automated OpenAPI specification generation
 
 ## 📁 Project Structure
 
 ```
 partner-portal-demo/
 ├── app/
-│   ├── backend/              # Fastify backend
+│   ├── backend/              # Fastify backend (ESM)
 │   │   ├── src/
 │   │   │   ├── domain/       # Domain models and interfaces
 │   │   │   ├── application/  # Application services (business logic)
-│   │   │   └── infrastructure/
-│   │   │       ├── adapters/     # Database, HTTP, Logger adapters
-│   │   │       ├── controllers/  # HTTP controllers
-│   │   │       ├── repositories/ # Repository implementations
-│   │   │       └── config/       # Configuration
+│   │   │   ├── infrastructure/
+│   │   │   │   ├── adapters/     # Database, HTTP, Logger adapters
+│   │   │   │   ├── controllers/  # HTTP controllers
+│   │   │   │   ├── repositories/ # Repository implementations
+│   │   │   │   └── config/       # Configuration
+│   │   │   └── scripts/      # Automation scripts (OpenAPI generation)
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   └── frontend/             # Next.js frontend
+│   └── frontend/             # Next.js frontend (ESM)
 │       ├── src/
-│       │   ├── app/          # Next.js app directory
+│       │   ├── app/          # Next.js app directory (App Router)
 │       │   ├── components/   # React components
 │       │   └── lib/          # API client and utilities
 │       ├── package.json
 │       └── tsconfig.json
+├── packages/
+│   └── shared/               # Shared TypeScript types and utilities
+│       ├── src/
+│       ├── package.json
+│       └── tsconfig.json
 ├── openapi/
-│   └── openapi.yaml          # OpenAPI 3.0 specification
+│   ├── openapi.yaml          # Final merged OpenAPI 3.0 specification
+│   └── openapi-additional.yaml # Manual OpenAPI overrides/details
 ├── tests/
-│   ├── unit/                 # Unit tests
+│   ├── unit/                 # Unit tests (ESM compatible)
 │   ├── functional/           # Functional tests
 │   └── e2e/                  # End-to-end tests
 ├── development.env           # Development environment variables
 ├── test.env                  # Test environment variables
-├── package.json              # Root package with workspaces
-├── tsconfig.json             # Shared TypeScript config
-├── .eslintrc.json            # ESLint configuration
+├── package.json              # Root package with workspaces (ESM)
+├── tsconfig.json             # Root TypeScript config (ES2024, nodenext)
 └── README.md
 ```
 
@@ -52,8 +59,8 @@ partner-portal-demo/
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- npm >= 9.0.0
+- Node.js >= 22.0.0
+- npm >= 10.0.0
 
 ### Installation
 
@@ -171,6 +178,19 @@ DB_PASSWORD=password
 
 The API follows RESTful conventions and is documented using OpenAPI 3.0.
 
+### OpenAPI Workflow
+
+The documentation is managed as a "Source of Truth" from the backend code, enriched with additional manual metadata.
+
+1.  **Backend Source**: Routes and schemas are automatically detected from the Fastify code.
+2.  **Manual Overrides**: Additional details (security schemes, support info, tags) are defined in `openapi/openapi-additional.yaml`.
+3.  **Merge & Generate**: Run the generation script to create the final `openapi/openapi.yaml`.
+
+```bash
+# From the backend directory
+npm run generate:openapi
+```
+
 - OpenAPI Spec: `/openapi/openapi.yaml`
 - Interactive Documentation: http://localhost:3001/docs
 
@@ -185,9 +205,9 @@ The API follows RESTful conventions and is documented using OpenAPI 3.0.
 
 ## 🏛️ Hexagonal Architecture
 
-The backend follows hexagonal (ports and adapters) architecture:
+The backend follows hexagonal (ports and adapters) architecture, strictly typing the boundaries:
 
-- **Domain Layer**: Core business logic and domain models
+- **Domain Layer**: Core business logic and domain models (extending from `@partner-portal/shared`)
 - **Application Layer**: Use cases and application services
 - **Infrastructure Layer**: External concerns (database, HTTP, logging)
 
