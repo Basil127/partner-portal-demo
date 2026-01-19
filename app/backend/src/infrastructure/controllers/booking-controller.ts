@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { BookingService } from '../../application/services/booking-service';
-import { CreateBookingData } from '../../domain/models/booking';
+import { Booking, BookingStatus, CreateBookingData } from '../../domain/models/booking';
 import { z } from 'zod';
 
 const CreateBookingSchema = z.object({
@@ -67,13 +67,19 @@ export class BookingController {
   async updateBooking(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
       const validatedData = UpdateBookingSchema.parse(request.body);
-      const data: any = { ...validatedData };
+      const data: Partial<Booking> = {};
       
-      if (data.startDate) {
-        data.startDate = new Date(data.startDate);
+      if (validatedData.customerName) {
+        data.customerName = validatedData.customerName;
       }
-      if (data.endDate) {
-        data.endDate = new Date(data.endDate);
+      if (validatedData.status) {
+        data.status = validatedData.status as BookingStatus;
+      }
+      if (validatedData.startDate) {
+        data.startDate = new Date(validatedData.startDate);
+      }
+      if (validatedData.endDate) {
+        data.endDate = new Date(validatedData.endDate);
       }
 
       const booking = await this.bookingService.updateBooking(request.params.id, data);

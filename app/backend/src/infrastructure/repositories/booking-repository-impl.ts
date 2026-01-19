@@ -11,12 +11,12 @@ export class BookingRepositoryImpl implements BookingRepository {
       'SELECT * FROM bookings WHERE id = ?',
       [id]
     );
-    return rows.length > 0 ? this.mapToBooking(rows[0]) : null;
+    return rows.length > 0 ? this.mapToBooking(rows[0] as Record<string, unknown>) : null;
   }
 
   async findAll(): Promise<Booking[]> {
     const rows = await this.db.query('SELECT * FROM bookings ORDER BY created_at DESC');
-    return rows.map((row) => this.mapToBooking(row));
+    return rows.map((row) => this.mapToBooking(row as Record<string, unknown>));
   }
 
   async create(data: CreateBookingData): Promise<Booking> {
@@ -94,17 +94,17 @@ export class BookingRepositoryImpl implements BookingRepository {
     return true;
   }
 
-  private mapToBooking(row: any): Booking {
+  private mapToBooking(row: Record<string, unknown>): Booking {
     return {
-      id: row.id,
-      partnerId: row.partner_id,
-      customerName: row.customer_name,
-      serviceType: row.service_type,
-      startDate: new Date(row.start_date),
-      endDate: new Date(row.end_date),
+      id: row.id as string,
+      partnerId: row.partner_id as string,
+      customerName: row.customer_name as string,
+      serviceType: row.service_type as string,
+      startDate: new Date(row.start_date as string),
+      endDate: new Date(row.end_date as string),
       status: row.status as BookingStatus,
-      createdAt: new Date(row.created_at),
-      updatedAt: new Date(row.updated_at),
+      createdAt: new Date(row.created_at as string),
+      updatedAt: new Date(row.updated_at as string),
     };
   }
 }

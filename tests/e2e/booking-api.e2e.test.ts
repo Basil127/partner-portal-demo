@@ -1,4 +1,4 @@
-# Example E2E test placeholder
+// Example E2E test placeholder
 
 describe('Booking API E2E', () => {
   it('should handle complete booking lifecycle via API', async () => {

@@ -1,4 +1,4 @@
-# Example functional test placeholder
+// Example functional test placeholder
 
 describe('Booking Flow Integration', () => {
   it('should create and retrieve a booking through repository', async () => {

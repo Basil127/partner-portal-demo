@@ -17,6 +17,8 @@ export enum BookingStatus {
   COMPLETED = 'completed',
 }
 
+export type BookingStatusValue = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+
 export interface CreateBookingData {
   partnerId: string;
   customerName: string;
