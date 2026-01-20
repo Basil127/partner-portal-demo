@@ -58,7 +58,7 @@ export const baseConfig = [
     },
     // Backend Overrides
     {
-        files: ["app/backend/src/**/*.ts"],
+        files: ["app/backend/src/**/*.ts", "app/backend/tests/**/*.ts", "src/**/*.ts", "tests/**/*.ts"],
         rules: {
             "no-console": "off",
             "@typescript-eslint/no-explicit-any": "off",
@@ -66,7 +66,7 @@ export const baseConfig = [
     },
     // Frontend Overrides
     {
-        files: ["app/frontend/src/**/*.{ts,tsx}"],
+        files: ["app/frontend/src/**/*.{ts,tsx}", "app/frontend/tests/**/*.{ts,tsx}", "src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}"],
         languageOptions: {
             globals: {
                 ...globals.browser,
@@ -79,11 +79,40 @@ export const baseConfig = [
     },
     // Test Overrides
     {
-        files: ["tests/**/*.ts", "app/backend/src/**/*.test.ts"],
+        files: [
+            "app/backend/tests/**/*.ts",
+            "app/frontend/tests/**/*.ts",
+            "**/tests/**/*.ts",
+            "**/tests/**/*.tsx",
+            "**/*.test.ts",
+            "**/*.test.tsx",
+            "**/*.spec.ts",
+            "**/*.spec.tsx"
+        ],
         languageOptions: {
             globals: {
                 ...globals.jest,
+                ...globals.node,
+                // Core Jest/Jasmine globals
+                describe: "readonly",
+                it: "readonly",
+                expect: "readonly",
+                beforeEach: "readonly",
+                afterEach: "readonly",
+                beforeAll: "readonly",
+                afterAll: "readonly",
+                jest: "readonly",
+                test: "readonly",
+                expect: "readonly",
+                fit: "readonly",
+                fdescribe: "readonly",
+                xit: "readonly",
+                xdescribe: "readonly",
+                xtest: "readonly",
             },
+        },
+        rules: {
+            "@typescript-eslint/no-explicit-any": "off",
         },
     },
 ];

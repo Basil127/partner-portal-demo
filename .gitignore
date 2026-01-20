@@ -152,3 +152,6 @@ data/
 *.swp
 *.swo
 *~
+
+local/*
+local

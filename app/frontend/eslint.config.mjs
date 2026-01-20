@@ -15,7 +15,7 @@ export default [
     ...baseConfig,
     ...compat.extends("next/core-web-vitals"),
     {
-        files: ["app/frontend/src/**/*.{ts,tsx}"],
+        files: ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}"],
         rules: {
             // Frontend specific overrides
             "@next/next/no-html-link-for-pages": "off", // Sometimes needed for external links or if not using standard layout
