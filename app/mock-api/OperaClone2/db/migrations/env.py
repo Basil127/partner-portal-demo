@@ -79,10 +79,8 @@ async def run_migrations_online() -> None:
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
 
-loop = asyncio.get_event_loop()
-if context.is_offline_mode():
-    task = run_migrations_offline()
-else:
-    task = run_migrations_online()
 
-loop.run_until_complete(task)
+if context.is_offline_mode():
+    asyncio.run(run_migrations_offline())
+else:
+    asyncio.run(run_migrations_online())

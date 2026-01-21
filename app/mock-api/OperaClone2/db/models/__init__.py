@@ -3,6 +3,9 @@
 import pkgutil
 from pathlib import Path
 
+from operaclone2.db.models.dummy_model import DummyModel as DummyModel
+from operaclone2.db.models.hotel import Hotel as Hotel
+
 
 def load_all_models() -> None:
     """Load all models from this folder."""
