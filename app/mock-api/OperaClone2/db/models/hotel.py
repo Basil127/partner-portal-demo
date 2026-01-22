@@ -1,5 +1,6 @@
 from typing import Any
 
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql.sqltypes import JSON, Float, Integer, String, Text
 
@@ -73,18 +74,18 @@ class Hotel(Base):
     # Storing these as JSON allows for schema flexibility and efficient 'grab-bag' retrieval
     # matching the API structure directly.
 
-    property_amenities: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON)
+    property_amenities: Mapped[list[dict[str, Any]] | None] = mapped_column(postgresql.JSONB)
     # Example: [{"hotelAmenity": "104", "description": "Wedding services", ...}]
 
-    point_of_interest: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON)
+    point_of_interest: Mapped[list[dict[str, Any]] | None] = mapped_column(postgresql.JSONB)
     # Example: [{"name": "Statue of Liberty", "pointOfInterestType": "ATTRACTIONS", ...}]
 
-    communications: Mapped[dict[str, list[dict[str, Any]]] | None] = mapped_column(JSON)
+    communications: Mapped[dict[str, list[dict[str, Any]]] | None] = mapped_column(postgresql.JSONB)
 
-    transportations: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON)
+    transportations: Mapped[list[dict[str, Any]] | None] = mapped_column(postgresql.JSONB)
     # Example: [{"transportationCode": "Metro", ...}]
 
-    hotel_child_policy: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    hotel_child_policy: Mapped[dict[str, Any] | None] = mapped_column(postgresql.JSONB)
 
     # --- Text Blocks ---
     # These are deeply nested in JSON but are essentially just large text fields.
@@ -99,7 +100,7 @@ class Hotel(Base):
 
     # --- Flexible Metadata ---
     meta: Mapped[dict[str, Any] | None] = mapped_column(
-        JSON,
+        postgresql.JSONB,
         default={},
         comment="Extra metadata not covered by standard schema",
     )

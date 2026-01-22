@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel
 
 
@@ -26,6 +28,19 @@ class OfferPointOfInterest(BaseModel):
     name: str | None = None
     distance: float | None = None
     unit: str | None = None
+
+
+class PropertySnippet(BaseModel):
+    """Snippet information for property summary."""
+
+    hotelId: str
+    hotelCode: str
+    hotelName: str | None = None
+    hotelDescription: str | None = None
+    address: Address = Address()
+    coordinates: dict[str, float] = {}
+    connectivity: dict[str, str] = {}
+    meta: dict[str, Any] = {}
 
 
 class ContentPropertyInfo(BaseModel):
@@ -56,14 +71,39 @@ class PropertyInfoResponse(BaseModel):
     propertyInfo: ContentPropertyInfo | None = None
 
 
+class ContentRoomAmenity(BaseModel):
+    """Room amenity information."""
+
+    roomAmenity: str
+    description: str
+    quantity: int
+    includeInRate: bool
+    confirmable: bool
+
+
+class Occupancy(BaseModel):
+    """Details on the occupancy of the room type."""
+
+    minOccupancy: int
+    maxOccupancy: int
+    maxAdultOccupancy: int
+    maxChildOccupancy: int
+
+
 class ContentRoomType(BaseModel):
     """Room type information."""
 
-    hotelRoomType: str | None = None
-    roomType: str | None = None
-    description: list[str] | None = None
-    roomName: str | None = None
-    roomCategory: str | None = None
+    hotelRoomType: str | None
+    roomType: str | None
+    description: list[str] = []
+    roomName: str | None
+    roomCategory: str | None
+    roomAmenities: list[ContentRoomAmenity] = []
+    roomViewType: str | None
+    roomPrimaryBedType: str | None
+    nonSmokingInd: bool | None
+    occupancy: Occupancy | None = None
+    numberOfUnits: int | None = None
 
 
 class RoomTypesResponse(BaseModel):
@@ -93,9 +133,9 @@ class OfferDetailsPropertyInfoSummary(BaseModel):
 class PropertyInfoSummaryResponse(BaseModel):
     """Response for property info summary."""
 
-    hasMore: bool | None = None
+    hasMore: bool = True
     totalResults: int | None = None
-    limit: int | None = None
-    count: int | None = None
-    offset: int | None = None
-    hotels: list[OfferDetailsPropertyInfoSummary] | None = None
+    limit: int = 20
+    count: int = 20
+    offset: int = 0
+    hotels: list[PropertySnippet] = []
