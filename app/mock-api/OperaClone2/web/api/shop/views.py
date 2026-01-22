@@ -1,7 +1,8 @@
 from datetime import date
 
-from fastapi import APIRouter, Header, Path, Query
+from fastapi import APIRouter, Depends, Header, Path, Query
 
+from operaclone2.services.shop_service import ShopService
 from operaclone2.web.api.shop.schema import (
     OfferDetailsResponse,
     PropertyOffersResponse,
@@ -55,7 +56,11 @@ async def get_properties(
     ),
     access_code: str | None = Query(None, alias="AccessCode", description="Access code"),
     number_of_units: int | None = Query(1, alias="NumberOfUnits", description="Number of rooms"),
-    rate_mode: str | None = Query("Highest", alias="RateMode", description="Rate mode"),
+    rate_mode: str | None = Query(
+        "Highest",
+        alias="RateMode",
+        description="Rate mode",
+    ),
     rate_plan_code_match_only: bool | None = Query(False, alias="RatePlanCodeMatchOnly"),
     rate_plan_type: str | None = Query(None, alias="RatePlanType", description="Rate Plan type"),
     available_only: bool | None = Query(False, alias="AvailableOnly"),
@@ -68,37 +73,19 @@ async def get_properties(
         alias="PromotionCodes",
         description="List of Promotion codes (CSV)",
     ),
-) -> PropertySearchResponse | None:
+    shop_service: ShopService = Depends(),
+) -> PropertySearchResponse:
     """
-    Search for properties and their rate ranges.
+    List the availability status and rate range at multiple properties for given list of properties.
 
-    :param authorization: Bearer token.
-    :param x_channel_code: Channel code.
-    :param x_app_key: Application Key.
-    :param accept_language: Language preference.
-    :param x_request_id: Unique tracing key.
-    :param x_originating_application: Originating Application.
-    :param hotel_codes: List of Hotel Codes (CSV).
-    :param arrival_date: Arrival/Check-in Date.
-    :param arrival_date_to: Arrival/Check-in Date To.
-    :param departure_date: Departure/Check-out Date.
-    :param adults: Number of adults.
-    :param children: Number of children.
-    :param children_ages: List of Age of the children (CSV).
-    :param rate_plan_codes: List of Rate Plan codes (CSV).
-    :param access_code: Access code.
-    :param number_of_units: Number of rooms.
-    :param rate_mode: Rate mode.
-    :param rate_plan_code_match_only: Only match specified rate plans.
-    :param rate_plan_type: Rate Plan type.
-    :param available_only: Only return available hotels.
-    :param min_rate: Minimum rate.
-    :param max_rate: Maximum rate.
-    :param alternate_offers: Alternate offers setting.
-    :param commissionable_status: Commissionable status.
-    :param promotion_codes: List of Promotion codes (CSV).
-    :returns: Property search response.
+    <p><strong>OperationId:</strong>getProperties</p>
     """
+    hotel_codes_list = hotel_codes.split(",") if hotel_codes else []
+    return await shop_service.search_properties(
+        hotel_codes=hotel_codes_list,
+        arrival_date=arrival_date,
+        departure_date=departure_date,
+    )
 
 
 @router.get("/hotels/{hotelCode}/offers", response_model=PropertyOffersResponse)
@@ -139,41 +126,18 @@ async def get_property_offers(
     commissionable_status: str | None = Query(None, alias="CommissionableStatus"),
     promotion_codes: str | None = Query(None, alias="PromotionCodes"),  # CSV
     block_code: str | None = Query(None, alias="BlockCode"),
-) -> PropertyOffersResponse | None:
+    shop_service: ShopService = Depends(),
+) -> PropertyOffersResponse:
     """
-    Get available offers for a property.
+    List available offers for a single property.
 
-    :param hotel_code: Hotel Code.
-    :param authorization: Bearer token.
-    :param x_channel_code: Channel code.
-    :param x_app_key: Application Key.
-    :param accept_language: Language preference.
-    :param x_request_id: Unique tracing key.
-    :param x_originating_application: Originating Application.
-    :param arrival_date: Arrival Date.
-    :param departure_date: Departure Date.
-    :param adults: Adults count.
-    :param children: Children count.
-    :param children_ages: Children ages CSV.
-    :param room_types: Room types CSV.
-    :param rate_plan_codes: Rate plan codes CSV.
-    :param access_code: Access code.
-    :param rate_plan_type: Rate plan type.
-    :param number_of_units: Units count.
-    :param room_type_match_only: Room type match only.
-    :param rate_plan_code_match_only: Rate plan code match only.
-    :param rate_mode: Rate mode.
-    :param room_amenity: Room amenity.
-    :param room_amenity_quantity: Room amenity quantity.
-    :param include_amenities: Include amenities.
-    :param min_rate: Min rate.
-    :param max_rate: Max rate.
-    :param alternate_offers: Alternate offers.
-    :param commissionable_status: Commissionable status.
-    :param promotion_codes: Promotion codes CSV.
-    :param block_code: Block code.
-    :returns: Property offers response.
+    <p><strong>OperationId:</strong>getPropertyOffers</p>
     """
+    return await shop_service.get_property_offers(
+        hotel_code=hotel_code,
+        arrival_date=arrival_date,
+        departure_date=departure_date,
+    )
 
 
 @router.get("/hotels/{hotelCode}/offer", response_model=OfferDetailsResponse)
@@ -203,31 +167,15 @@ async def get_property_offer(
     include_amenities: bool | None = Query(None, alias="IncludeAmenities"),
     promotion_codes: str | None = Query(None, alias="PromotionCodes"),
     block_code: str | None = Query(None, alias="BlockCode"),
-) -> OfferDetailsResponse | None:
+    shop_service: ShopService = Depends(),
+) -> OfferDetailsResponse:
     """
-    Get detailed offer information.
+    Retrieve a single offer by room type and rate plan. Or booking code.
 
-    :param hotel_code: Hotel Code.
-    :param authorization: Bearer token.
-    :param x_external_system: External system code.
-    :param x_app_key: Application Key.
-    :param x_channel_code: Channel code.
-    :param accept_language: Language preference.
-    :param x_request_id: Unique tracing key.
-    :param x_originating_application: Originating Application.
-    :param arrival_date: Arrival date.
-    :param departure_date: Departure date.
-    :param adults: Adults count.
-    :param children: Children count.
-    :param children_ages: Children ages.
-    :param room_type: Room type.
-    :param rate_plan_code: Rate plan code.
-    :param access_code: Access code.
-    :param rate_mode: Rate mode.
-    :param number_of_units: Units count.
-    :param booking_code: Booking code.
-    :param include_amenities: Include amenities.
-    :param promotion_codes: Promotion codes.
-    :param block_code: Block code.
-    :returns: Offer details response.
+    <p><strong>OperationId:</strong>getPropertyOffer</p>
     """
+    return await shop_service.get_offer_details(
+        hotel_code=hotel_code,
+        arrival_date=arrival_date,
+        departure_date=departure_date,
+    )

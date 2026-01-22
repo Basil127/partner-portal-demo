@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel
-
-# Use forward references for circular dependencies if needed
 
 
 class HotelAvailabilityStatus(str, Enum):
@@ -19,11 +18,12 @@ class HotelAvailabilityStatus(str, Enum):
 class Address(BaseModel):
     """Address information."""
 
-    lines: list[str] | None = None
+    addressLine: list[str] | None = None
     city: str | None = None
     postalCode: str | None = None
     countryCode: str | None = None
     state: str | None = None
+    county: str | None = None
 
 
 class Description(BaseModel):
@@ -68,18 +68,50 @@ class Restriction(BaseModel):
     description: str | None = None
 
 
-class PropertyOffersPropertyInfo(BaseModel):
-    """Basic property info for offers."""
+class PropertySearchPropertyInfo(BaseModel):
+    """Property info for search results."""
 
     hotelCode: str | None = None
     hotelName: str | None = None
     chainCode: str | None = None
+    isAlternate: bool | None = None
+
+
+class PropertyOffersPropertyInfo(PropertySearchPropertyInfo):
+    """Property info for offers, extends search info."""
+
     address: Address | None = None
-    # Add other fields as necessary
+    propertyAmenities: list[dict[str, Any]] | None = None
+    distance: dict[str, Any] | None = None
 
 
-class PropertySearchPropertyInfo(PropertyOffersPropertyInfo):
-    """Property info for search results."""
+class OfferRateMode(BaseModel):
+    """Rate mode details."""
+
+    type: str | None = None
+
+
+class OfferTotalType(BaseModel):
+    """The daily rate of the offer."""
+
+    amountBeforeTax: float | None = None
+    amountAfterTax: float | None = None
+    currencyCode: str | None = None
+
+
+class OfferTotalTypeWithTaxes(OfferTotalType):
+    """Total cost including taxes."""
+
+
+class OfferMinMaxTotalType(BaseModel):
+    """Rate range information."""
+
+    amountBeforeTax: float | None = None
+    amountAfterTax: float | None = None
+    currencyCode: str | None = None
+    rateMode: OfferRateMode | None = None
+    isCommissionable: bool | None = None
+    hasRateChange: bool | None = None
 
 
 class PropertySearchRatePlan(BaseModel):
@@ -88,12 +120,30 @@ class PropertySearchRatePlan(BaseModel):
     ratePlanCode: str | None = None
     ratePlanName: str | None = None
     ratePlanType: str | None = None
-    totalAmount: float | None = None  # Inferred
-    currencyCode: str | None = None  # Inferred
+    identificationRequired: bool | None = None
+    accountId: str | None = None
+    availabilityStatus: str | None = None  # Enum/Ref
+    additionalDetails: dict[str, Any] | None = None
+
+
+class PropertySearchRoomStay(BaseModel):
+    """Room stay details for property search."""
+
+    propertyInfo: PropertySearchPropertyInfo | None = None
+    availability: HotelAvailabilityStatus | None = None
+    ratePlans: list[PropertySearchRatePlan] | None = None
+    minRate: OfferMinMaxTotalType | None = None
+    maxRate: OfferMinMaxTotalType | None = None
+
+
+class PropertySearchResponse(BaseModel):
+    """Response for property search."""
+
+    roomStays: list[PropertySearchRoomStay] | None = None
 
 
 class PropertyOffersRatePlan(BaseModel):
-    """Rate plan details for offers."""
+    """Rate plan details for offers. Combines SearchRatePlan and more."""
 
     ratePlanCode: str | None = None
     ratePlanName: str | None = None
@@ -118,18 +168,39 @@ class PropertyOffersRoomType(BaseModel):
     roomTypeCode: str | None = None
     roomTypeName: str | None = None
     description: str | None = None
-    # Add other fields as necessary
+    availabilityStatus: str | None = None  # Ref OfferRoomTypeAvailabilityStatus
+
+
+class OfferOverallRateInformation(BaseModel):
+    """Rate plan information of the offer."""
+
+    rateModeAmount: OfferTotalType | None = None
+    # additionalGuestAmounts
+    rateMode: OfferRateMode | None = None
+
+
+class OfferRateInformation(BaseModel):
+    """Details on the rate plan of the offer."""
+
+    rate: OfferOverallRateInformation | None = None
+    cancellationPolicies: list[dict[str, Any]] | None = None
+    guaranteeRequirement: str | None = None
+    depositPolicies: list[dict[str, Any]] | None = None
 
 
 class Offer(BaseModel):
     """Offer details."""
 
+    bookingCode: str | None = None
+    offerName: str | None = None
+    availabilityStatus: str | None = None
+    roomType: str | None = None
     ratePlanCode: str | None = None
-    roomTypeCode: str | None = None
-    totalAmount: float | None = None
-    currencyCode: str | None = None
-    availability: HotelAvailabilityStatus | None = None
-    # Add more fields as necessary
+    rateChangeDuringStay: bool | None = None
+    rateInformation: OfferRateInformation | None = None
+    packages: list[RatePackage] | None = None
+    total: OfferTotalTypeWithTaxes | None = None
+    blockInformation: dict[str, Any] | None = None
 
 
 class PropertyOffersRoomStay(BaseModel):
@@ -147,29 +218,6 @@ class PropertyOffersResponse(BaseModel):
     """Response for property offers search."""
 
     roomStays: list[PropertyOffersRoomStay] | None = None
-
-
-class OfferMinMaxTotalType(BaseModel):
-    """Rate range information."""
-
-    amount: float | None = None
-    currencyCode: str | None = None
-
-
-class PropertySearchRoomStay(BaseModel):
-    """Room stay details for property search."""
-
-    propertyInfo: PropertySearchPropertyInfo | None = None
-    availability: HotelAvailabilityStatus | None = None
-    ratePlans: list[PropertySearchRatePlan] | None = None
-    minRate: OfferMinMaxTotalType | None = None
-    maxRate: OfferMinMaxTotalType | None = None
-
-
-class PropertySearchResponse(BaseModel):
-    """Response for property search."""
-
-    roomStays: list[PropertySearchRoomStay] | None = None
 
 
 # Offer Details
@@ -209,14 +257,10 @@ class Location(BaseModel):
     longitude: float | None = None
 
 
-class OfferDetailsPropertyInfo(BaseModel):
+class OfferDetailsPropertyInfo(PropertyOffersPropertyInfo):
     """Detailed property info for an offer."""
 
-    # Combines PropertyOffersPropertyInfo and general property details
-    hotelCode: str | None = None
-    hotelName: str | None = None
-    chainCode: str | None = None
-    address: Address | None = None
+    # Extends PropertyOffersPropertyInfo
 
     generalInformation: GeneralInformation | None = None
     communications: Communications | None = None
@@ -243,5 +287,17 @@ class OfferDetailsRoomStay(BaseModel):
     offer: Offer | None = None
 
 
-class OfferDetailsResponse(OfferDetailsRoomStay):
+class OfferDetailsResponse(BaseModel):
     """Response for a single offer detail."""
+
+    # The spec say: schema: { $ref: "#/definitions/OfferDetailsResponse" }
+    # And OfferDetailsResponse: allOf [ OfferDetailsRoomStay ]
+    # So it IS OfferDetailsRoomStay directly or wrapped.
+    # In Pydantic we can just inherit or use fields.
+    # Since it is allOf, it effectively inherits.
+
+    propertyInfo: OfferDetailsPropertyInfo | None = None
+    availability: HotelAvailabilityStatus | None = None
+    roomType: OfferDetailsRoomType | None = None
+    ratePlan: OfferDetailsRatePlan | None = None
+    offer: Offer | None = None

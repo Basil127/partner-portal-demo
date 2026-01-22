@@ -35,6 +35,18 @@ class HotelDAO:
         )
         return raw_hotel.scalars().first()
 
+    async def get_hotels_by_codes(self, hotel_codes: list[str]) -> list[Hotel]:
+        """
+        Get hotels by their codes.
+
+        :param hotel_codes: list of hotel codes.
+        :return: list of hotels.
+        """
+        raw_hotels = await self.session.execute(
+            select(Hotel).where(Hotel.hotel_code.in_(hotel_codes)),
+        )
+        return list(raw_hotels.scalars().fetchall())
+
     async def get_all_hotels(self, limit: int, offset: int) -> list[Hotel]:
         """
         Get all hotels with limit/offset pagination.
