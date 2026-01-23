@@ -16,8 +16,10 @@
 		"build": "npm run build --workspaces",
 		"build:backend": "npm run build --workspace=app/backend",
 		"build:frontend": "npm run build --workspace=app/frontend",
+
 		"test": "npm run test --workspace=app/backend",
 		"test:unit": "npm run test --workspace=app/backend",
+
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",

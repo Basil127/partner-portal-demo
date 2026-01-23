@@ -6,8 +6,11 @@ import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
   BoxCubeIcon,
+  BoxIcon,
   CalenderIcon,
+  ChatIcon,
   ChevronDownIcon,
+  FileIcon,
   GridIcon,
   HorizontaLDots,
   ListIcon,
@@ -15,8 +18,9 @@ import {
   PieChartIcon,
   PlugInIcon,
   TableIcon,
+  TaskIcon,
   UserCircleIcon,
-} from "../icons/index";
+} from "@/icons/index";
 import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
@@ -30,19 +34,41 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    path: "/",
   },
+  {
+    icon: <ChatIcon />,
+    name: "Chat",
+    path: "/chat",
+  },
+  {
+    icon: <BoxIcon />,
+    name: "Hotels",
+    path: "/hotels",
+  },
+  {
+    icon: <TaskIcon />,
+    name: "Rooms",
+    path: "/rooms",
+  },
+  {
+    icon: <FileIcon />,
+    name: "Bookings",
+    path: "/bookings",
+  },
+  {
+    icon: <UserCircleIcon />,
+    name: "Profile",
+    path: "/profile",
+  },
+];
+
+const othersItems: NavItem[] = [
   {
     icon: <CalenderIcon />,
     name: "Calendar",
     path: "/calendar",
   },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
-  },
-
   {
     name: "Forms",
     icon: <ListIcon />,
@@ -61,9 +87,6 @@ const navItems: NavItem[] = [
       { name: "404 Error", path: "/error-404", pro: false },
     ],
   },
-];
-
-const othersItems: NavItem[] = [
   {
     icon: <PieChartIcon />,
     name: "Charts",

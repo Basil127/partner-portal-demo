@@ -30,7 +30,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
@@ -68,12 +68,12 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         isExpanded: isMobile ? false : isExpanded,
         isMobileOpen,
-        isHovered,
+        isHovered: false,
         activeItem,
         openSubmenu,
         toggleSidebar,
         toggleMobileSidebar,
-        setIsHovered,
+        setIsHovered: () => {},
         setActiveItem,
         toggleSubmenu,
       }}
