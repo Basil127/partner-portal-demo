@@ -5,6 +5,7 @@ from pathlib import Path
 
 from operaclone2.db.models.dummy_model import DummyModel as DummyModel
 from operaclone2.db.models.hotel import Hotel as Hotel
+from operaclone2.db.models.reservation import ReservationModel as ReservationModel
 from operaclone2.db.models.room_type import RoomType as RoomType
 
 
