@@ -1,30 +1,25 @@
 {
-  "compilerOptions": {
-    "target": "ES2024",
-    "lib": ["ES2024"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "verbatimModuleSyntax": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "jsx": "preserve",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": ".",
-    "types": ["node", "jest"],
-    "composite": false,
-    "incremental": true
-  },
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".next",
-    "out"
-  ]
+	"compilerOptions": {
+		"target": "ES2024",
+		"lib": ["ES2024"],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"verbatimModuleSyntax": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"jsx": "preserve",
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"rootDir": ".",
+		"types": ["node", "jest"],
+		"composite": false,
+		"incremental": true
+	},
+	"exclude": ["node_modules", "dist", ".next", "out"]
 }

@@ -2,9 +2,9 @@ import type { DatabaseAdapter } from '../adapters/database.js';
 import { logger } from '../adapters/logger.js';
 
 export async function initializeDatabase(db: DatabaseAdapter): Promise<void> {
-  try {
-    // Create bookings table
-    await db.execute(`
+	try {
+		// Create bookings table
+		await db.execute(`
       CREATE TABLE IF NOT EXISTS bookings (
         id TEXT PRIMARY KEY,
         partner_id TEXT NOT NULL,
@@ -18,9 +18,9 @@ export async function initializeDatabase(db: DatabaseAdapter): Promise<void> {
       )
     `);
 
-    logger.info('Database initialized successfully');
-  } catch (error) {
-    logger.error(error as Error, 'Failed to initialize database');
-    throw error;
-  }
+		logger.info('Database initialized successfully');
+	} catch (error) {
+		logger.error(error as Error, 'Failed to initialize database');
+		throw error;
+	}
 }

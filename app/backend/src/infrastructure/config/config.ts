@@ -6,23 +6,23 @@ const envFile = process.env.NODE_ENV === 'test' ? 'test.env' : 'development.env'
 dotenv.config({ path: path.resolve(process.cwd(), '../../', envFile) });
 
 export const config = {
-  nodeEnv: process.env.NODE_ENV || 'development',
-  port: parseInt(process.env.PORT || '3001', 10),
-  host: process.env.HOST || 'localhost',
-  database: {
-    type: process.env.DB_TYPE || 'sqlite',
-    path: process.env.DB_PATH || './data/dev.db',
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : undefined,
-    name: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-  },
-  jwt: {
-    secret: process.env.JWT_SECRET || 'default-secret',
-  },
-  session: {
-    secret: process.env.SESSION_SECRET || 'default-session-secret',
-  },
-  logLevel: process.env.LOG_LEVEL || 'info',
+	nodeEnv: process.env.NODE_ENV || 'development',
+	port: parseInt(process.env.PORT || '3001', 10),
+	host: process.env.HOST || 'localhost',
+	database: {
+		type: process.env.DB_TYPE || 'sqlite',
+		path: process.env.DB_PATH || './data/dev.db',
+		host: process.env.DB_HOST,
+		port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : undefined,
+		name: process.env.DB_NAME,
+		user: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
+	},
+	jwt: {
+		secret: process.env.JWT_SECRET || 'default-secret',
+	},
+	session: {
+		secret: process.env.SESSION_SECRET || 'default-session-secret',
+	},
+	logLevel: process.env.LOG_LEVEL || 'info',
 };
