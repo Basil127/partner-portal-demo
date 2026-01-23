@@ -157,3 +157,30 @@ class CancelReservationDetails(BaseModel):
     reservationIdList: list[UniqueID] | None = None
     cancellationNumber: UniqueID | None = None
     status: str | None = "Cancelled"
+
+
+class DistributionReservationSummaryType(BaseModel):
+    """Detailed statistics item for distribution summary."""
+
+    hotelId: str | None = None
+    channelCode: str | None = None
+    enterpriseId: str | None = None
+    arrivalDate: date | None = None
+    departureDate: date | None = None
+    creationDate: datetime | None = None
+    lastUpdateDate: datetime | None = None
+    cancellationDate: datetime | None = None
+    numberOfRooms: int | None = None
+    reservationStatus: str | None = None
+    confirmationId: str | None = None
+    legNumber: str | None = None
+    reservationId: str | None = None
+    guestName: str | None = None
+    creatorId: str | None = None
+
+
+class CheckDistributionReservationsSummary(BaseModel):
+    """Response wrapper for distribution statistics."""
+
+    checkReservations: list[DistributionReservationSummaryType] | None = None
+    hasMore: bool | None = None

@@ -9,7 +9,9 @@ from operaclone2.db.dao.reservation_dao import ReservationDAO
 from operaclone2.web.api.reservation.schema import (
     CancelReservationDetails,
     CancelReservationRequest,
+    CheckDistributionReservationsSummary,
     CreateReservationRequest,
+    DistributionReservationSummaryType,
     Reservation,
     ReservationGuest,
     ReservationListResponse,
@@ -266,4 +268,44 @@ class ReservationService:
             reservationIdList=[UniqueID(id=updated_model.reservation_id, type="Reservation")],
             cancellationNumber=UniqueID(id=updated_model.cancellation_number, type="Cancellation"),
             status="Cancelled",
+        )
+
+    async def get_distribution_statistics(
+        self,
+        hotel_id: str,
+        start_date: date | None = None,
+        end_date: date | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -> CheckDistributionReservationsSummary:
+        """Get reservation distribution statistics."""
+        models = await self.reservation_dao.get_distribution_statistics(
+            hotel_id=hotel_id,
+            start_date=start_date,
+            end_date=end_date,
+            limit=limit,
+            offset=offset,
+        )
+
+        items = []
+        for m in models:
+            item = DistributionReservationSummaryType(
+                hotelId=m.hotel_id,
+                channelCode="WEB",
+                arrivalDate=m.arrival_date,
+                departureDate=m.departure_date,
+                creationDate=m.create_date_time,
+                lastUpdateDate=m.update_date_time,
+                numberOfRooms=1,
+                reservationStatus=m.reservation_status,
+                confirmationId=m.confirmation_number,
+                legNumber="1",
+                reservationId=m.reservation_id,
+                guestName=f"{m.guest_first_name} {m.guest_last_name}".strip(),
+                creatorId="System",
+            )
+            items.append(item)
+
+        return CheckDistributionReservationsSummary(
+            checkReservations=items, hasMore=len(items) >= limit
         )

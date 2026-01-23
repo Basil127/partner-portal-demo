@@ -74,3 +74,24 @@ class ReservationDAO:
         query = query.limit(limit).offset(offset)
         result = await self.session.execute(query)
         return list(result.scalars().all())
+
+    async def get_distribution_statistics(
+        self,
+        hotel_id: str,
+        start_date: date | None = None,
+        end_date: date | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -> list[ReservationModel]:
+        """Get reservation statistics/list based on criteria."""
+        query = select(ReservationModel).where(ReservationModel.hotel_id == hotel_id)
+
+        if start_date:
+            # Cast to datetime or rely on SQL driver
+            query = query.where(ReservationModel.update_date_time >= start_date)  # type: ignore
+        if end_date:
+            query = query.where(ReservationModel.update_date_time <= end_date)  # type: ignore
+
+        query = query.limit(limit).offset(offset)
+        result = await self.session.execute(query)
+        return list(result.scalars().all())

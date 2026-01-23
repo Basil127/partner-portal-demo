@@ -16,16 +16,18 @@
 - **Room Features (Amenities)**: [rmcfg.json](opera-api-spec/rest-api-specs/property/rmcfg.json#L14066) - `GET /roomFeatures`: Lists configured room amenities and features.
 
 
-
+<!-- Added these api's -->
 - **Booking Search/List**: [rsv.json](opera-api-spec/rest-api-specs/property/rsv.json#L6020) - `GET /hotels/{hotelId}/reservations`: Search for reservations by guest name, date, or status.
 - **Booking Brief Summary**: [rsv.json](opera-api-spec/rest-api-specs/property/rsv.json#L9693) - `GET /hotels/{hotelId}/reservations/summary`: Quick high-level summary list of reservations.
 - **Create Reservation**: [rsv.json](opera-api-spec/rest-api-specs/property/rsv.json#L6020) - `POST /hotels/{hotelId}/reservations`: Endpoint to create a new booking.
 - **Update Reservation**: [rsv.json](opera-api-spec/rest-api-specs/property/rsv.json#L10501) - `PUT /hotels/{hotelId}/reservations/{reservationId}`: Modify existing booking details (dates, room type).
 - **Cancel Reservation**: [rsv.json](opera-api-spec/rest-api-specs/property/rsv.json#L12790) - `POST /hotels/{hotelId}/reservations/{reservationId}/cancellations`: Cancel an existing booking with a reason.
-
-
-- **Dashboard: Inventory Stats**: [inv.json](opera-api-spec/rest-api-specs/property/inv.json#L867) - `GET /hotels/{hotelId}/inventoryStatistics`: Occupancy and availability data for the dashboard.
 - **Dashboard: Booking/Revenue Stats**: [rsv.json](opera-api-spec/rest-api-specs/property/rsv.json#L9531) - `GET /hotels/{hotelId}/reservations/statistics`: Metrics on bookings and cancellations, with channel filter support.
+
+
+
+<!-- Working on this -->
+- **Dashboard: Inventory Stats**: [inv.json](opera-api-spec/rest-api-specs/property/inv.json#L867) - `GET /hotels/{hotelId}/inventoryStatistics`: Occupancy and availability data for the dashboard.
 
 
 ## Most Likely Needed:

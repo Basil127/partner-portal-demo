@@ -7,6 +7,7 @@ from operaclone2.services.reservation_service import ReservationService
 from operaclone2.web.api.reservation.schema import (
     CancelReservationDetails,
     CancelReservationRequest,
+    CheckDistributionReservationsSummary,
     CreateReservationRequest,
     ReservationListResponse,
     ReservationSummaryResponse,
@@ -56,6 +57,28 @@ async def get_reservations_summary(
         hotel_id=hotel_id,
         arrival_date=arrival_date,
         last_name=last_name,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.get(
+    "/hotels/{hotelId}/reservations/statistics",
+    response_model=CheckDistributionReservationsSummary,
+)
+async def get_reservation_statistics(
+    hotel_id: Annotated[str, Path(alias="hotelId")],
+    start_date: Annotated[date | None, Query(alias="startDate")] = None,
+    end_date: Annotated[date | None, Query(alias="endDate")] = None,
+    limit: Annotated[int, Query()] = 20,
+    offset: Annotated[int, Query()] = 0,
+    reservation_service: ReservationService = Depends(),
+) -> CheckDistributionReservationsSummary:
+    """Get reservation statistics."""
+    return await reservation_service.get_distribution_statistics(
+        hotel_id=hotel_id,
+        start_date=start_date,
+        end_date=end_date,
         limit=limit,
         offset=offset,
     )
