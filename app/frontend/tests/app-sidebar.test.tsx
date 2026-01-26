@@ -1,15 +1,15 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import ChatPage from "@/app/(admin)/(others-pages)/chat/page";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import ChatPage from '@/app/(admin)/(others-pages)/chat/page';
 
-jest.mock("next/navigation", () => ({
-	usePathname: () => "/",
+jest.mock('next/navigation', () => ({
+	usePathname: () => '/',
 }));
 
-describe("Chat page", () => {
-	it("renders the Chat heading", () => {
+describe('Chat page', () => {
+	it('renders the Chat heading', () => {
 		render(<ChatPage />);
-		const headings = screen.getAllByRole("heading", { name: "Chat" });
+		const headings = screen.getAllByRole('heading', { name: 'Chat' });
 		expect(headings[0]).toBeInTheDocument();
 	});
 });
