@@ -17,7 +17,16 @@ const compat = new FlatCompat({
 /** @type {import('eslint').Linter.Config[]} */
 export const baseConfig = [
 	{
-		ignores: ['**/node_modules/', '**/dist/', '**/.next/', '**/out/', '**/*.config.js'],
+		ignores: [
+			'**/node_modules/',
+			'**/dist/',
+			'**/.next/',
+			'**/out/',
+			'**/*.config.js',
+			'**/*.config.ts',
+			'**/*.d.ts',
+			'base-admin-dashboard/**',
+		],
 	},
 	{
 		files: ['**/*.ts', '**/*.tsx'],
@@ -25,6 +34,8 @@ export const baseConfig = [
 			globals: {
 				...globals.browser,
 				...globals.node,
+				RequestInit: 'readonly',
+				BodyInit: 'readonly',
 			},
 
 			parser: tsParser,
@@ -60,6 +71,14 @@ export const baseConfig = [
 					allow: ['warn', 'error'],
 				},
 			],
+		},
+	},
+	// Generated client code overrides
+	{
+		files: ['**/*.gen.ts', '**/*.gen.tsx'],
+		rules: {
+			'@typescript-eslint/no-explicit-any': 'off',
+			'@typescript-eslint/ban-ts-comment': 'off',
 		},
 	},
 	// Backend Overrides

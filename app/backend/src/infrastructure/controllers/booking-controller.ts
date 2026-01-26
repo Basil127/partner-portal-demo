@@ -59,7 +59,8 @@ export class BookingController {
 		} catch (error) {
 			request.log.error(error);
 			if (error instanceof z.ZodError) {
-				return reply.status(400).send({ error: 'Validation error', details: error.errors });
+				const details = error.issues ?? (error as unknown as { errors: unknown }).errors;
+				return reply.status(400).send({ error: 'Validation error', details });
 			}
 			return reply.status(500).send({ error: 'Internal server error' });
 		}
@@ -91,7 +92,8 @@ export class BookingController {
 		} catch (error) {
 			request.log.error(error);
 			if (error instanceof z.ZodError) {
-				return reply.status(400).send({ error: 'Validation error', details: error.errors });
+				const details = error.issues ?? (error as unknown as { errors: unknown }).errors;
+				return reply.status(400).send({ error: 'Validation error', details });
 			}
 			return reply.status(500).send({ error: 'Internal server error' });
 		}

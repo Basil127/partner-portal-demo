@@ -21,5 +21,12 @@
 		"composite": false,
 		"incremental": true
 	},
-	"exclude": ["node_modules", "dist", ".next", "out"]
+	"include": [
+		"app/backend/src/**/*",
+		"app/backend/tests/**/*",
+		"app/frontend/src/**/*",
+		"app/frontend/tests/**/*",
+		"packages/shared/src/**/*"
+	],
+	"exclude": ["node_modules", "dist", ".next", "out", "base-admin-dashboard"]
 }

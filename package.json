@@ -18,11 +18,13 @@
 		"build:frontend": "npm run build --workspace=app/frontend",
 		"test": "npm run test --workspace=app/backend",
 		"test:unit": "npm run test --workspace=app/backend",
+		"pre-commit": "npm run lint && npm run typecheck && npm run format:check",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc -p app/backend/tsconfig.json --noEmit && tsc -p app/frontend/tsconfig.json --noEmit && tsc -p packages/shared/tsconfig.json --noEmit",
+		"openapi:generate": "npm run generate:openapi --workspace=app/backend && npm run generate:client --workspace=app/backend && npm run generate:client --workspace=app/frontend"
 	},
 	"devDependencies": {
 		"@hey-api/client-fetch": "^0.13.1",
