@@ -1,7 +1,7 @@
 // Example functional test placeholder
 
-describe('Hotel Shop Availability Flow Integration', () => {
-	it('should retrieve availability through service layer', async () => {
+describe('Hotel Shop Offers Flow Integration', () => {
+	it('should retrieve offers through service layer', async () => {
 		// This is a placeholder for functional tests
 		// Actual implementation would involve:
 		// 1. Mocking the external client

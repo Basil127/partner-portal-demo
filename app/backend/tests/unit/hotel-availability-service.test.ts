@@ -1,20 +1,22 @@
-import { HotelAvailabilityService } from '../../src/application/services/hotel-availability-service.js';
-import type { HotelAvailabilityRepository } from '../../src/domain/repositories/hotel-availability-repository.js';
+import { HotelShopService } from '../../src/application/services/hotel-shop/hotel-shop-service.js';
+import type { HotelShopRepository } from '../../src/domain/repositories/hotel-shop/hotel-shop-repository.js';
 import type {
 	HotelAvailabilityRequestHeaders,
 	HotelAvailabilitySearchQuery,
 	PropertySearchResponse,
 } from '@partner-portal/shared';
 
-describe('HotelAvailabilityService', () => {
-	let service: HotelAvailabilityService;
-	let repository: jest.Mocked<HotelAvailabilityRepository>;
+describe('HotelShopService (availability)', () => {
+	let service: HotelShopService;
+	let repository: jest.Mocked<HotelShopRepository>;
 
 	beforeEach(() => {
 		repository = {
 			getAvailableHotels: jest.fn(),
+			getPropertyOffers: jest.fn(),
+			getPropertyOffer: jest.fn(),
 		};
-		service = new HotelAvailabilityService(repository);
+		service = new HotelShopService(repository);
 	});
 
 	it('should return available hotels from repository', async () => {

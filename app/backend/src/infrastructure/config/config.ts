@@ -30,5 +30,6 @@ export const config = {
 		channelCode: process.env.EXTERNAL_CLIENT_CHANNEL_CODE || '',
 		appKey: process.env.EXTERNAL_CLIENT_APP_KEY || undefined,
 		originatingApplication: process.env.EXTERNAL_CLIENT_ORIGINATING_APP || undefined,
+		externalSystem: process.env.EXTERNAL_CLIENT_EXTERNAL_SYSTEM || undefined,
 	},
 };

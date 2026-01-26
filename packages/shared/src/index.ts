@@ -103,3 +103,78 @@ export interface HotelAvailabilityRequestHeaders {
 	requestId?: string;
 	originatingApplication?: string;
 }
+
+export interface HotelShopRequestHeaders {
+	channelCode: string;
+	authorization?: string;
+	appKey?: string;
+	acceptLanguage?: string;
+	requestId?: string;
+	originatingApplication?: string;
+	externalSystem?: string;
+}
+
+export interface HotelPropertyOffersSearchQuery {
+	hotelCode: string;
+	arrivalDate: string;
+	departureDate: string;
+	adults?: number | null;
+	children?: number | null;
+	childrenAges?: string | null;
+	roomTypes?: string | null;
+	ratePlanCodes?: string | null;
+	accessCode?: string | null;
+	ratePlanType?: string | null;
+	numberOfUnits?: number | null;
+	roomTypeMatchOnly?: boolean | null;
+	ratePlanCodeMatchOnly?: boolean | null;
+	rateMode?: string | null;
+	roomAmenity?: string | null;
+	roomAmenityQuantity?: number | null;
+	includeAmenities?: boolean | null;
+	minRate?: number | null;
+	maxRate?: number | null;
+	alternateOffers?: string | null;
+	commissionableStatus?: string | null;
+	promotionCodes?: string | null;
+	blockCode?: string | null;
+}
+
+export interface HotelPropertyOfferQuery {
+	hotelCode: string;
+	arrivalDate: string;
+	departureDate: string;
+	adults?: number | null;
+	children?: number | null;
+	childrenAges?: string | null;
+	roomType?: string | null;
+	ratePlanCode?: string | null;
+	accessCode?: string | null;
+	rateMode?: string | null;
+	numberOfUnits?: number | null;
+	bookingCode?: string | null;
+	includeAmenities?: boolean | null;
+	promotionCodes?: string | null;
+	blockCode?: string | null;
+}
+
+export interface PropertyOffersRoomStay {
+	propertyInfo?: PropertySearchPropertyInfo | null;
+	availability?: HotelAvailabilityStatus | null;
+	restrictions?: Array<Record<string, unknown>> | null;
+	roomTypes?: Array<Record<string, unknown>> | null;
+	ratePlans?: Array<Record<string, unknown>> | null;
+	offers?: Array<Record<string, unknown>> | null;
+}
+
+export interface PropertyOffersResponse {
+	roomStays?: PropertyOffersRoomStay[] | null;
+}
+
+export interface OfferDetailsResponse {
+	propertyInfo?: PropertySearchPropertyInfo | null;
+	availability?: HotelAvailabilityStatus | null;
+	roomType?: Record<string, unknown> | null;
+	ratePlan?: Record<string, unknown> | null;
+	offer?: Record<string, unknown> | null;
+}

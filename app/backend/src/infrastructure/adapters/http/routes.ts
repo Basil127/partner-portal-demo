@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 import { BookingController } from '../../controllers/booking-controller.js';
-import { HotelAvailabilityController } from '../../controllers/hotel-availability-controller.js';
+import { HotelShopController } from '../../controllers/hotel-shop/hotel-shop-controller.js';
 import { BookingService } from '../../../application/services/booking-service.js';
-import { HotelAvailabilityService } from '../../../application/services/hotel-availability-service.js';
+import { HotelShopService } from '../../../application/services/hotel-shop/hotel-shop-service.js';
 import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
-import { HotelAvailabilityRepositoryImpl } from '../../repositories/hotel-availability-repository-impl.js';
+import { HotelShopRepositoryImpl } from '../../repositories/hotel-shop/hotel-shop-repository-impl.js';
 import { createDatabaseAdapter } from '../database.js';
 
 export function setupRoutes(fastify: FastifyInstance) {
@@ -13,9 +13,9 @@ export function setupRoutes(fastify: FastifyInstance) {
 	const bookingRepository = new BookingRepositoryImpl(dbAdapter);
 	const bookingService = new BookingService(bookingRepository);
 	const bookingController = new BookingController(bookingService);
-	const hotelAvailabilityRepository = new HotelAvailabilityRepositoryImpl();
-	const hotelAvailabilityService = new HotelAvailabilityService(hotelAvailabilityRepository);
-	const hotelAvailabilityController = new HotelAvailabilityController(hotelAvailabilityService);
+	const hotelShopRepository = new HotelShopRepositoryImpl();
+	const hotelShopService = new HotelShopService(hotelShopRepository);
+	const hotelShopController = new HotelShopController(hotelShopService);
 
 	// Booking routes
 	fastify.get('/api/bookings', {
@@ -235,6 +235,122 @@ export function setupRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		handler: hotelAvailabilityController.getAvailableHotels.bind(hotelAvailabilityController),
+		handler: hotelShopController.getAvailableHotels.bind(hotelShopController),
+	});
+
+	fastify.get('/api/hotels/:hotelCode/offers', {
+		schema: {
+			tags: ['hotel shop'],
+			description: 'Get property offers from external provider',
+			params: {
+				type: 'object',
+				required: ['hotelCode'],
+				properties: {
+					hotelCode: { type: 'string' },
+				},
+			},
+			querystring: {
+				type: 'object',
+				required: ['arrivalDate', 'departureDate'],
+				properties: {
+					arrivalDate: { type: 'string', format: 'date' },
+					departureDate: { type: 'string', format: 'date' },
+					adults: { type: 'integer', minimum: 1 },
+					children: { type: 'integer', minimum: 0 },
+					childrenAges: { type: 'string' },
+					roomTypes: { type: 'string' },
+					ratePlanCodes: { type: 'string' },
+					accessCode: { type: 'string' },
+					ratePlanType: { type: 'string' },
+					numberOfUnits: { type: 'integer', minimum: 1 },
+					roomTypeMatchOnly: { type: 'boolean' },
+					ratePlanCodeMatchOnly: { type: 'boolean' },
+					rateMode: { type: 'string' },
+					roomAmenity: { type: 'string' },
+					roomAmenityQuantity: { type: 'integer', minimum: 0 },
+					includeAmenities: { type: 'boolean' },
+					minRate: { type: 'number' },
+					maxRate: { type: 'number' },
+					alternateOffers: { type: 'string' },
+					commissionableStatus: { type: 'string' },
+					promotionCodes: { type: 'string' },
+					blockCode: { type: 'string' },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						roomStays: {
+							type: 'array',
+							items: { type: 'object' },
+							nullable: true,
+						},
+					},
+				},
+				400: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+						details: { type: 'array' },
+					},
+				},
+			},
+		},
+		handler: hotelShopController.getPropertyOffers.bind(hotelShopController),
+	});
+
+	fastify.get('/api/hotels/:hotelCode/offer', {
+		schema: {
+			tags: ['hotel shop'],
+			description: 'Get a property offer from external provider',
+			params: {
+				type: 'object',
+				required: ['hotelCode'],
+				properties: {
+					hotelCode: { type: 'string' },
+				},
+			},
+			querystring: {
+				type: 'object',
+				required: ['arrivalDate', 'departureDate'],
+				properties: {
+					arrivalDate: { type: 'string', format: 'date' },
+					departureDate: { type: 'string', format: 'date' },
+					adults: { type: 'integer', minimum: 1 },
+					children: { type: 'integer', minimum: 0 },
+					childrenAges: { type: 'string' },
+					roomType: { type: 'string' },
+					ratePlanCode: { type: 'string' },
+					accessCode: { type: 'string' },
+					rateMode: { type: 'string' },
+					numberOfUnits: { type: 'integer', minimum: 1 },
+					bookingCode: { type: 'string' },
+					includeAmenities: { type: 'boolean' },
+					promotionCodes: { type: 'string' },
+					blockCode: { type: 'string' },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						propertyInfo: { type: 'object', nullable: true },
+						availability: { type: 'string', nullable: true },
+						roomType: { type: 'object', nullable: true },
+						ratePlan: { type: 'object', nullable: true },
+						offer: { type: 'object', nullable: true },
+					},
+				},
+				400: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+						details: { type: 'array' },
+					},
+				},
+			},
+		},
+		handler: hotelShopController.getPropertyOffer.bind(hotelShopController),
 	});
 }
