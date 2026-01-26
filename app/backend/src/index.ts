@@ -55,6 +55,10 @@ async function start() {
 			tags: [
 				{ name: 'health', description: 'Health check endpoints' },
 				{ name: 'bookings', description: 'Booking management endpoints' },
+				{ name: 'hotel shop', description: 'External hotel shopping endpoints' },
+				{ name: 'hotel inv', description: 'External hotel inventory endpoints' },
+				{ name: 'hotel content', description: 'External hotel content endpoints' },
+				{ name: 'hotel reservations', description: 'External hotel reservations endpoints' },
 			],
 		},
 	});

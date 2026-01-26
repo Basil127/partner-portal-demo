@@ -1,7 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 import { BookingController } from '../../controllers/booking-controller.js';
+import { HotelAvailabilityController } from '../../controllers/hotel-availability-controller.js';
 import { BookingService } from '../../../application/services/booking-service.js';
+import { HotelAvailabilityService } from '../../../application/services/hotel-availability-service.js';
 import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
+import { HotelAvailabilityRepositoryImpl } from '../../repositories/hotel-availability-repository-impl.js';
 import { createDatabaseAdapter } from '../database.js';
 
 export function setupRoutes(fastify: FastifyInstance) {
@@ -10,6 +13,9 @@ export function setupRoutes(fastify: FastifyInstance) {
 	const bookingRepository = new BookingRepositoryImpl(dbAdapter);
 	const bookingService = new BookingService(bookingRepository);
 	const bookingController = new BookingController(bookingService);
+	const hotelAvailabilityRepository = new HotelAvailabilityRepositoryImpl();
+	const hotelAvailabilityService = new HotelAvailabilityService(hotelAvailabilityRepository);
+	const hotelAvailabilityController = new HotelAvailabilityController(hotelAvailabilityService);
 
 	// Booking routes
 	fastify.get('/api/bookings', {
@@ -178,5 +184,57 @@ export function setupRoutes(fastify: FastifyInstance) {
 			},
 		},
 		handler: bookingController.deleteBooking.bind(bookingController),
+	});
+
+	fastify.get('/api/hotels/availability', {
+		schema: {
+			tags: ['hotel shop'],
+			description: 'Get available hotels from external provider',
+			querystring: {
+				type: 'object',
+				required: ['hotelCodes', 'arrivalDate', 'departureDate'],
+				properties: {
+					hotelCodes: { type: 'string', description: 'List of Hotel Codes (CSV)' },
+					arrivalDate: { type: 'string', format: 'date' },
+					arrivalDateTo: { type: 'string', format: 'date' },
+					departureDate: { type: 'string', format: 'date' },
+					adults: { type: 'integer', minimum: 1 },
+					children: { type: 'integer', minimum: 0 },
+					childrenAges: { type: 'string' },
+					ratePlanCodes: { type: 'string' },
+					accessCode: { type: 'string' },
+					numberOfUnits: { type: 'integer', minimum: 1 },
+					rateMode: { type: 'string' },
+					ratePlanCodeMatchOnly: { type: 'boolean' },
+					ratePlanType: { type: 'string' },
+					availableOnly: { type: 'boolean' },
+					minRate: { type: 'number' },
+					maxRate: { type: 'number' },
+					alternateOffers: { type: 'string' },
+					commissionableStatus: { type: 'string' },
+					promotionCodes: { type: 'string' },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						roomStays: {
+							type: 'array',
+							items: { type: 'object' },
+							nullable: true,
+						},
+					},
+				},
+				400: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+						details: { type: 'array' },
+					},
+				},
+			},
+		},
+		handler: hotelAvailabilityController.getAvailableHotels.bind(hotelAvailabilityController),
 	});
 }
