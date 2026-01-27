@@ -178,3 +178,94 @@ export interface OfferDetailsResponse {
 	ratePlan?: Record<string, unknown> | null;
 	offer?: Record<string, unknown> | null;
 }
+
+export interface HotelContentRequestHeaders {
+	channelCode: string;
+	authorization?: string;
+	appKey?: string;
+	requestId?: string;
+	originatingApplication?: string;
+}
+
+export interface PropertiesSummaryQuery {
+	connectionStatusLastChangedFrom?: string | null;
+	connectionStatusLastChangedTo?: string | null;
+	connectionStatus?: string | null;
+	fetchInstructions?: string | null;
+	limit?: number;
+	offset?: number;
+}
+
+export interface PropertySnippet {
+	hotelId?: string | null;
+	hotelCode?: string | null;
+	hotelName?: string | null;
+	hotelDescription?: string | null;
+	address?: Record<string, any> | null;
+	coordinates?: Record<string, any> | null;
+	connectivity?: Record<string, any> | null;
+	meta?: Record<string, any> | null;
+}
+
+export interface PropertyInfoSummaryResponse {
+	hasMore?: boolean;
+	totalResults?: number | null;
+	limit?: number;
+	count?: number;
+	offset?: number;
+	hotels?: PropertySnippet[];
+}
+
+export interface ContentPropertyInfo {
+	hotelId?: string | null;
+	enterpriseId?: string | null;
+	hotelCode?: string | null;
+	hotelName?: string | null;
+	hotelDescription?: string | null;
+	chainCode?: string | null;
+	clusterCode?: string | null;
+	address?: Record<string, any> | null;
+	latitude?: number | null;
+	longitude?: number | null;
+	propertyAmenities?: any[] | null;
+	pointOfInterest?: any[] | null;
+	marketingMessage?: string | null;
+	currencyCode?: string | null;
+	primaryLanguage?: string | null;
+	totalNumberOfRooms?: number | null;
+	petPolicy?: string | null;
+}
+
+export interface PropertyInfoResponse {
+	propertyInfo?: ContentPropertyInfo | null;
+}
+
+export interface RoomTypesQuery {
+	includeRoomAmenities?: boolean | null;
+	roomType?: string | null;
+	limit?: number | null;
+	offset?: number | null;
+}
+
+export interface ContentRoomType {
+	hotelRoomType?: string | null;
+	roomType?: string | null;
+	description?: string[] | null;
+	roomName?: string | null;
+	roomCategory?: string | null;
+	roomAmenities?: any[] | null;
+	roomViewType?: string | null;
+	roomPrimaryBedType?: string | null;
+	nonSmokingInd?: boolean | null;
+	occupancy?: Record<string, any> | null;
+	numberOfUnits?: number | null;
+}
+
+export interface RoomTypesResponse {
+	roomTypes?: ContentRoomType[] | null;
+	count?: number | null;
+	hasMore?: boolean | null;
+	limit?: number | null;
+	offset?: number | null;
+	totalResults?: number | null;
+}

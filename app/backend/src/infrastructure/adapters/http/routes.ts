@@ -1,10 +1,13 @@
 import type { FastifyInstance } from 'fastify';
 import { BookingController } from '../../controllers/booking-controller.js';
 import { HotelShopController } from '../../controllers/hotel-shop/hotel-shop-controller.js';
+import { HotelContentController } from '../../controllers/hotel-content/hotel-content-controller.js';
 import { BookingService } from '../../../application/services/booking-service.js';
 import { HotelShopService } from '../../../application/services/hotel-shop/hotel-shop-service.js';
+import { HotelContentService } from '../../../application/services/hotel-content/hotel-content-service.js';
 import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
 import { HotelShopRepositoryImpl } from '../../repositories/hotel-shop/hotel-shop-repository-impl.js';
+import { HotelContentRepositoryImpl } from '../../repositories/hotel-content/hotel-content-repository-impl.js';
 import { createDatabaseAdapter } from '../database.js';
 
 export function setupRoutes(fastify: FastifyInstance) {
@@ -16,6 +19,9 @@ export function setupRoutes(fastify: FastifyInstance) {
 	const hotelShopRepository = new HotelShopRepositoryImpl();
 	const hotelShopService = new HotelShopService(hotelShopRepository);
 	const hotelShopController = new HotelShopController(hotelShopService);
+	const hotelContentRepository = new HotelContentRepositoryImpl();
+	const hotelContentService = new HotelContentService(hotelContentRepository);
+	const hotelContentController = new HotelContentController(hotelContentService);
 
 	// Booking routes
 	fastify.get('/api/bookings', {
@@ -353,5 +359,134 @@ export function setupRoutes(fastify: FastifyInstance) {
 			},
 		},
 		handler: hotelShopController.getPropertyOffer.bind(hotelShopController),
+	});
+
+	// Hotel Content routes
+	fastify.get('/api/content/hotels', {
+		schema: {
+			tags: ['hotel content'],
+			description: 'Get properties summary',
+			querystring: {
+				type: 'object',
+				properties: {
+					connectionStatusLastChangedFrom: { type: 'string', format: 'date-time' },
+					connectionStatusLastChangedTo: { type: 'string', format: 'date-time' },
+					connectionStatus: { type: 'string' },
+					fetchInstructions: { type: 'string' },
+					limit: { type: 'integer', default: 20 },
+					offset: { type: 'integer', default: 0 },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						hasMore: { type: 'boolean' },
+						totalResults: { type: 'integer', nullable: true },
+						limit: { type: 'integer' },
+						count: { type: 'integer' },
+						offset: { type: 'integer' },
+						hotels: {
+							type: 'array',
+							items: {
+								type: 'object',
+								additionalProperties: true,
+								properties: {
+									hotelId: { type: 'string', nullable: true },
+									hotelCode: { type: 'string', nullable: true },
+									hotelName: { type: 'string', nullable: true },
+									hotelDescription: { type: 'string', nullable: true },
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		handler: hotelContentController.getPropertiesSummary.bind(hotelContentController),
+	});
+
+	fastify.get('/api/content/hotels/:hotelCode', {
+		schema: {
+			tags: ['hotel content'],
+			description: 'Get detailed property information',
+			params: {
+				type: 'object',
+				required: ['hotelCode'],
+				properties: {
+					hotelCode: { type: 'string' },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						propertyInfo: {
+							type: 'object',
+							nullable: true,
+							additionalProperties: true,
+							properties: {
+								hotelId: { type: 'string', nullable: true },
+								enterpriseId: { type: 'string', nullable: true },
+								hotelCode: { type: 'string', nullable: true },
+								hotelName: { type: 'string', nullable: true },
+								hotelDescription: { type: 'string', nullable: true },
+								chainCode: { type: 'string', nullable: true },
+							},
+						},
+					},
+				},
+			},
+		},
+		handler: hotelContentController.getPropertyInfo.bind(hotelContentController),
+	});
+
+	fastify.get('/api/content/hotels/:hotelCode/roomTypes', {
+		schema: {
+			tags: ['hotel content'],
+			description: 'Get room types for a property',
+			params: {
+				type: 'object',
+				required: ['hotelCode'],
+				properties: {
+					hotelCode: { type: 'string' },
+				},
+			},
+			querystring: {
+				type: 'object',
+				properties: {
+					includeRoomAmenities: { type: 'boolean', default: false },
+					roomType: { type: 'string' },
+					limit: { type: 'integer', default: 20 },
+					offset: { type: 'integer', default: 0 },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						roomTypes: {
+							type: 'array',
+							nullable: true,
+							items: {
+								type: 'object',
+								additionalProperties: true,
+								properties: {
+									hotelRoomType: { type: 'string', nullable: true },
+									roomType: { type: 'string', nullable: true },
+									roomName: { type: 'string', nullable: true },
+								},
+							},
+						},
+						count: { type: 'integer', nullable: true },
+						hasMore: { type: 'boolean', nullable: true },
+						limit: { type: 'integer', nullable: true },
+						offset: { type: 'integer', nullable: true },
+						totalResults: { type: 'integer', nullable: true },
+					},
+				},
+			},
+		},
+		handler: hotelContentController.getRoomTypes.bind(hotelContentController),
 	});
 }

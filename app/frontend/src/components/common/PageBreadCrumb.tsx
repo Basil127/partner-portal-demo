@@ -35,7 +35,10 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
 						</Link>
 					</li>
 					<li>
-						<h2 className="text-xl font-semibold text-gray-800 dark:text-white/90" x-text="pageName">
+						<h2
+							className="text-xl font-semibold text-gray-800 dark:text-white/90"
+							x-text="pageName"
+						>
 							{pageTitle}
 						</h2>
 					</li>
