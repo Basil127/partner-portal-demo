@@ -1,5 +1,4 @@
 'use client';
-import PageBreadcrumb from '@/components/common/PageBreadCrumb';
 import ComponentCard from '@/components/common/ComponentCard';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/components/ui/table';
 import Badge from '@/components/ui/badge/Badge';
@@ -69,8 +68,6 @@ export default function HotelsPage() {
 
 	return (
 		<div className="space-y-6">
-			<PageBreadcrumb pageTitle="Hotels" />
-
 			<HotelSearchCard
 				filters={filters}
 				onFilterChange={handleFilterChange}
