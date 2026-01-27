@@ -2,6 +2,7 @@ import React from 'react';
 // import { VectorMap } from "@react-jvectormap/core";
 import { worldMill } from '@react-jvectormap/world';
 import dynamic from 'next/dynamic';
+import { COLORS } from '@/lib/theme';
 
 const VectorMap = dynamic(() => import('@react-jvectormap/core').then((mod) => mod.VectorMap), {
 	ssr: false,
@@ -96,11 +97,11 @@ const CountryMap: React.FC<CountryMapProps> = ({ mapColor }) => {
 				hover: {
 					fillOpacity: 0.7,
 					cursor: 'pointer',
-					fill: '#465fff',
+					fill: COLORS.light.primary,
 					stroke: 'none',
 				},
 				selected: {
-					fill: '#465FFF',
+					fill: COLORS.light.primary,
 				},
 				selectedHover: {},
 			}}

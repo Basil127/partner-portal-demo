@@ -5,6 +5,7 @@ import { ApexOptions } from 'apexcharts';
 import flatpickr from 'flatpickr';
 import ChartTab from '../common/ChartTab';
 import { CalenderIcon } from '../../icons';
+import { COLORS } from '@/lib/theme';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -44,7 +45,7 @@ export default function StatisticsChart() {
 			position: 'top',
 			horizontalAlign: 'left',
 		},
-		colors: ['#465FFF', '#9CB9FF'], // Define line colors
+		colors: [COLORS.light.primary, COLORS.light.primaryAccent], // Define line colors
 		chart: {
 			fontFamily: 'Outfit, sans-serif',
 			height: 310,

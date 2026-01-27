@@ -5,6 +5,11 @@ import AppHeader from '@/layout/AppHeader';
 import AppSidebar from '@/layout/AppSidebar';
 import Backdrop from '@/layout/Backdrop';
 import React from 'react';
+import { client } from '@/lib/api-client/client.gen';
+
+client.setConfig({
+	baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+});
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
 	const { isExpanded, isHovered, isMobileOpen } = useSidebar();

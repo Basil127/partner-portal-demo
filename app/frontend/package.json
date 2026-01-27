@@ -10,7 +10,7 @@
 		"lint": "next lint",
 		"test": "jest",
 		"test:watch": "jest --watch",
-		"generate:client": "openapi-ts"
+		"generate:client": "openapi-ts && node scripts/fix-api-client.js"
 	},
 	"dependencies": {
 		"@fullcalendar/core": "^6.1.19",

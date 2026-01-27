@@ -10,6 +10,11 @@ import type {
 } from '@partner-portal/shared';
 import { createClient } from '../external-client/client/index.js';
 import {
+	getPropertiesApiShopV1HotelsGet,
+	getPropertyOfferApiShopV1HotelsHotelCodeOfferGet,
+	getPropertyOffersApiShopV1HotelsHotelCodeOffersGet,
+} from '../external-client/sdk.gen.js';
+import {
 	zGetPropertiesApiShopV1HotelsGetResponse,
 	zGetPropertyOfferApiShopV1HotelsHotelCodeOfferGetResponse,
 	zGetPropertyOffersApiShopV1HotelsHotelCodeOffersGetResponse,
@@ -55,16 +60,10 @@ export const fetchHotelAvailability = async (
 	query: HotelAvailabilitySearchQuery,
 	headers: HotelAvailabilityRequestHeaders,
 ): Promise<PropertySearchResponse> => {
-	const response: PropertySearchResponse = await externalClient.request<
-		PropertySearchResponse,
-		unknown,
-		true,
-		'data'
-	>({
-		method: 'GET',
-		url: '/api/shop/v1/hotels',
-		responseStyle: 'data',
+	const response = await getPropertiesApiShopV1HotelsGet({
+		client: externalClient,
 		throwOnError: true,
+		responseStyle: 'data',
 		query: {
 			HotelCodes: query.hotelCodes,
 			ArrivalDate: query.arrivalDate,
@@ -86,24 +85,26 @@ export const fetchHotelAvailability = async (
 			CommissionableStatus: query.commissionableStatus ?? undefined,
 			PromotionCodes: query.promotionCodes ?? undefined,
 		},
-		headers: buildHeaders(headers),
+		headers: buildHeaders(headers) as any,
 		responseValidator: async (data) => {
 			zGetPropertiesApiShopV1HotelsGetResponse.parse(data);
 		},
 	});
 
-	return response;
+	return response as PropertySearchResponse;
 };
 
 export const fetchPropertyOffers = async (
 	query: HotelPropertyOffersSearchQuery,
 	headers: HotelShopRequestHeaders,
 ): Promise<PropertyOffersResponse> => {
-	const response = await externalClient.request<PropertyOffersResponse, unknown, true, 'data'>({
-		method: 'GET',
-		url: `/api/shop/v1/hotels/${query.hotelCode}/offers`,
-		responseStyle: 'data',
+	const response = await getPropertyOffersApiShopV1HotelsHotelCodeOffersGet({
+		client: externalClient,
 		throwOnError: true,
+		responseStyle: 'data',
+		path: {
+			hotelCode: query.hotelCode,
+		},
 		query: {
 			ArrivalDate: query.arrivalDate,
 			DepartureDate: query.departureDate,
@@ -128,24 +129,26 @@ export const fetchPropertyOffers = async (
 			PromotionCodes: query.promotionCodes ?? undefined,
 			BlockCode: query.blockCode ?? undefined,
 		},
-		headers: buildHeaders(headers),
+		headers: buildHeaders(headers) as any,
 		responseValidator: async (data) => {
 			zGetPropertyOffersApiShopV1HotelsHotelCodeOffersGetResponse.parse(data);
 		},
 	});
 
-	return response;
+	return response as PropertyOffersResponse;
 };
 
 export const fetchPropertyOffer = async (
 	query: HotelPropertyOfferQuery,
 	headers: HotelShopRequestHeaders,
 ): Promise<OfferDetailsResponse> => {
-	const response = await externalClient.request<OfferDetailsResponse, unknown, true, 'data'>({
-		method: 'GET',
-		url: `/api/shop/v1/hotels/${query.hotelCode}/offer`,
-		responseStyle: 'data',
+	const response = await getPropertyOfferApiShopV1HotelsHotelCodeOfferGet({
+		client: externalClient,
 		throwOnError: true,
+		responseStyle: 'data',
+		path: {
+			hotelCode: query.hotelCode,
+		},
 		query: {
 			ArrivalDate: query.arrivalDate,
 			DepartureDate: query.departureDate,
@@ -162,11 +165,11 @@ export const fetchPropertyOffer = async (
 			PromotionCodes: query.promotionCodes ?? undefined,
 			BlockCode: query.blockCode ?? undefined,
 		},
-		headers: buildHeaders(headers),
+		headers: buildHeaders(headers) as any,
 		responseValidator: async (data) => {
 			zGetPropertyOfferApiShopV1HotelsHotelCodeOfferGetResponse.parse(data);
 		},
 	});
 
-	return response;
+	return response as OfferDetailsResponse;
 };

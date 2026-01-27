@@ -173,3 +173,174 @@ export type PutApiBookingsByIdResponses = {
 };
 
 export type PutApiBookingsByIdResponse = PutApiBookingsByIdResponses[keyof PutApiBookingsByIdResponses];
+
+export type GetApiHotelsAvailabilityData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * List of Hotel Codes (CSV)
+         */
+        hotelCodes: string;
+        arrivalDate: string;
+        arrivalDateTo?: string;
+        departureDate: string;
+        adults?: number;
+        children?: number;
+        childrenAges?: string;
+        ratePlanCodes?: string;
+        accessCode?: string;
+        numberOfUnits?: number;
+        rateMode?: string;
+        ratePlanCodeMatchOnly?: boolean;
+        ratePlanType?: string;
+        availableOnly?: boolean;
+        minRate?: number;
+        maxRate?: number;
+        alternateOffers?: string;
+        commissionableStatus?: string;
+        promotionCodes?: string;
+    };
+    url: '/api/hotels/availability';
+};
+
+export type GetApiHotelsAvailabilityErrors = {
+    /**
+     * Default Response
+     */
+    400: {
+        error?: string;
+        details?: Array<unknown>;
+    };
+};
+
+export type GetApiHotelsAvailabilityError = GetApiHotelsAvailabilityErrors[keyof GetApiHotelsAvailabilityErrors];
+
+export type GetApiHotelsAvailabilityResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        roomStays?: Array<{
+            [key: string]: unknown;
+        }>;
+    };
+};
+
+export type GetApiHotelsAvailabilityResponse = GetApiHotelsAvailabilityResponses[keyof GetApiHotelsAvailabilityResponses];
+
+export type GetApiHotelsByHotelCodeOffersData = {
+    body?: never;
+    path: {
+        hotelCode: string;
+    };
+    query: {
+        arrivalDate: string;
+        departureDate: string;
+        adults?: number;
+        children?: number;
+        childrenAges?: string;
+        roomTypes?: string;
+        ratePlanCodes?: string;
+        accessCode?: string;
+        ratePlanType?: string;
+        numberOfUnits?: number;
+        roomTypeMatchOnly?: boolean;
+        ratePlanCodeMatchOnly?: boolean;
+        rateMode?: string;
+        roomAmenity?: string;
+        roomAmenityQuantity?: number;
+        includeAmenities?: boolean;
+        minRate?: number;
+        maxRate?: number;
+        alternateOffers?: string;
+        commissionableStatus?: string;
+        promotionCodes?: string;
+        blockCode?: string;
+    };
+    url: '/api/hotels/{hotelCode}/offers';
+};
+
+export type GetApiHotelsByHotelCodeOffersErrors = {
+    /**
+     * Default Response
+     */
+    400: {
+        error?: string;
+        details?: Array<unknown>;
+    };
+};
+
+export type GetApiHotelsByHotelCodeOffersError = GetApiHotelsByHotelCodeOffersErrors[keyof GetApiHotelsByHotelCodeOffersErrors];
+
+export type GetApiHotelsByHotelCodeOffersResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        roomStays?: Array<{
+            [key: string]: unknown;
+        }>;
+    };
+};
+
+export type GetApiHotelsByHotelCodeOffersResponse = GetApiHotelsByHotelCodeOffersResponses[keyof GetApiHotelsByHotelCodeOffersResponses];
+
+export type GetApiHotelsByHotelCodeOfferData = {
+    body?: never;
+    path: {
+        hotelCode: string;
+    };
+    query: {
+        arrivalDate: string;
+        departureDate: string;
+        adults?: number;
+        children?: number;
+        childrenAges?: string;
+        roomType?: string;
+        ratePlanCode?: string;
+        accessCode?: string;
+        rateMode?: string;
+        numberOfUnits?: number;
+        bookingCode?: string;
+        includeAmenities?: boolean;
+        promotionCodes?: string;
+        blockCode?: string;
+    };
+    url: '/api/hotels/{hotelCode}/offer';
+};
+
+export type GetApiHotelsByHotelCodeOfferErrors = {
+    /**
+     * Default Response
+     */
+    400: {
+        error?: string;
+        details?: Array<unknown>;
+    };
+};
+
+export type GetApiHotelsByHotelCodeOfferError = GetApiHotelsByHotelCodeOfferErrors[keyof GetApiHotelsByHotelCodeOfferErrors];
+
+export type GetApiHotelsByHotelCodeOfferResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        propertyInfo?: {
+            [key: string]: unknown;
+        };
+        availability?: string;
+        roomType?: {
+            [key: string]: unknown;
+        };
+        ratePlan?: {
+            [key: string]: unknown;
+        };
+        offer?: {
+            [key: string]: unknown;
+        };
+    };
+};
+
+export type GetApiHotelsByHotelCodeOfferResponse = GetApiHotelsByHotelCodeOfferResponses[keyof GetApiHotelsByHotelCodeOfferResponses];

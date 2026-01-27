@@ -236,6 +236,415 @@ paths:
                 properties:
                   error:
                     type: string
+  /api/hotels/availability:
+    get:
+      tags:
+        - hotel shop
+      description: Get available hotels from external provider
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: hotelCodes
+          required: true
+          description: List of Hotel Codes (CSV)
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDate
+          required: true
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDateTo
+          required: false
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: departureDate
+          required: true
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: adults
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: children
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: childrenAges
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: accessCode
+          required: false
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: numberOfUnits
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: rateMode
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: ratePlanCodeMatchOnly
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanType
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: availableOnly
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: minRate
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: maxRate
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: alternateOffers
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: commissionableStatus
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: promotionCodes
+          required: false
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roomStays:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                    nullable: true
+        '400':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+  /api/hotels/{hotelCode}/offers:
+    get:
+      tags:
+        - hotel shop
+      description: Get property offers from external provider
+      parameters:
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDate
+          required: true
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: departureDate
+          required: true
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: adults
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: children
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: childrenAges
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomTypes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: accessCode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanType
+          required: false
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: numberOfUnits
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: roomTypeMatchOnly
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: ratePlanCodeMatchOnly
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: rateMode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomAmenity
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: roomAmenityQuantity
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: includeAmenities
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: minRate
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: maxRate
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: alternateOffers
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: commissionableStatus
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: promotionCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: blockCode
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roomStays:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                    nullable: true
+        '400':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+  /api/hotels/{hotelCode}/offer:
+    get:
+      tags:
+        - hotel shop
+      description: Get a property offer from external provider
+      parameters:
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDate
+          required: true
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: departureDate
+          required: true
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: adults
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: children
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: childrenAges
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomType
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanCode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: accessCode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: rateMode
+          required: false
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: numberOfUnits
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: bookingCode
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: includeAmenities
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: promotionCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: blockCode
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  propertyInfo:
+                    type: object
+                    additionalProperties: true
+                    nullable: true
+                  availability:
+                    type: string
+                    nullable: true
+                  roomType:
+                    type: object
+                    additionalProperties: true
+                    nullable: true
+                  ratePlan:
+                    type: object
+                    additionalProperties: true
+                    nullable: true
+                  offer:
+                    type: object
+                    additionalProperties: true
+                    nullable: true
+        '400':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
 tags:
   - name: bookings
     x-displayName: Booking Operations

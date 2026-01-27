@@ -118,3 +118,108 @@ export const zPutApiBookingsByIdResponse = z.object({
     createdAt: z.optional(z.string()),
     updatedAt: z.optional(z.string())
 });
+
+export const zGetApiHotelsAvailabilityData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.object({
+        hotelCodes: z.string(),
+        arrivalDate: z.iso.date(),
+        arrivalDateTo: z.optional(z.iso.date()),
+        departureDate: z.iso.date(),
+        adults: z.optional(z.int().gte(1)),
+        children: z.optional(z.int().gte(0)),
+        childrenAges: z.optional(z.string()),
+        ratePlanCodes: z.optional(z.string()),
+        accessCode: z.optional(z.string()),
+        numberOfUnits: z.optional(z.int().gte(1)),
+        rateMode: z.optional(z.string()),
+        ratePlanCodeMatchOnly: z.optional(z.boolean()),
+        ratePlanType: z.optional(z.string()),
+        availableOnly: z.optional(z.boolean()),
+        minRate: z.optional(z.number()),
+        maxRate: z.optional(z.number()),
+        alternateOffers: z.optional(z.string()),
+        commissionableStatus: z.optional(z.string()),
+        promotionCodes: z.optional(z.string())
+    })
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiHotelsAvailabilityResponse = z.object({
+    roomStays: z.optional(z.array(z.record(z.string(), z.unknown())))
+});
+
+export const zGetApiHotelsByHotelCodeOffersData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        hotelCode: z.string()
+    }),
+    query: z.object({
+        arrivalDate: z.iso.date(),
+        departureDate: z.iso.date(),
+        adults: z.optional(z.int().gte(1)),
+        children: z.optional(z.int().gte(0)),
+        childrenAges: z.optional(z.string()),
+        roomTypes: z.optional(z.string()),
+        ratePlanCodes: z.optional(z.string()),
+        accessCode: z.optional(z.string()),
+        ratePlanType: z.optional(z.string()),
+        numberOfUnits: z.optional(z.int().gte(1)),
+        roomTypeMatchOnly: z.optional(z.boolean()),
+        ratePlanCodeMatchOnly: z.optional(z.boolean()),
+        rateMode: z.optional(z.string()),
+        roomAmenity: z.optional(z.string()),
+        roomAmenityQuantity: z.optional(z.int().gte(0)),
+        includeAmenities: z.optional(z.boolean()),
+        minRate: z.optional(z.number()),
+        maxRate: z.optional(z.number()),
+        alternateOffers: z.optional(z.string()),
+        commissionableStatus: z.optional(z.string()),
+        promotionCodes: z.optional(z.string()),
+        blockCode: z.optional(z.string())
+    })
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiHotelsByHotelCodeOffersResponse = z.object({
+    roomStays: z.optional(z.array(z.record(z.string(), z.unknown())))
+});
+
+export const zGetApiHotelsByHotelCodeOfferData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        hotelCode: z.string()
+    }),
+    query: z.object({
+        arrivalDate: z.iso.date(),
+        departureDate: z.iso.date(),
+        adults: z.optional(z.int().gte(1)),
+        children: z.optional(z.int().gte(0)),
+        childrenAges: z.optional(z.string()),
+        roomType: z.optional(z.string()),
+        ratePlanCode: z.optional(z.string()),
+        accessCode: z.optional(z.string()),
+        rateMode: z.optional(z.string()),
+        numberOfUnits: z.optional(z.int().gte(1)),
+        bookingCode: z.optional(z.string()),
+        includeAmenities: z.optional(z.boolean()),
+        promotionCodes: z.optional(z.string()),
+        blockCode: z.optional(z.string())
+    })
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiHotelsByHotelCodeOfferResponse = z.object({
+    propertyInfo: z.optional(z.record(z.string(), z.unknown())),
+    availability: z.optional(z.string()),
+    roomType: z.optional(z.record(z.string(), z.unknown())),
+    ratePlan: z.optional(z.record(z.string(), z.unknown())),
+    offer: z.optional(z.record(z.string(), z.unknown()))
+});

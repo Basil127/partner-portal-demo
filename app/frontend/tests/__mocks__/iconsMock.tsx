@@ -19,3 +19,6 @@ export const PlugInIcon = Icon;
 export const TableIcon = Icon;
 export const TaskIcon = Icon;
 export const UserCircleIcon = Icon;
+export const SearchIcon = Icon;
+export const PlusIcon = Icon;
+export const CalenderLineIcon = Icon;

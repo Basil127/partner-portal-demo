@@ -8,30 +8,30 @@ import { z } from 'zod';
  * Address information.
  */
 export const zAddress = z.object({
-    addressLine: z.union([
+    addressLine: z.optional(z.union([
         z.array(z.string()),
         z.null()
-    ]).optional(),
-    city: z.union([
+    ])),
+    city: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    postalCode: z.union([
+    ])),
+    postalCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    countryCode: z.union([
+    ])),
+    countryCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    state: z.union([
+    ])),
+    state: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    county: z.union([
+    ])),
+    county: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -40,14 +40,14 @@ export const zAddress = z.object({
  * Reason for cancellation.
  */
 export const zCancelReason = z.object({
-    description: z.union([
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    code: z.union([
+    ])),
+    code: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -56,14 +56,14 @@ export const zCancelReason = z.object({
  * Request to cancel a reservation.
  */
 export const zCancelReservationRequest = z.object({
-    reason: z.union([
+    reason: z.optional(z.union([
         zCancelReason,
         z.null()
-    ]).optional(),
-    reservations: z.union([
-        z.array(z.record(z.unknown())),
+    ])),
+    reservations: z.optional(z.union([
+        z.array(z.record(z.string(), z.unknown())),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -72,14 +72,14 @@ export const zCancelReservationRequest = z.object({
  * Property communication channels.
  */
 export const zCommunications = z.object({
-    phone: z.union([
+    phone: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    email: z.union([
+    ])),
+    email: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -90,7 +90,7 @@ export const zCommunications = z.object({
 export const zContentRoomAmenity = z.object({
     roomAmenity: z.string(),
     description: z.string(),
-    quantity: z.number().int(),
+    quantity: z.int(),
     includeInRate: z.boolean(),
     confirmable: z.boolean()
 });
@@ -101,10 +101,10 @@ export const zContentRoomAmenity = z.object({
  * Description text.
  */
 export const zDescription = z.object({
-    text: z.union([
+    text: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -113,10 +113,10 @@ export const zDescription = z.object({
  * Directions to property.
  */
 export const zDirection = z.object({
-    propertyDirection: z.union([
+    propertyDirection: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -125,66 +125,66 @@ export const zDirection = z.object({
  * Detailed statistics item for distribution summary.
  */
 export const zDistributionReservationSummaryType = z.object({
-    hotelId: z.union([
+    hotelId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    channelCode: z.union([
+    ])),
+    channelCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    enterpriseId: z.union([
+    ])),
+    enterpriseId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    arrivalDate: z.union([
-        z.string().date(),
+    ])),
+    arrivalDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    departureDate: z.union([
-        z.string().date(),
+    ])),
+    departureDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    creationDate: z.union([
-        z.string().datetime(),
+    ])),
+    creationDate: z.optional(z.union([
+        z.iso.datetime(),
         z.null()
-    ]).optional(),
-    lastUpdateDate: z.union([
-        z.string().datetime(),
+    ])),
+    lastUpdateDate: z.optional(z.union([
+        z.iso.datetime(),
         z.null()
-    ]).optional(),
-    cancellationDate: z.union([
-        z.string().datetime(),
+    ])),
+    cancellationDate: z.optional(z.union([
+        z.iso.datetime(),
         z.null()
-    ]).optional(),
-    numberOfRooms: z.union([
-        z.number().int(),
+    ])),
+    numberOfRooms: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional(),
-    reservationStatus: z.union([
+    ])),
+    reservationStatus: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    confirmationId: z.union([
+    ])),
+    confirmationId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    legNumber: z.union([
+    ])),
+    legNumber: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    reservationId: z.union([
+    ])),
+    reservationId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    guestName: z.union([
+    ])),
+    guestName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    creatorId: z.union([
+    ])),
+    creatorId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -193,14 +193,14 @@ export const zDistributionReservationSummaryType = z.object({
  * Response wrapper for distribution statistics.
  */
 export const zCheckDistributionReservationsSummary = z.object({
-    checkReservations: z.union([
+    checkReservations: z.optional(z.union([
         z.array(zDistributionReservationSummaryType),
         z.null()
-    ]).optional(),
-    hasMore: z.union([
+    ])),
+    hasMore: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -211,7 +211,7 @@ export const zCheckDistributionReservationsSummary = z.object({
  * It returned when accessing dummy models from the API.
  */
 export const zDummyModelDto = z.object({
-    id: z.number().int(),
+    id: z.int(),
     name: z.string()
 });
 
@@ -230,14 +230,14 @@ export const zDummyModelInputDto = z.object({
  * General property information.
  */
 export const zGeneralInformation = z.object({
-    checkInTime: z.union([
+    checkInTime: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    checkOutTime: z.union([
+    ])),
+    checkOutTime: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -246,14 +246,14 @@ export const zGeneralInformation = z.object({
  * Reservation guarantee info.
  */
 export const zGuarantee = z.object({
-    guaranteeCode: z.union([
+    guaranteeCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    shortDescription: z.union([
+    ])),
+    shortDescription: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -262,14 +262,14 @@ export const zGuarantee = z.object({
  * Guest counts.
  */
 export const zGuestCounts = z.object({
-    adults: z.union([
-        z.number().int(),
+    adults: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional().default(1),
-    children: z.union([
-        z.number().int(),
+    ])).default(1),
+    children: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional().default(0)
+    ])).default(0)
 });
 
 /**
@@ -290,14 +290,14 @@ export const zHotelAvailabilityStatus = z.enum([
  * Geographic location.
  */
 export const zLocation = z.object({
-    latitude: z.union([
+    latitude: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    longitude: z.union([
+    ])),
+    longitude: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -317,14 +317,14 @@ export const zMessage = z.object({
  * Such as number of guests, rooms occupied, etc.
  */
 export const zNumericCategorySummaryType = z.object({
-    value: z.union([
+    value: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    code: z.union([
+    ])),
+    code: z.optional(z.union([
         z.string().max(40),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -333,10 +333,10 @@ export const zNumericCategorySummaryType = z.object({
  * Details on the occupancy of the room type.
  */
 export const zOccupancy = z.object({
-    minOccupancy: z.number().int(),
-    maxOccupancy: z.number().int(),
-    maxAdultOccupancy: z.number().int(),
-    maxChildOccupancy: z.number().int()
+    minOccupancy: z.int(),
+    maxOccupancy: z.int(),
+    maxAdultOccupancy: z.int(),
+    maxChildOccupancy: z.int()
 });
 
 /**
@@ -353,7 +353,7 @@ export const zContentRoomType = z.object({
         z.string(),
         z.null()
     ]),
-    description: z.array(z.string()).optional().default([]),
+    description: z.optional(z.array(z.string())).default([]),
     roomName: z.union([
         z.string(),
         z.null()
@@ -362,7 +362,7 @@ export const zContentRoomType = z.object({
         z.string(),
         z.null()
     ]),
-    roomAmenities: z.array(zContentRoomAmenity).optional().default([]),
+    roomAmenities: z.optional(z.array(zContentRoomAmenity)).default([]),
     roomViewType: z.union([
         z.string(),
         z.null()
@@ -375,14 +375,14 @@ export const zContentRoomType = z.object({
         z.boolean(),
         z.null()
     ]),
-    occupancy: z.union([
+    occupancy: z.optional(z.union([
         zOccupancy,
         z.null()
-    ]).optional(),
-    numberOfUnits: z.union([
-        z.number().int(),
+    ])),
+    numberOfUnits: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -391,22 +391,22 @@ export const zContentRoomType = z.object({
  * Detailed room type for an offer.
  */
 export const zOfferDetailsRoomType = z.object({
-    roomTypeCode: z.union([
+    roomTypeCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    roomTypeName: z.union([
+    ])),
+    roomTypeName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    availabilityStatus: z.union([
+    ])),
+    availabilityStatus: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -415,14 +415,14 @@ export const zOfferDetailsRoomType = z.object({
  * Meal plan details.
  */
 export const zOfferMealPlan = z.object({
-    code: z.union([
+    code: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -431,18 +431,18 @@ export const zOfferMealPlan = z.object({
  * Point of interest information.
  */
 export const zOfferPointOfInterest = z.object({
-    name: z.union([
+    name: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    distance: z.union([
+    ])),
+    distance: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    unit: z.union([
+    ])),
+    unit: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -451,10 +451,10 @@ export const zOfferPointOfInterest = z.object({
  * Rate mode details.
  */
 export const zOfferRateMode = z.object({
-    type: z.union([
+    type: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -463,30 +463,30 @@ export const zOfferRateMode = z.object({
  * Rate range information.
  */
 export const zOfferMinMaxTotalType = z.object({
-    amountBeforeTax: z.union([
+    amountBeforeTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    amountAfterTax: z.union([
+    ])),
+    amountAfterTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    currencyCode: z.union([
+    ])),
+    currencyCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    rateMode: z.union([
+    ])),
+    rateMode: z.optional(z.union([
         zOfferRateMode,
         z.null()
-    ]).optional(),
-    isCommissionable: z.union([
+    ])),
+    isCommissionable: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    hasRateChange: z.union([
+    ])),
+    hasRateChange: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -495,18 +495,18 @@ export const zOfferMinMaxTotalType = z.object({
  * Commission info for a rate plan.
  */
 export const zOfferRatePlanCommission = z.object({
-    percent: z.union([
+    percent: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    amount: z.union([
+    ])),
+    amount: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    currencyCode: z.union([
+    ])),
+    currencyCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -515,18 +515,18 @@ export const zOfferRatePlanCommission = z.object({
  * The daily rate of the offer.
  */
 export const zOfferTotalType = z.object({
-    amountBeforeTax: z.union([
+    amountBeforeTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    amountAfterTax: z.union([
+    ])),
+    amountAfterTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    currencyCode: z.union([
+    ])),
+    currencyCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -535,14 +535,14 @@ export const zOfferTotalType = z.object({
  * Rate plan information of the offer.
  */
 export const zOfferOverallRateInformation = z.object({
-    rateModeAmount: z.union([
+    rateModeAmount: z.optional(z.union([
         zOfferTotalType,
         z.null()
-    ]).optional(),
-    rateMode: z.union([
+    ])),
+    rateMode: z.optional(z.union([
         zOfferRateMode,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -551,22 +551,22 @@ export const zOfferOverallRateInformation = z.object({
  * Details on the rate plan of the offer.
  */
 export const zOfferRateInformation = z.object({
-    rate: z.union([
+    rate: z.optional(z.union([
         zOfferOverallRateInformation,
         z.null()
-    ]).optional(),
-    cancellationPolicies: z.union([
-        z.array(z.record(z.unknown())),
+    ])),
+    cancellationPolicies: z.optional(z.union([
+        z.array(z.record(z.string(), z.unknown())),
         z.null()
-    ]).optional(),
-    guaranteeRequirement: z.union([
+    ])),
+    guaranteeRequirement: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    depositPolicies: z.union([
-        z.array(z.record(z.unknown())),
+    ])),
+    depositPolicies: z.optional(z.union([
+        z.array(z.record(z.string(), z.unknown())),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -575,18 +575,18 @@ export const zOfferRateInformation = z.object({
  * Total cost including taxes.
  */
 export const zOfferTotalTypeWithTaxes = z.object({
-    amountBeforeTax: z.union([
+    amountBeforeTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    amountAfterTax: z.union([
+    ])),
+    amountAfterTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    currencyCode: z.union([
+    ])),
+    currencyCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -595,14 +595,14 @@ export const zOfferTotalTypeWithTaxes = z.object({
  * Guest profile definition.
  */
 export const zProfile = z.object({
-    customer: z.union([
-        z.record(z.unknown()),
+    customer: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
         z.null()
-    ]).optional(),
-    profileType: z.union([
+    ])),
+    profileType: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional().default('Guest')
+    ])).default('Guest')
 });
 
 /**
@@ -611,14 +611,14 @@ export const zProfile = z.object({
  * Promotion code item.
  */
 export const zPromotionCodeItem = z.object({
-    code: z.union([
+    code: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    name: z.union([
+    ])),
+    name: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -627,14 +627,14 @@ export const zPromotionCodeItem = z.object({
  * Hotel amenity information.
  */
 export const zPropertyOffersHotelAmenity = z.object({
-    code: z.union([
+    code: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -643,34 +643,34 @@ export const zPropertyOffersHotelAmenity = z.object({
  * Property info for offers, extends search info.
  */
 export const zPropertyOffersPropertyInfo = z.object({
-    hotelCode: z.union([
+    hotelCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    hotelName: z.union([
+    ])),
+    hotelName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    chainCode: z.union([
+    ])),
+    chainCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    isAlternate: z.union([
+    ])),
+    isAlternate: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    address: z.union([
+    ])),
+    address: z.optional(z.union([
         zAddress,
         z.null()
-    ]).optional(),
-    propertyAmenities: z.union([
-        z.array(z.record(z.unknown())),
+    ])),
+    propertyAmenities: z.optional(z.union([
+        z.array(z.record(z.string(), z.unknown())),
         z.null()
-    ]).optional(),
-    distance: z.union([
-        z.record(z.unknown()),
+    ])),
+    distance: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -679,22 +679,22 @@ export const zPropertyOffersPropertyInfo = z.object({
  * Room type details for offers.
  */
 export const zPropertyOffersRoomType = z.object({
-    roomTypeCode: z.union([
+    roomTypeCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    roomTypeName: z.union([
+    ])),
+    roomTypeName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    availabilityStatus: z.union([
+    ])),
+    availabilityStatus: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -703,22 +703,22 @@ export const zPropertyOffersRoomType = z.object({
  * Property info for search results.
  */
 export const zPropertySearchPropertyInfo = z.object({
-    hotelCode: z.union([
+    hotelCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    hotelName: z.union([
+    ])),
+    hotelName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    chainCode: z.union([
+    ])),
+    chainCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    isAlternate: z.union([
+    ])),
+    isAlternate: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -727,34 +727,34 @@ export const zPropertySearchPropertyInfo = z.object({
  * Rate plan in search results.
  */
 export const zPropertySearchRatePlan = z.object({
-    ratePlanCode: z.union([
+    ratePlanCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanName: z.union([
+    ])),
+    ratePlanName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanType: z.union([
+    ])),
+    ratePlanType: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    identificationRequired: z.union([
+    ])),
+    identificationRequired: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    accountId: z.union([
+    ])),
+    accountId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    availabilityStatus: z.union([
+    ])),
+    availabilityStatus: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    additionalDetails: z.union([
-        z.record(z.unknown()),
+    ])),
+    additionalDetails: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -763,26 +763,26 @@ export const zPropertySearchRatePlan = z.object({
  * Room stay details for property search.
  */
 export const zPropertySearchRoomStay = z.object({
-    propertyInfo: z.union([
+    propertyInfo: z.optional(z.union([
         zPropertySearchPropertyInfo,
         z.null()
-    ]).optional(),
-    availability: z.union([
+    ])),
+    availability: z.optional(z.union([
         zHotelAvailabilityStatus,
         z.null()
-    ]).optional(),
-    ratePlans: z.union([
+    ])),
+    ratePlans: z.optional(z.union([
         z.array(zPropertySearchRatePlan),
         z.null()
-    ]).optional(),
-    minRate: z.union([
+    ])),
+    minRate: z.optional(z.union([
         zOfferMinMaxTotalType,
         z.null()
-    ]).optional(),
-    maxRate: z.union([
+    ])),
+    maxRate: z.optional(z.union([
         zOfferMinMaxTotalType,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -791,10 +791,10 @@ export const zPropertySearchRoomStay = z.object({
  * Response for property search.
  */
 export const zPropertySearchResponse = z.object({
-    roomStays: z.union([
+    roomStays: z.optional(z.union([
         z.array(zPropertySearchRoomStay),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -803,14 +803,14 @@ export const zPropertySearchResponse = z.object({
  * Package associated with a rate.
  */
 export const zRatePackage = z.object({
-    code: z.union([
+    code: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -819,46 +819,46 @@ export const zRatePackage = z.object({
  * Offer details.
  */
 export const zOffer = z.object({
-    bookingCode: z.union([
+    bookingCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    offerName: z.union([
+    ])),
+    offerName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    availabilityStatus: z.union([
+    ])),
+    availabilityStatus: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    roomType: z.union([
+    ])),
+    roomType: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanCode: z.union([
+    ])),
+    ratePlanCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    rateChangeDuringStay: z.union([
+    ])),
+    rateChangeDuringStay: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    rateInformation: z.union([
+    ])),
+    rateInformation: z.optional(z.union([
         zOfferRateInformation,
         z.null()
-    ]).optional(),
-    packages: z.union([
+    ])),
+    packages: z.optional(z.union([
         z.array(zRatePackage),
         z.null()
-    ]).optional(),
-    total: z.union([
+    ])),
+    total: z.optional(z.union([
         zOfferTotalTypeWithTaxes,
         z.null()
-    ]).optional(),
-    blockInformation: z.union([
-        z.record(z.unknown()),
+    ])),
+    blockInformation: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -867,66 +867,66 @@ export const zOffer = z.object({
  * Detailed rate plan for an offer.
  */
 export const zOfferDetailsRatePlan = z.object({
-    ratePlanCode: z.union([
+    ratePlanCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanName: z.union([
+    ])),
+    ratePlanName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanType: z.union([
+    ])),
+    ratePlanType: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    accessCode: z.union([
+    ])),
+    accessCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    identificationRequired: z.union([
+    ])),
+    identificationRequired: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    accountId: z.union([
+    ])),
+    accountId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanLevel: z.union([
+    ])),
+    ratePlanLevel: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanCategory: z.union([
+    ])),
+    ratePlanCategory: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    gdsDescription: z.union([
+    ])),
+    gdsDescription: z.optional(z.union([
         zDescription,
         z.null()
-    ]).optional(),
-    commissionable: z.union([
+    ])),
+    commissionable: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    commissionDescription: z.union([
+    ])),
+    commissionDescription: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    commission: z.union([
+    ])),
+    commission: z.optional(z.union([
         zOfferRatePlanCommission,
         z.null()
-    ]).optional(),
-    packages: z.union([
+    ])),
+    packages: z.optional(z.union([
         z.array(zRatePackage),
         z.null()
-    ]).optional(),
-    mealPlan: z.union([
+    ])),
+    mealPlan: z.optional(z.union([
         zOfferMealPlan,
         z.null()
-    ]).optional(),
-    promotionCodes: z.union([
+    ])),
+    promotionCodes: z.optional(z.union([
         z.array(zPromotionCodeItem),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -935,66 +935,66 @@ export const zOfferDetailsRatePlan = z.object({
  * Rate plan details for offers. Combines SearchRatePlan and more.
  */
 export const zPropertyOffersRatePlan = z.object({
-    ratePlanCode: z.union([
+    ratePlanCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanName: z.union([
+    ])),
+    ratePlanName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanType: z.union([
+    ])),
+    ratePlanType: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    accessCode: z.union([
+    ])),
+    accessCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    identificationRequired: z.union([
+    ])),
+    identificationRequired: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    accountId: z.union([
+    ])),
+    accountId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanLevel: z.union([
+    ])),
+    ratePlanLevel: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanCategory: z.union([
+    ])),
+    ratePlanCategory: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    gdsDescription: z.union([
+    ])),
+    gdsDescription: z.optional(z.union([
         zDescription,
         z.null()
-    ]).optional(),
-    commissionable: z.union([
+    ])),
+    commissionable: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    commissionDescription: z.union([
+    ])),
+    commissionDescription: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    commission: z.union([
+    ])),
+    commission: z.optional(z.union([
         zOfferRatePlanCommission,
         z.null()
-    ]).optional(),
-    packages: z.union([
+    ])),
+    packages: z.optional(z.union([
         z.array(zRatePackage),
         z.null()
-    ]).optional(),
-    mealPlan: z.union([
+    ])),
+    mealPlan: z.optional(z.union([
         zOfferMealPlan,
         z.null()
-    ]).optional(),
-    promotionCodes: z.union([
+    ])),
+    promotionCodes: z.optional(z.union([
         z.array(zPromotionCodeItem),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1003,18 +1003,18 @@ export const zPropertyOffersRatePlan = z.object({
  * Rate total definition.
  */
 export const zRateTotal = z.object({
-    amountBeforeTax: z.union([
+    amountBeforeTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    amountAfterTax: z.union([
+    ])),
+    amountAfterTax: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    currencyCode: z.union([
+    ])),
+    currencyCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1023,22 +1023,22 @@ export const zRateTotal = z.object({
  * Daily rate info.
  */
 export const zRate = z.object({
-    base: z.union([
+    base: z.optional(z.union([
         zRateTotal,
         z.null()
-    ]).optional(),
-    total: z.union([
+    ])),
+    total: z.optional(z.union([
         zRateTotal,
         z.null()
-    ]).optional(),
-    start: z.union([
-        z.string().date(),
+    ])),
+    start: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    end: z.union([
-        z.string().date(),
+    ])),
+    end: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1047,30 +1047,30 @@ export const zRate = z.object({
  * Simplified reservation summary.
  */
 export const zReservationSummary = z.object({
-    reservationId: z.union([
+    reservationId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    confirmationNumber: z.union([
+    ])),
+    confirmationNumber: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    guestName: z.union([
+    ])),
+    guestName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    arrivalDate: z.union([
-        z.string().date(),
+    ])),
+    arrivalDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    departureDate: z.union([
-        z.string().date(),
+    ])),
+    departureDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    status: z.union([
+    ])),
+    status: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1079,10 +1079,10 @@ export const zReservationSummary = z.object({
  * Response containing a list of reservation summaries.
  */
 export const zReservationSummaryResponse = z.object({
-    reservations: z.union([
+    reservations: z.optional(z.union([
         z.array(zReservationSummary),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1091,14 +1091,14 @@ export const zReservationSummaryResponse = z.object({
  * Booking restriction.
  */
 export const zRestriction = z.object({
-    code: z.union([
+    code: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1107,30 +1107,30 @@ export const zRestriction = z.object({
  * Room stay details for property offers.
  */
 export const zPropertyOffersRoomStay = z.object({
-    propertyInfo: z.union([
+    propertyInfo: z.optional(z.union([
         zPropertyOffersPropertyInfo,
         z.null()
-    ]).optional(),
-    availability: z.union([
+    ])),
+    availability: z.optional(z.union([
         zHotelAvailabilityStatus,
         z.null()
-    ]).optional(),
-    restrictions: z.union([
+    ])),
+    restrictions: z.optional(z.union([
         z.array(zRestriction),
         z.null()
-    ]).optional(),
-    roomTypes: z.union([
+    ])),
+    roomTypes: z.optional(z.union([
         z.array(zPropertyOffersRoomType),
         z.null()
-    ]).optional(),
-    ratePlans: z.union([
+    ])),
+    ratePlans: z.optional(z.union([
         z.array(zPropertyOffersRatePlan),
         z.null()
-    ]).optional(),
-    offers: z.union([
+    ])),
+    offers: z.optional(z.union([
         z.array(zOffer),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1139,10 +1139,10 @@ export const zPropertyOffersRoomStay = z.object({
  * Response for property offers search.
  */
 export const zPropertyOffersResponse = z.object({
-    roomStays: z.union([
+    roomStays: z.optional(z.union([
         z.array(zPropertyOffersRoomStay),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1153,18 +1153,18 @@ export const zPropertyOffersResponse = z.object({
  * Such as Room Revenue, Food and Beverage Revenue.
  */
 export const zRevenueCategorySummaryType = z.object({
-    code: z.union([
+    code: z.optional(z.union([
         z.string().max(40),
         z.null()
-    ]).optional(),
-    amount: z.union([
+    ])),
+    amount: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    currencyCode: z.union([
+    ])),
+    currencyCode: z.optional(z.union([
         z.string().length(3),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1173,34 +1173,34 @@ export const zRevenueCategorySummaryType = z.object({
  * Room rate details.
  */
 export const zRoomRateInput = z.object({
-    total: z.union([
+    total: z.optional(z.union([
         zRateTotal,
         z.null()
-    ]).optional(),
-    rates: z.union([
-        z.record(z.array(zRate)),
+    ])),
+    rates: z.optional(z.union([
+        z.record(z.string(), z.array(zRate)),
         z.null()
-    ]).optional(),
-    roomType: z.union([
+    ])),
+    roomType: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanCode: z.union([
+    ])),
+    ratePlanCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    start: z.union([
-        z.string().date(),
+    ])),
+    start: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    end: z.union([
-        z.string().date(),
+    ])),
+    end: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    guestCounts: z.union([
+    ])),
+    guestCounts: z.optional(z.union([
         zGuestCounts,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1209,34 +1209,34 @@ export const zRoomRateInput = z.object({
  * Room rate details.
  */
 export const zRoomRateOutput = z.object({
-    total: z.union([
+    total: z.optional(z.union([
         zRateTotal,
         z.null()
-    ]).optional(),
-    rates: z.union([
-        z.record(z.array(zRate)),
+    ])),
+    rates: z.optional(z.union([
+        z.record(z.string(), z.array(zRate)),
         z.null()
-    ]).optional(),
-    roomType: z.union([
+    ])),
+    roomType: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    ratePlanCode: z.union([
+    ])),
+    ratePlanCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    start: z.union([
-        z.string().date(),
+    ])),
+    start: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    end: z.union([
-        z.string().date(),
+    ])),
+    end: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    guestCounts: z.union([
+    ])),
+    guestCounts: z.optional(z.union([
         zGuestCounts,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1245,26 +1245,26 @@ export const zRoomRateOutput = z.object({
  * Room stay details.
  */
 export const zRoomStayInput = z.object({
-    arrivalDate: z.union([
-        z.string().date(),
+    arrivalDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    departureDate: z.union([
-        z.string().date(),
+    ])),
+    departureDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    guarantee: z.union([
+    ])),
+    guarantee: z.optional(z.union([
         zGuarantee,
         z.null()
-    ]).optional(),
-    roomRates: z.union([
+    ])),
+    roomRates: z.optional(z.union([
         z.array(zRoomRateInput),
         z.null()
-    ]).optional(),
-    guestCounts: z.union([
+    ])),
+    guestCounts: z.optional(z.union([
         zGuestCounts,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1273,26 +1273,26 @@ export const zRoomStayInput = z.object({
  * Room stay details.
  */
 export const zRoomStayOutput = z.object({
-    arrivalDate: z.union([
-        z.string().date(),
+    arrivalDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    departureDate: z.union([
-        z.string().date(),
+    ])),
+    departureDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    guarantee: z.union([
+    ])),
+    guarantee: z.optional(z.union([
         zGuarantee,
         z.null()
-    ]).optional(),
-    roomRates: z.union([
+    ])),
+    roomRates: z.optional(z.union([
         z.array(zRoomRateOutput),
         z.null()
-    ]).optional(),
-    guestCounts: z.union([
+    ])),
+    guestCounts: z.optional(z.union([
         zGuestCounts,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1301,30 +1301,30 @@ export const zRoomStayOutput = z.object({
  * Response for room types information.
  */
 export const zRoomTypesResponse = z.object({
-    roomTypes: z.union([
+    roomTypes: z.optional(z.union([
         z.array(zContentRoomType),
         z.null()
-    ]).optional(),
-    count: z.union([
-        z.number().int(),
+    ])),
+    count: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional(),
-    hasMore: z.union([
+    ])),
+    hasMore: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    limit: z.union([
-        z.number().int(),
+    ])),
+    limit: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional(),
-    offset: z.union([
-        z.number().int(),
+    ])),
+    offset: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional(),
-    totalResults: z.union([
-        z.number().int(),
+    ])),
+    totalResults: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1335,22 +1335,22 @@ export const zRoomTypesResponse = z.object({
  * It is a set containing revenue category and number category summaries.
  */
 export const zStatisticSetType = z.object({
-    revenue: z.union([
+    revenue: z.optional(z.union([
         z.array(zRevenueCategorySummaryType).max(4000),
         z.null()
-    ]).optional(),
-    inventory: z.union([
+    ])),
+    inventory: z.optional(z.union([
         z.array(zNumericCategorySummaryType).max(4000),
         z.null()
-    ]).optional(),
-    statisticDate: z.union([
-        z.string().date(),
+    ])),
+    statisticDate: z.optional(z.union([
+        z.iso.date(),
         z.null()
-    ]).optional(),
-    weekendDate: z.union([
+    ])),
+    weekendDate: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1361,26 +1361,26 @@ export const zStatisticSetType = z.object({
  * Data in the other elements has been gathered for these.
  */
 export const zStatisticCodeType = z.object({
-    statisticDate: z.union([
+    statisticDate: z.optional(z.union([
         z.array(zStatisticSetType).max(4000),
         z.null()
-    ]).optional(),
-    statCode: z.union([
+    ])),
+    statCode: z.optional(z.union([
         z.string().max(20),
         z.null()
-    ]).optional(),
-    statCategoryCode: z.union([
+    ])),
+    statCategoryCode: z.optional(z.union([
         z.string().max(40),
         z.null()
-    ]).optional(),
-    statCodeClass: z.union([
+    ])),
+    statCodeClass: z.optional(z.union([
         z.string().max(40),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string().max(2000),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1389,22 +1389,22 @@ export const zStatisticCodeType = z.object({
  * Defines all details needed to create a statistical report.
  */
 export const zStatisticType = z.object({
-    statistics: z.union([
+    statistics: z.optional(z.union([
         z.array(zStatisticCodeType).max(4000),
         z.null()
-    ]).optional(),
-    hotelName: z.union([
+    ])),
+    hotelName: z.optional(z.union([
         z.string().max(80),
         z.null()
-    ]).optional(),
-    reportCode: z.union([
+    ])),
+    reportCode: z.optional(z.union([
         z.string().max(100),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string().max(2000),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1413,14 +1413,14 @@ export const zStatisticType = z.object({
  * Transportation services.
  */
 export const zTransportation = z.object({
-    type: z.union([
+    type: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    description: z.union([
+    ])),
+    description: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1429,54 +1429,54 @@ export const zTransportation = z.object({
  * Detailed property info for an offer.
  */
 export const zOfferDetailsPropertyInfo = z.object({
-    hotelCode: z.union([
+    hotelCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    hotelName: z.union([
+    ])),
+    hotelName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    chainCode: z.union([
+    ])),
+    chainCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    isAlternate: z.union([
+    ])),
+    isAlternate: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional(),
-    address: z.union([
+    ])),
+    address: z.optional(z.union([
         zAddress,
         z.null()
-    ]).optional(),
-    propertyAmenities: z.union([
-        z.array(z.record(z.unknown())),
+    ])),
+    propertyAmenities: z.optional(z.union([
+        z.array(z.record(z.string(), z.unknown())),
         z.null()
-    ]).optional(),
-    distance: z.union([
-        z.record(z.unknown()),
+    ])),
+    distance: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
         z.null()
-    ]).optional(),
-    generalInformation: z.union([
+    ])),
+    generalInformation: z.optional(z.union([
         zGeneralInformation,
         z.null()
-    ]).optional(),
-    communications: z.union([
+    ])),
+    communications: z.optional(z.union([
         zCommunications,
         z.null()
-    ]).optional(),
-    transportations: z.union([
+    ])),
+    transportations: z.optional(z.union([
         z.array(zTransportation),
         z.null()
-    ]).optional(),
-    direction: z.union([
+    ])),
+    direction: z.optional(z.union([
         zDirection,
         z.null()
-    ]).optional(),
-    location: z.union([
+    ])),
+    location: z.optional(z.union([
         zLocation,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1485,26 +1485,26 @@ export const zOfferDetailsPropertyInfo = z.object({
  * Response for a single offer detail.
  */
 export const zOfferDetailsResponse = z.object({
-    propertyInfo: z.union([
+    propertyInfo: z.optional(z.union([
         zOfferDetailsPropertyInfo,
         z.null()
-    ]).optional(),
-    availability: z.union([
+    ])),
+    availability: z.optional(z.union([
         zHotelAvailabilityStatus,
         z.null()
-    ]).optional(),
-    roomType: z.union([
+    ])),
+    roomType: z.optional(z.union([
         zOfferDetailsRoomType,
         z.null()
-    ]).optional(),
-    ratePlan: z.union([
+    ])),
+    ratePlan: z.optional(z.union([
         zOfferDetailsRatePlan,
         z.null()
-    ]).optional(),
-    offer: z.union([
+    ])),
+    offer: z.optional(z.union([
         zOffer,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1513,14 +1513,14 @@ export const zOfferDetailsResponse = z.object({
  * Unique ID definition.
  */
 export const zUniqueId = z.object({
-    id: z.union([
+    id: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    type: z.union([
+    ])),
+    type: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1529,18 +1529,18 @@ export const zUniqueId = z.object({
  * Details of a canceled reservation.
  */
 export const zCancelReservationDetails = z.object({
-    reservationIdList: z.union([
+    reservationIdList: z.optional(z.union([
         z.array(zUniqueId),
         z.null()
-    ]).optional(),
-    cancellationNumber: z.union([
+    ])),
+    cancellationNumber: z.optional(z.union([
         zUniqueId,
         z.null()
-    ]).optional(),
-    status: z.union([
+    ])),
+    status: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional().default('Cancelled')
+    ])).default('Cancelled')
 });
 
 /**
@@ -1549,14 +1549,14 @@ export const zCancelReservationDetails = z.object({
  * Profile info containing profile details.
  */
 export const zProfileInfo = z.object({
-    profileIdList: z.union([
+    profileIdList: z.optional(z.union([
         z.array(zUniqueId),
         z.null()
-    ]).optional(),
-    profile: z.union([
+    ])),
+    profile: z.optional(z.union([
         zProfile,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1565,14 +1565,14 @@ export const zProfileInfo = z.object({
  * Guest associated with a reservation.
  */
 export const zReservationGuestInput = z.object({
-    profileInfo: z.union([
+    profileInfo: z.optional(z.union([
         zProfileInfo,
         z.null()
-    ]).optional(),
-    primary: z.union([
+    ])),
+    primary: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional().default(true)
+    ])).default(true)
 });
 
 /**
@@ -1581,30 +1581,30 @@ export const zReservationGuestInput = z.object({
  * Reservation model.
  */
 export const zReservationInput = z.object({
-    reservationIdList: z.union([
+    reservationIdList: z.optional(z.union([
         z.array(zUniqueId),
         z.null()
-    ]).optional(),
-    roomStay: z.union([
+    ])),
+    roomStay: z.optional(z.union([
         zRoomStayInput,
         z.null()
-    ]).optional(),
-    reservationGuests: z.union([
+    ])),
+    reservationGuests: z.optional(z.union([
         z.array(zReservationGuestInput),
         z.null()
-    ]).optional(),
-    hotelId: z.union([
+    ])),
+    hotelId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    reservationStatus: z.union([
+    ])),
+    reservationStatus: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    createDateTime: z.union([
-        z.string().datetime(),
+    ])),
+    createDateTime: z.optional(z.union([
+        z.iso.datetime(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1613,7 +1613,7 @@ export const zReservationInput = z.object({
  * Request to create a reservation.
  */
 export const zCreateReservationRequest = z.object({
-    reservations: z.record(z.array(zReservationInput))
+    reservations: z.record(z.string(), z.array(zReservationInput))
 });
 
 /**
@@ -1622,14 +1622,14 @@ export const zCreateReservationRequest = z.object({
  * Guest associated with a reservation.
  */
 export const zReservationGuestOutput = z.object({
-    profileInfo: z.union([
+    profileInfo: z.optional(z.union([
         zProfileInfo,
         z.null()
-    ]).optional(),
-    primary: z.union([
+    ])),
+    primary: z.optional(z.union([
         z.boolean(),
         z.null()
-    ]).optional().default(true)
+    ])).default(true)
 });
 
 /**
@@ -1638,30 +1638,30 @@ export const zReservationGuestOutput = z.object({
  * Reservation model.
  */
 export const zReservationOutput = z.object({
-    reservationIdList: z.union([
+    reservationIdList: z.optional(z.union([
         z.array(zUniqueId),
         z.null()
-    ]).optional(),
-    roomStay: z.union([
+    ])),
+    roomStay: z.optional(z.union([
         zRoomStayOutput,
         z.null()
-    ]).optional(),
-    reservationGuests: z.union([
+    ])),
+    reservationGuests: z.optional(z.union([
         z.array(zReservationGuestOutput),
         z.null()
-    ]).optional(),
-    hotelId: z.union([
+    ])),
+    hotelId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    reservationStatus: z.union([
+    ])),
+    reservationStatus: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    createDateTime: z.union([
-        z.string().datetime(),
+    ])),
+    createDateTime: z.optional(z.union([
+        z.iso.datetime(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1670,17 +1670,17 @@ export const zReservationOutput = z.object({
  * Response containing a list of reservations.
  */
 export const zReservationListResponse = z.object({
-    reservations: z.union([
-        z.record(z.array(zReservationOutput)),
+    reservations: z.optional(z.union([
+        z.record(z.string(), z.array(zReservationOutput)),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
  * ValidationError
  */
 export const zValidationError = z.object({
-    loc: z.array(z.union([z.string(), z.number().int()])),
+    loc: z.array(z.union([z.string(), z.int()])),
     msg: z.string(),
     type: z.string()
 });
@@ -1689,7 +1689,7 @@ export const zValidationError = z.object({
  * HTTPValidationError
  */
 export const zHttpValidationError = z.object({
-    detail: z.array(zValidationError).optional()
+    detail: z.optional(z.array(zValidationError))
 });
 
 /**
@@ -1698,26 +1698,26 @@ export const zHttpValidationError = z.object({
  * Address information.
  */
 export const zOperaclone2WebApiContentSchemaAddress = z.object({
-    lines: z.union([
+    lines: z.optional(z.union([
         z.array(z.string()),
         z.null()
-    ]).optional(),
-    city: z.union([
+    ])),
+    city: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    postalCode: z.union([
+    ])),
+    postalCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    countryCode: z.union([
+    ])),
+    countryCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    state: z.union([
+    ])),
+    state: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1726,74 +1726,74 @@ export const zOperaclone2WebApiContentSchemaAddress = z.object({
  * Property information details.
  */
 export const zContentPropertyInfo = z.object({
-    hotelId: z.union([
+    hotelId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    enterpriseId: z.union([
+    ])),
+    enterpriseId: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    hotelCode: z.union([
+    ])),
+    hotelCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    hotelName: z.union([
+    ])),
+    hotelName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    hotelDescription: z.union([
+    ])),
+    hotelDescription: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    chainCode: z.union([
+    ])),
+    chainCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    clusterCode: z.union([
+    ])),
+    clusterCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    address: z.union([
+    ])),
+    address: z.optional(z.union([
         zOperaclone2WebApiContentSchemaAddress,
         z.null()
-    ]).optional(),
-    latitude: z.union([
+    ])),
+    latitude: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    longitude: z.union([
+    ])),
+    longitude: z.optional(z.union([
         z.number(),
         z.null()
-    ]).optional(),
-    propertyAmenities: z.union([
+    ])),
+    propertyAmenities: z.optional(z.union([
         z.array(zPropertyOffersHotelAmenity),
         z.null()
-    ]).optional(),
-    pointOfInterest: z.union([
+    ])),
+    pointOfInterest: z.optional(z.union([
         z.array(zOfferPointOfInterest),
         z.null()
-    ]).optional(),
-    marketingMessage: z.union([
+    ])),
+    marketingMessage: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    currencyCode: z.union([
+    ])),
+    currencyCode: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    primaryLanguage: z.union([
+    ])),
+    primaryLanguage: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    totalNumberOfRooms: z.union([
-        z.number().int(),
+    ])),
+    totalNumberOfRooms: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional(),
-    petPolicy: z.union([
+    ])),
+    petPolicy: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1802,10 +1802,10 @@ export const zContentPropertyInfo = z.object({
  * Response for property information.
  */
 export const zPropertyInfoResponse = z.object({
-    propertyInfo: z.union([
+    propertyInfo: z.optional(z.union([
         zContentPropertyInfo,
         z.null()
-    ]).optional()
+    ]))
 });
 
 /**
@@ -1816,18 +1816,18 @@ export const zPropertyInfoResponse = z.object({
 export const zPropertySnippet = z.object({
     hotelId: z.string(),
     hotelCode: z.string(),
-    hotelName: z.union([
+    hotelName: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    hotelDescription: z.union([
+    ])),
+    hotelDescription: z.optional(z.union([
         z.string(),
         z.null()
-    ]).optional(),
-    address: zOperaclone2WebApiContentSchemaAddress.optional().default({}),
-    coordinates: z.record(z.number()).optional().default({}),
-    connectivity: z.record(z.string()).optional().default({}),
-    meta: z.record(z.unknown()).optional().default({})
+    ])),
+    address: z.optional(zOperaclone2WebApiContentSchemaAddress).default({}),
+    coordinates: z.optional(z.record(z.string(), z.number())).default({}),
+    connectivity: z.optional(z.record(z.string(), z.string())).default({}),
+    meta: z.optional(z.record(z.string(), z.unknown())).default({})
 });
 
 /**
@@ -1836,27 +1836,27 @@ export const zPropertySnippet = z.object({
  * Response for property info summary.
  */
 export const zPropertyInfoSummaryResponse = z.object({
-    hasMore: z.boolean().optional().default(true),
-    totalResults: z.union([
-        z.number().int(),
+    hasMore: z.optional(z.boolean()).default(true),
+    totalResults: z.optional(z.union([
+        z.int(),
         z.null()
-    ]).optional(),
-    limit: z.number().int().optional().default(20),
-    count: z.number().int().optional().default(20),
-    offset: z.number().int().optional().default(0),
-    hotels: z.array(zPropertySnippet).optional().default([])
+    ])),
+    limit: z.optional(z.int()).default(20),
+    count: z.optional(z.int()).default(20),
+    offset: z.optional(z.int()).default(0),
+    hotels: z.optional(z.array(zPropertySnippet)).default([])
 });
 
 export const zHealthCheckApiHealthGetData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zSendEchoMessageApiEchoPostData = z.object({
     body: zMessage,
-    path: z.never().optional(),
-    query: z.never().optional()
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 /**
@@ -1865,12 +1865,12 @@ export const zSendEchoMessageApiEchoPostData = z.object({
 export const zSendEchoMessageApiEchoPostResponse = zMessage;
 
 export const zGetDummyModelsApiDummyGetData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        limit: z.number().int().optional().default(10),
-        offset: z.number().int().optional().default(0)
-    }).optional()
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        limit: z.optional(z.int()).default(10),
+        offset: z.optional(z.int()).default(0)
+    }))
 });
 
 /**
@@ -1882,104 +1882,104 @@ export const zGetDummyModelsApiDummyGetResponse = z.array(zDummyModelDto);
 
 export const zCreateDummyModelApiDummyPutData = z.object({
     body: zDummyModelInputDto,
-    path: z.never().optional(),
-    query: z.never().optional()
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGetPropertiesApiShopV1HotelsGetData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
     query: z.object({
         HotelCodes: z.string(),
-        ArrivalDate: z.string().date(),
-        ArrivalDateTo: z.union([
-            z.string().date(),
+        ArrivalDate: z.iso.date(),
+        ArrivalDateTo: z.optional(z.union([
+            z.iso.date(),
             z.null()
-        ]).optional(),
-        DepartureDate: z.string().date(),
-        Adults: z.union([
-            z.number().int(),
+        ])),
+        DepartureDate: z.iso.date(),
+        Adults: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(1),
-        Children: z.union([
-            z.number().int(),
+        ])).default(1),
+        Children: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(0),
-        ChildrenAges: z.union([
+        ])).default(0),
+        ChildrenAges: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RatePlanCodes: z.union([
+        ])),
+        RatePlanCodes: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        AccessCode: z.union([
+        ])),
+        AccessCode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        NumberOfUnits: z.union([
-            z.number().int(),
+        ])),
+        NumberOfUnits: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(1),
-        RateMode: z.union([
+        ])).default(1),
+        RateMode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional().default('Highest'),
-        RatePlanCodeMatchOnly: z.union([
+        ])).default('Highest'),
+        RatePlanCodeMatchOnly: z.optional(z.union([
             z.boolean(),
             z.null()
-        ]).optional().default(false),
-        RatePlanType: z.union([
+        ])).default(false),
+        RatePlanType: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        AvailableOnly: z.union([
+        ])),
+        AvailableOnly: z.optional(z.union([
             z.boolean(),
             z.null()
-        ]).optional().default(false),
-        minRate: z.union([
+        ])).default(false),
+        minRate: z.optional(z.union([
             z.number(),
             z.null()
-        ]).optional(),
-        maxRate: z.union([
+        ])),
+        maxRate: z.optional(z.union([
             z.number(),
             z.null()
-        ]).optional(),
-        AlternateOffers: z.union([
+        ])),
+        AlternateOffers: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional().default('Always'),
-        CommissionableStatus: z.union([
+        ])).default('Always'),
+        CommissionableStatus: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional().default('Both'),
-        PromotionCodes: z.union([
+        ])).default('Both'),
+        PromotionCodes: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     }),
     headers: z.object({
-        authorization: z.union([
+        authorization: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
+        ])),
         'x-channelCode': z.string(),
-        'x-app-key': z.union([
+        'x-app-key': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'Accept-Language': z.union([
+        ])),
+        'Accept-Language': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-request-id': z.union([
+        ])),
+        'x-request-id': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-originating-application': z.union([
+        ])),
+        'x-originating-application': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     })
 });
 
@@ -1989,116 +1989,116 @@ export const zGetPropertiesApiShopV1HotelsGetData = z.object({
 export const zGetPropertiesApiShopV1HotelsGetResponse = zPropertySearchResponse;
 
 export const zGetPropertyOffersApiShopV1HotelsHotelCodeOffersGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelCode: z.string()
     }),
     query: z.object({
-        ArrivalDate: z.string().date(),
-        DepartureDate: z.string().date(),
-        Adults: z.union([
-            z.number().int(),
+        ArrivalDate: z.iso.date(),
+        DepartureDate: z.iso.date(),
+        Adults: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(1),
-        Children: z.union([
-            z.number().int(),
+        ])).default(1),
+        Children: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(0),
-        ChildrenAges: z.union([
+        ])).default(0),
+        ChildrenAges: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RoomTypes: z.union([
+        ])),
+        RoomTypes: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RatePlanCodes: z.union([
+        ])),
+        RatePlanCodes: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        AccessCode: z.union([
+        ])),
+        AccessCode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RatePlanType: z.union([
+        ])),
+        RatePlanType: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        NumberOfUnits: z.union([
-            z.number().int(),
+        ])),
+        NumberOfUnits: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional(),
-        RoomTypeMatchOnly: z.union([
+        ])),
+        RoomTypeMatchOnly: z.optional(z.union([
             z.boolean(),
             z.null()
-        ]).optional(),
-        RatePlanCodeMatchOnly: z.union([
+        ])),
+        RatePlanCodeMatchOnly: z.optional(z.union([
             z.boolean(),
             z.null()
-        ]).optional(),
-        RateMode: z.union([
+        ])),
+        RateMode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RoomAmenity: z.union([
+        ])),
+        RoomAmenity: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RoomAmenityQuantity: z.union([
-            z.number().int(),
+        ])),
+        RoomAmenityQuantity: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional(),
-        IncludeAmenities: z.union([
+        ])),
+        IncludeAmenities: z.optional(z.union([
             z.boolean(),
             z.null()
-        ]).optional(),
-        minRate: z.union([
+        ])),
+        minRate: z.optional(z.union([
             z.number(),
             z.null()
-        ]).optional(),
-        maxRate: z.union([
+        ])),
+        maxRate: z.optional(z.union([
             z.number(),
             z.null()
-        ]).optional(),
-        AlternateOffers: z.union([
+        ])),
+        AlternateOffers: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        CommissionableStatus: z.union([
+        ])),
+        CommissionableStatus: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        PromotionCodes: z.union([
+        ])),
+        PromotionCodes: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        BlockCode: z.union([
+        ])),
+        BlockCode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     }),
     headers: z.object({
-        authorization: z.union([
+        authorization: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
+        ])),
         'x-channelCode': z.string(),
-        'x-app-key': z.union([
+        'x-app-key': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'Accept-Language': z.union([
+        ])),
+        'Accept-Language': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-request-id': z.union([
+        ])),
+        'x-request-id': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-originating-application': z.union([
+        ])),
+        'x-originating-application': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     })
 });
 
@@ -2108,92 +2108,92 @@ export const zGetPropertyOffersApiShopV1HotelsHotelCodeOffersGetData = z.object(
 export const zGetPropertyOffersApiShopV1HotelsHotelCodeOffersGetResponse = zPropertyOffersResponse;
 
 export const zGetPropertyOfferApiShopV1HotelsHotelCodeOfferGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelCode: z.string()
     }),
     query: z.object({
-        ArrivalDate: z.string().date(),
-        DepartureDate: z.string().date(),
-        Adults: z.union([
-            z.number().int(),
+        ArrivalDate: z.iso.date(),
+        DepartureDate: z.iso.date(),
+        Adults: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(1),
-        Children: z.union([
-            z.number().int(),
+        ])).default(1),
+        Children: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(0),
-        ChildrenAges: z.union([
+        ])).default(0),
+        ChildrenAges: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RoomType: z.union([
+        ])),
+        RoomType: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RatePlanCode: z.union([
+        ])),
+        RatePlanCode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        AccessCode: z.union([
+        ])),
+        AccessCode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        RateMode: z.union([
+        ])),
+        RateMode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        NumberOfUnits: z.union([
-            z.number().int(),
+        ])),
+        NumberOfUnits: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional(),
-        BookingCode: z.union([
+        ])),
+        BookingCode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        IncludeAmenities: z.union([
+        ])),
+        IncludeAmenities: z.optional(z.union([
             z.boolean(),
             z.null()
-        ]).optional(),
-        PromotionCodes: z.union([
+        ])),
+        PromotionCodes: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        BlockCode: z.union([
+        ])),
+        BlockCode: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     }),
-    headers: z.object({
-        authorization: z.union([
+    headers: z.optional(z.object({
+        authorization: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-externalsystem': z.union([
+        ])),
+        'x-externalsystem': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-app-key': z.union([
+        ])),
+        'x-app-key': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-channelCode': z.union([
+        ])),
+        'x-channelCode': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'Accept-Language': z.union([
+        ])),
+        'Accept-Language': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-request-id': z.union([
+        ])),
+        'x-request-id': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-originating-application': z.union([
+        ])),
+        'x-originating-application': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
-    }).optional()
+        ]))
+    }))
 });
 
 /**
@@ -2202,27 +2202,27 @@ export const zGetPropertyOfferApiShopV1HotelsHotelCodeOfferGetData = z.object({
 export const zGetPropertyOfferApiShopV1HotelsHotelCodeOfferGetResponse = zOfferDetailsResponse;
 
 export const zGetInventoryStatisticsApiInvV1HotelsHotelIdInventoryStatisticsGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelId: z.string().min(1).max(2000)
     }),
     query: z.object({
-        dateRangeStart: z.string().date(),
-        dateRangeEnd: z.string().date(),
+        dateRangeStart: z.iso.date(),
+        dateRangeEnd: z.iso.date(),
         reportCode: z.enum([
             'DetailedAvailabiltySummary',
             'RoomCalendarStatistics',
             'SellLimitSummary',
             'RoomsAvailabilitySummary'
         ]),
-        parameterName: z.union([
+        parameterName: z.optional(z.union([
             z.array(z.string()),
             z.null()
-        ]).optional(),
-        parameterValue: z.union([
+        ])),
+        parameterValue: z.optional(z.union([
             z.array(z.string()),
             z.null()
-        ]).optional()
+        ]))
     })
 });
 
@@ -2234,46 +2234,46 @@ export const zGetInventoryStatisticsApiInvV1HotelsHotelIdInventoryStatisticsGetD
 export const zGetInventoryStatisticsApiInvV1HotelsHotelIdInventoryStatisticsGetResponse = z.array(zStatisticType);
 
 export const zGetPropertiesSummaryApiContentV1HotelsGetData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        connectionStatusLastChangedFrom: z.union([
-            z.string().datetime(),
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        connectionStatusLastChangedFrom: z.optional(z.union([
+            z.iso.datetime(),
             z.null()
-        ]).optional(),
-        connectionStatusLastChangedTo: z.union([
-            z.string().datetime(),
+        ])),
+        connectionStatusLastChangedTo: z.optional(z.union([
+            z.iso.datetime(),
             z.null()
-        ]).optional(),
-        connectionStatus: z.union([
+        ])),
+        connectionStatus: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        fetchInstructions: z.union([
+        ])),
+        fetchInstructions: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        limit: z.number().int().optional().default(20),
-        offset: z.number().int().optional().default(0)
-    }).optional(),
+        ])),
+        limit: z.optional(z.int()).default(20),
+        offset: z.optional(z.int()).default(0)
+    })),
     headers: z.object({
-        authorization: z.union([
+        authorization: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
+        ])),
         'x-channelCode': z.string(),
-        'x-app-key': z.union([
+        'x-app-key': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-request-id': z.union([
+        ])),
+        'x-request-id': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-originating-application': z.union([
+        ])),
+        'x-originating-application': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     })
 });
 
@@ -2283,29 +2283,29 @@ export const zGetPropertiesSummaryApiContentV1HotelsGetData = z.object({
 export const zGetPropertiesSummaryApiContentV1HotelsGetResponse = zPropertyInfoSummaryResponse;
 
 export const zGetPropertyInfoApiContentV1HotelsHotelCodeGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelCode: z.string()
     }),
-    query: z.never().optional(),
+    query: z.optional(z.never()),
     headers: z.object({
-        authorization: z.union([
+        authorization: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
+        ])),
         'x-channelCode': z.string(),
-        'x-app-key': z.union([
+        'x-app-key': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-request-id': z.union([
+        ])),
+        'x-request-id': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-originating-application': z.union([
+        ])),
+        'x-originating-application': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     })
 });
 
@@ -2315,46 +2315,46 @@ export const zGetPropertyInfoApiContentV1HotelsHotelCodeGetData = z.object({
 export const zGetPropertyInfoApiContentV1HotelsHotelCodeGetResponse = zPropertyInfoResponse;
 
 export const zGetRoomTypesInfoApiContentV1HotelsHotelCodeRoomTypesGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelCode: z.string()
     }),
-    query: z.object({
-        includeRoomAmenities: z.union([
+    query: z.optional(z.object({
+        includeRoomAmenities: z.optional(z.union([
             z.boolean(),
             z.null()
-        ]).optional().default(false),
-        roomType: z.union([
+        ])).default(false),
+        roomType: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        limit: z.union([
-            z.number().int(),
+        ])),
+        limit: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(20),
-        offset: z.union([
-            z.number().int(),
+        ])).default(20),
+        offset: z.optional(z.union([
+            z.int(),
             z.null()
-        ]).optional().default(0)
-    }).optional(),
+        ])).default(0)
+    })),
     headers: z.object({
-        authorization: z.union([
+        authorization: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
+        ])),
         'x-channelCode': z.string(),
-        'x-app-key': z.union([
+        'x-app-key': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-request-id': z.union([
+        ])),
+        'x-request-id': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        'x-originating-application': z.union([
+        ])),
+        'x-originating-application': z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional()
+        ]))
     })
 });
 
@@ -2364,34 +2364,34 @@ export const zGetRoomTypesInfoApiContentV1HotelsHotelCodeRoomTypesGetData = z.ob
 export const zGetRoomTypesInfoApiContentV1HotelsHotelCodeRoomTypesGetResponse = zRoomTypesResponse;
 
 export const zGetHotelReservationsApiRsvV1HotelsHotelIdReservationsGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelId: z.string()
     }),
-    query: z.object({
-        surname: z.union([
+    query: z.optional(z.object({
+        surname: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        givenName: z.union([
+        ])),
+        givenName: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        arrivalStartDate: z.union([
-            z.string().date(),
+        ])),
+        arrivalStartDate: z.optional(z.union([
+            z.iso.date(),
             z.null()
-        ]).optional(),
-        arrivalEndDate: z.union([
-            z.string().date(),
+        ])),
+        arrivalEndDate: z.optional(z.union([
+            z.iso.date(),
             z.null()
-        ]).optional(),
-        confirmationNumberList: z.union([
+        ])),
+        confirmationNumberList: z.optional(z.union([
             z.array(z.string()),
             z.null()
-        ]).optional(),
-        limit: z.number().int().optional().default(100),
-        offset: z.number().int().optional().default(0)
-    }).optional()
+        ])),
+        limit: z.optional(z.int()).default(100),
+        offset: z.optional(z.int()).default(0)
+    }))
 });
 
 /**
@@ -2404,7 +2404,7 @@ export const zCreateReservationApiRsvV1HotelsHotelIdReservationsPostData = z.obj
     path: z.object({
         hotelId: z.string()
     }),
-    query: z.never().optional()
+    query: z.optional(z.never())
 });
 
 /**
@@ -2413,22 +2413,22 @@ export const zCreateReservationApiRsvV1HotelsHotelIdReservationsPostData = z.obj
 export const zCreateReservationApiRsvV1HotelsHotelIdReservationsPostResponse = zReservationListResponse;
 
 export const zGetReservationsSummaryApiRsvV1HotelsHotelIdReservationsSummaryGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelId: z.string()
     }),
-    query: z.object({
-        arrivalDate: z.union([
-            z.string().date(),
+    query: z.optional(z.object({
+        arrivalDate: z.optional(z.union([
+            z.iso.date(),
             z.null()
-        ]).optional(),
-        lastName: z.union([
+        ])),
+        lastName: z.optional(z.union([
             z.string(),
             z.null()
-        ]).optional(),
-        limit: z.number().int().optional().default(200),
-        offset: z.number().int().optional().default(0)
-    }).optional()
+        ])),
+        limit: z.optional(z.int()).default(200),
+        offset: z.optional(z.int()).default(0)
+    }))
 });
 
 /**
@@ -2437,22 +2437,22 @@ export const zGetReservationsSummaryApiRsvV1HotelsHotelIdReservationsSummaryGetD
 export const zGetReservationsSummaryApiRsvV1HotelsHotelIdReservationsSummaryGetResponse = zReservationSummaryResponse;
 
 export const zGetReservationStatisticsApiRsvV1HotelsHotelIdReservationsStatisticsGetData = z.object({
-    body: z.never().optional(),
+    body: z.optional(z.never()),
     path: z.object({
         hotelId: z.string()
     }),
-    query: z.object({
-        startDate: z.union([
-            z.string().date(),
+    query: z.optional(z.object({
+        startDate: z.optional(z.union([
+            z.iso.date(),
             z.null()
-        ]).optional(),
-        endDate: z.union([
-            z.string().date(),
+        ])),
+        endDate: z.optional(z.union([
+            z.iso.date(),
             z.null()
-        ]).optional(),
-        limit: z.number().int().optional().default(20),
-        offset: z.number().int().optional().default(0)
-    }).optional()
+        ])),
+        limit: z.optional(z.int()).default(20),
+        offset: z.optional(z.int()).default(0)
+    }))
 });
 
 /**
@@ -2466,7 +2466,7 @@ export const zUpdateReservationApiRsvV1HotelsHotelIdReservationsReservationIdPut
         hotelId: z.string(),
         reservationId: z.string()
     }),
-    query: z.never().optional()
+    query: z.optional(z.never())
 });
 
 /**
@@ -2480,7 +2480,7 @@ export const zCancelReservationApiRsvV1HotelsHotelIdReservationsReservationIdCan
         hotelId: z.string(),
         reservationId: z.string()
     }),
-    query: z.never().optional()
+    query: z.optional(z.never())
 });
 
 /**

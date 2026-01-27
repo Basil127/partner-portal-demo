@@ -5,6 +5,7 @@ import { MoreDotIcon } from '@/icons';
 import { DropdownItem } from '../ui/dropdown/DropdownItem';
 import { useState } from 'react';
 import { Dropdown } from '../ui/dropdown/Dropdown';
+import { COLORS } from '@/lib/theme';
 
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
@@ -13,7 +14,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
 
 export default function MonthlySalesChart() {
 	const options: ApexOptions = {
-		colors: ['#465fff'],
+		colors: [COLORS.light.primary],
 		chart: {
 			fontFamily: 'Outfit, sans-serif',
 			type: 'bar',
