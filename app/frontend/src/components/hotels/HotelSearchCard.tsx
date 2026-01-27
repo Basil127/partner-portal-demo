@@ -35,14 +35,17 @@ export default function HotelSearchCard({
 
 	const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
+	const isDateRangeInvalid = new Date(filters.departureDate) <= new Date(filters.arrivalDate);
+
 	return (
-		<div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
+		<div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
 			<div className="p-5 sm:p-6">
 				<div className="flex flex-wrap items-end justify-between gap-4">
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:flex lg:items-end">
 						<div className="w-full lg:w-44">
 							<DatePicker
 								id="arrivalDate"
+								mode="single"
 								label="Arrival Date"
 								defaultDate={filters.arrivalDate}
 								onChange={(dates: Date[]) => {
@@ -52,17 +55,24 @@ export default function HotelSearchCard({
 								}}
 							/>
 						</div>
-						<div className="w-full lg:w-44">
+						<div className="w-full lg:w-44 relative">
 							<DatePicker
 								id="departureDate"
+								mode="single"
 								label="Departure Date"
 								defaultDate={filters.departureDate}
+								error={isDateRangeInvalid}
 								onChange={(dates: Date[]) => {
 									if (dates.length > 0) {
 										onFilterChange('departureDate', formatDate(dates[0]));
 									}
 								}}
 							/>
+							{isDateRangeInvalid && (
+								<p className="absolute -bottom-5 left-0 text-[10px] text-error-500 font-medium whitespace-nowrap">
+									Must be after arrival date
+								</p>
+							)}
 						</div>
 
 						{!isExpanded && (
@@ -75,7 +85,11 @@ export default function HotelSearchCard({
 								>
 									More Filters <ChevronDownIcon className="w-4 h-4" />
 								</Button>
-								<Button onClick={onSearch} startIcon={<SearchIcon width={20} height={20} />}>
+								<Button
+									onClick={onSearch}
+									disabled={isDateRangeInvalid}
+									startIcon={<SearchIcon width={20} height={20} />}
+								>
 									Search
 								</Button>
 							</div>
@@ -176,6 +190,7 @@ export default function HotelSearchCard({
 						<div className="flex justify-end items-end lg:col-start-4">
 							<Button
 								onClick={onSearch}
+								disabled={isDateRangeInvalid}
 								startIcon={<SearchIcon width={20} height={20} />}
 								className="w-full sm:w-auto"
 							>
