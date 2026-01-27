@@ -53,6 +53,7 @@ import MoreDotIcon from './more-dot.svg';
 import BellIcon from './bell.svg';
 import BedIcon from './bed.svg';
 import BuildingsIcon from './buildings.svg';
+import SearchIcon from './search-outline.svg';
 
 export {
 	DownloadIcon,
@@ -110,4 +111,5 @@ export {
 	ChatIcon,
 	BedIcon,
 	BuildingsIcon,
+	SearchIcon,
 };

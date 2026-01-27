@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ChatPage from '@/app/(admin)/(others-pages)/chat/page';
+import ChatPage from '@/app/(admin)/(primary)/chat/page';
 
 jest.mock('next/navigation', () => ({
 	usePathname: () => '/',

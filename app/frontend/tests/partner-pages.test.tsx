@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import HotelsPage from '@/app/(admin)/(others-pages)/hotels/page';
-import RoomsPage from '@/app/(admin)/(others-pages)/rooms/page';
-import BookingsPage from '@/app/(admin)/(others-pages)/reservations/page';
+import HotelsPage from '@/app/(admin)/(primary)/hotels/page';
+import RoomsPage from '@/app/(admin)/(primary)/rooms/page';
+import BookingsPage from '@/app/(admin)/(primary)/reservations/page';
 
 jest.mock('next/navigation', () => ({
 	usePathname: () => '/',
