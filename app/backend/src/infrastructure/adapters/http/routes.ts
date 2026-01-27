@@ -186,6 +186,7 @@ export function setupRoutes(fastify: FastifyInstance) {
 		handler: bookingController.deleteBooking.bind(bookingController),
 	});
 
+	// shop api endpoints
 	fastify.get('/api/hotels/availability', {
 		schema: {
 			tags: ['hotel shop'],
@@ -221,7 +222,7 @@ export function setupRoutes(fastify: FastifyInstance) {
 					properties: {
 						roomStays: {
 							type: 'array',
-							items: { type: 'object' },
+							items: { type: 'object', additionalProperties: true },
 							nullable: true,
 						},
 					},
@@ -283,7 +284,7 @@ export function setupRoutes(fastify: FastifyInstance) {
 					properties: {
 						roomStays: {
 							type: 'array',
-							items: { type: 'object' },
+							items: { type: 'object', additionalProperties: true },
 							nullable: true,
 						},
 					},
@@ -335,11 +336,11 @@ export function setupRoutes(fastify: FastifyInstance) {
 				200: {
 					type: 'object',
 					properties: {
-						propertyInfo: { type: 'object', nullable: true },
+						propertyInfo: { type: 'object', additionalProperties: true, nullable: true },
 						availability: { type: 'string', nullable: true },
-						roomType: { type: 'object', nullable: true },
-						ratePlan: { type: 'object', nullable: true },
-						offer: { type: 'object', nullable: true },
+						roomType: { type: 'object', additionalProperties: true, nullable: true },
+						ratePlan: { type: 'object', additionalProperties: true, nullable: true },
+						offer: { type: 'object', additionalProperties: true, nullable: true },
 					},
 				},
 				400: {

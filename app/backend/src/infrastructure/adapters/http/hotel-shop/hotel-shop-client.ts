@@ -55,7 +55,12 @@ export const fetchHotelAvailability = async (
 	query: HotelAvailabilitySearchQuery,
 	headers: HotelAvailabilityRequestHeaders,
 ): Promise<PropertySearchResponse> => {
-	const response = await externalClient.request<PropertySearchResponse, unknown, true, 'data'>({
+	const response: PropertySearchResponse = await externalClient.request<
+		PropertySearchResponse,
+		unknown,
+		true,
+		'data'
+	>({
 		method: 'GET',
 		url: '/api/shop/v1/hotels',
 		responseStyle: 'data',

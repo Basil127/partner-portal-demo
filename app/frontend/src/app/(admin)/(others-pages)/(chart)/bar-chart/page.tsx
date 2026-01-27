@@ -6,8 +6,7 @@ import React from 'react';
 
 export const metadata: Metadata = {
 	title: 'Bar Chart | B2B Partner Portal',
-	description:
-		'This is the Bar Chart page for B2B Partner Portal',
+	description: 'This is the Bar Chart page for B2B Partner Portal',
 };
 
 export default function page() {

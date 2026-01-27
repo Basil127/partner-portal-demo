@@ -6,8 +6,7 @@ import React from 'react';
 
 export const metadata: Metadata = {
 	title: 'Next.js Line Chart | B2B Partner Portal',
-	description:
-		'This is the Line Chart page for B2B Partner Portal',
+	description: 'This is the Line Chart page for B2B Partner Portal',
 };
 export default function LineChart() {
 	return (

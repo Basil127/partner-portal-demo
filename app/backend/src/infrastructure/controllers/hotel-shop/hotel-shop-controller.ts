@@ -100,6 +100,7 @@ export class HotelShopController {
 		request: FastifyRequest<{ Querystring: Record<string, string | undefined> }>,
 		reply: FastifyReply,
 	) {
+		request.log.info({ query: request.query, headers: request.headers }, 'Request body');
 		try {
 			const query = HotelAvailabilityQuerySchema.parse(request.query);
 			const incomingHeaders = HeaderSchema.parse(request.headers);
@@ -144,6 +145,7 @@ export class HotelShopController {
 			};
 
 			const response = await this.hotelShopService.getAvailableHotels(data, headers);
+			request.log.info(response, 'response message');
 			return reply.send(response);
 		} catch (error) {
 			request.log.error(error);
