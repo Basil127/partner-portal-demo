@@ -18,8 +18,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 	const mainContentMargin = isMobileOpen
 		? 'ml-0'
 		: isExpanded || isHovered
-			? 'lg:ml-[290px]'
-			: 'lg:ml-[90px]';
+			? 'lg:ml-[250px]'
+			: 'lg:ml-[70px]';
 
 	return (
 		<div className="min-h-screen xl:flex">
