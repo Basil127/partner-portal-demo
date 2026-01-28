@@ -645,6 +645,448 @@ paths:
                     type: string
                   details:
                     type: array
+  /api/content/hotels:
+    get:
+      tags:
+        - hotel content
+      description: Get properties summary
+      parameters:
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: connectionStatusLastChangedFrom
+          required: false
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: connectionStatusLastChangedTo
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: connectionStatus
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: fetchInstructions
+          required: false
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasMore:
+                    type: boolean
+                  totalResults:
+                    type: integer
+                    nullable: true
+                  limit:
+                    type: integer
+                  count:
+                    type: integer
+                  offset:
+                    type: integer
+                  hotels:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        hotelId:
+                          type: string
+                          nullable: true
+                        hotelCode:
+                          type: string
+                          nullable: true
+                        hotelName:
+                          type: string
+                          nullable: true
+                        hotelDescription:
+                          type: string
+                          nullable: true
+  /api/content/hotels/{hotelCode}:
+    get:
+      tags:
+        - hotel content
+      description: Get detailed property information
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  propertyInfo:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    properties:
+                      hotelId:
+                        type: string
+                        nullable: true
+                      enterpriseId:
+                        type: string
+                        nullable: true
+                      hotelCode:
+                        type: string
+                        nullable: true
+                      hotelName:
+                        type: string
+                        nullable: true
+                      hotelDescription:
+                        type: string
+                        nullable: true
+                      chainCode:
+                        type: string
+                        nullable: true
+  /api/content/hotels/{hotelCode}/roomTypes:
+    get:
+      tags:
+        - hotel content
+      description: Get room types for a property
+      parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: includeRoomAmenities
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomType
+          required: false
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roomTypes:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        hotelRoomType:
+                          type: string
+                          nullable: true
+                        roomType:
+                          type: string
+                          nullable: true
+                        roomName:
+                          type: string
+                          nullable: true
+                  count:
+                    type: integer
+                    nullable: true
+                  hasMore:
+                    type: boolean
+                    nullable: true
+                  limit:
+                    type: integer
+                    nullable: true
+                  offset:
+                    type: integer
+                    nullable: true
+                  totalResults:
+                    type: integer
+                    nullable: true
+  /api/hotels/{hotelId}/reservations:
+    get:
+      tags:
+        - hotel reservations
+      description: Get reservations for a hotel
+      parameters:
+        - schema:
+            type: string
+            nullable: true
+          in: query
+          name: surname
+          required: false
+        - schema:
+            type: string
+            nullable: true
+          in: query
+          name: givenName
+          required: false
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: arrivalStartDate
+          required: false
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: arrivalEndDate
+          required: false
+        - schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+          in: query
+          name: confirmationNumberList
+          required: false
+        - schema:
+            type: integer
+            default: 100
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                properties:
+                  reservations:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    properties:
+                      reservation:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          additionalProperties: true
+    post:
+      tags:
+        - hotel reservations
+      description: Create a reservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/hotels/{hotelId}/reservations/summary:
+    get:
+      tags:
+        - hotel reservations
+      description: Get reservations summary
+      parameters:
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: arrivalDate
+          required: false
+        - schema:
+            type: string
+            nullable: true
+          in: query
+          name: lastName
+          required: false
+        - schema:
+            type: integer
+            default: 200
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/hotels/{hotelId}/reservations/statistics:
+    get:
+      tags:
+        - hotel reservations
+      description: Get reservation statistics
+      parameters:
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: startDate
+          required: false
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: endDate
+          required: false
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/hotels/{hotelId}/reservations/{reservationId}:
+    put:
+      tags:
+        - hotel reservations
+      description: Update a reservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+        - schema:
+            type: string
+          in: path
+          name: reservationId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/hotels/{hotelId}/reservations/{reservationId}/cancellations:
+    post:
+      tags:
+        - hotel reservations
+      description: Cancel a reservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+        - schema:
+            type: string
+          in: path
+          name: reservationId
+          required: true
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
 tags:
   - name: bookings
     x-displayName: Booking Operations

@@ -2,12 +2,15 @@ import type { FastifyInstance } from 'fastify';
 import { BookingController } from '../../controllers/booking-controller.js';
 import { HotelShopController } from '../../controllers/hotel-shop/hotel-shop-controller.js';
 import { HotelContentController } from '../../controllers/hotel-content/hotel-content-controller.js';
+import { HotelReservationsController } from '../../controllers/hotel-reservations/hotel-reservations-controller.js';
 import { BookingService } from '../../../application/services/booking-service.js';
 import { HotelShopService } from '../../../application/services/hotel-shop/hotel-shop-service.js';
 import { HotelContentService } from '../../../application/services/hotel-content/hotel-content-service.js';
+import { HotelReservationsService } from '../../../application/services/hotel-reservations/hotel-reservations-service.js';
 import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
 import { HotelShopRepositoryImpl } from '../../repositories/hotel-shop/hotel-shop-repository-impl.js';
 import { HotelContentRepositoryImpl } from '../../repositories/hotel-content/hotel-content-repository-impl.js';
+import { HotelReservationsRepositoryImpl } from '../../repositories/hotel-reservations/hotel-reservations-repository-impl.js';
 import { createDatabaseAdapter } from '../database.js';
 
 export function setupRoutes(fastify: FastifyInstance) {
@@ -22,6 +25,9 @@ export function setupRoutes(fastify: FastifyInstance) {
 	const hotelContentRepository = new HotelContentRepositoryImpl();
 	const hotelContentService = new HotelContentService(hotelContentRepository);
 	const hotelContentController = new HotelContentController(hotelContentService);
+	const hotelReservationsRepository = new HotelReservationsRepositoryImpl();
+	const hotelReservationsService = new HotelReservationsService(hotelReservationsRepository);
+	const hotelReservationsController = new HotelReservationsController(hotelReservationsService);
 
 	// Booking routes
 	fastify.get('/api/bookings', {
@@ -488,5 +494,194 @@ export function setupRoutes(fastify: FastifyInstance) {
 			},
 		},
 		handler: hotelContentController.getRoomTypes.bind(hotelContentController),
+	});
+
+	// reservations api endpoints
+	fastify.get('/api/hotels/:hotelId/reservations', {
+		schema: {
+			tags: ['hotel reservations'],
+			description: 'Get reservations for a hotel',
+			params: {
+				type: 'object',
+				required: ['hotelId'],
+				properties: {
+					hotelId: { type: 'string' },
+				},
+			},
+			querystring: {
+				type: 'object',
+				properties: {
+					surname: { type: 'string', nullable: true },
+					givenName: { type: 'string', nullable: true },
+					arrivalStartDate: { type: 'string', format: 'date', nullable: true },
+					arrivalEndDate: { type: 'string', format: 'date', nullable: true },
+					confirmationNumberList: {
+						type: 'array',
+						items: { type: 'string' },
+						nullable: true,
+					},
+					limit: { type: 'integer', default: 100 },
+					offset: { type: 'integer', default: 0 },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					additionalProperties: true,
+					properties: {
+						reservations: {
+							type: 'object',
+							nullable: true,
+							additionalProperties: true,
+							properties: {
+								reservation: {
+									type: 'array',
+									nullable: true,
+									items: { type: 'object', additionalProperties: true },
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		handler: hotelReservationsController.getHotelReservations.bind(hotelReservationsController),
+	});
+
+	fastify.post('/api/hotels/:hotelId/reservations', {
+		schema: {
+			tags: ['hotel reservations'],
+			description: 'Create a reservation',
+			params: {
+				type: 'object',
+				required: ['hotelId'],
+				properties: {
+					hotelId: { type: 'string' },
+				},
+			},
+			body: {
+				type: 'object',
+				additionalProperties: true,
+			},
+			response: {
+				200: {
+					type: 'object',
+					additionalProperties: true,
+				},
+			},
+		},
+		handler: hotelReservationsController.createReservation.bind(hotelReservationsController),
+	});
+
+	fastify.get('/api/hotels/:hotelId/reservations/summary', {
+		schema: {
+			tags: ['hotel reservations'],
+			description: 'Get reservations summary',
+			params: {
+				type: 'object',
+				required: ['hotelId'],
+				properties: {
+					hotelId: { type: 'string' },
+				},
+			},
+			querystring: {
+				type: 'object',
+				properties: {
+					arrivalDate: { type: 'string', format: 'date', nullable: true },
+					lastName: { type: 'string', nullable: true },
+					limit: { type: 'integer', default: 200 },
+					offset: { type: 'integer', default: 0 },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					additionalProperties: true,
+				},
+			},
+		},
+		handler: hotelReservationsController.getReservationsSummary.bind(hotelReservationsController),
+	});
+
+	fastify.get('/api/hotels/:hotelId/reservations/statistics', {
+		schema: {
+			tags: ['hotel reservations'],
+			description: 'Get reservation statistics',
+			params: {
+				type: 'object',
+				required: ['hotelId'],
+				properties: {
+					hotelId: { type: 'string' },
+				},
+			},
+			querystring: {
+				type: 'object',
+				properties: {
+					startDate: { type: 'string', format: 'date', nullable: true },
+					endDate: { type: 'string', format: 'date', nullable: true },
+					limit: { type: 'integer', default: 20 },
+					offset: { type: 'integer', default: 0 },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					additionalProperties: true,
+				},
+			},
+		},
+		handler: hotelReservationsController.getReservationStatistics.bind(hotelReservationsController),
+	});
+
+	fastify.put('/api/hotels/:hotelId/reservations/:reservationId', {
+		schema: {
+			tags: ['hotel reservations'],
+			description: 'Update a reservation',
+			params: {
+				type: 'object',
+				required: ['hotelId', 'reservationId'],
+				properties: {
+					hotelId: { type: 'string' },
+					reservationId: { type: 'string' },
+				},
+			},
+			body: {
+				type: 'object',
+				additionalProperties: true,
+			},
+			response: {
+				200: {
+					type: 'object',
+					additionalProperties: true,
+				},
+			},
+		},
+		handler: hotelReservationsController.updateReservation.bind(hotelReservationsController),
+	});
+
+	fastify.post('/api/hotels/:hotelId/reservations/:reservationId/cancellations', {
+		schema: {
+			tags: ['hotel reservations'],
+			description: 'Cancel a reservation',
+			params: {
+				type: 'object',
+				required: ['hotelId', 'reservationId'],
+				properties: {
+					hotelId: { type: 'string' },
+					reservationId: { type: 'string' },
+				},
+			},
+			body: {
+				type: 'object',
+				additionalProperties: true,
+			},
+			response: {
+				201: {
+					type: 'object',
+					additionalProperties: true,
+				},
+			},
+		},
+		handler: hotelReservationsController.cancelReservation.bind(hotelReservationsController),
 	});
 }

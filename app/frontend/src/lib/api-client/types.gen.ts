@@ -344,3 +344,263 @@ export type GetApiHotelsByHotelCodeOfferResponses = {
 };
 
 export type GetApiHotelsByHotelCodeOfferResponse = GetApiHotelsByHotelCodeOfferResponses[keyof GetApiHotelsByHotelCodeOfferResponses];
+
+export type GetApiContentHotelsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        connectionStatusLastChangedFrom?: string;
+        connectionStatusLastChangedTo?: string;
+        connectionStatus?: string;
+        fetchInstructions?: string;
+        limit?: number;
+        offset?: number;
+    };
+    url: '/api/content/hotels';
+};
+
+export type GetApiContentHotelsResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        hasMore?: boolean;
+        totalResults?: number;
+        limit?: number;
+        count?: number;
+        offset?: number;
+        hotels?: Array<{
+            hotelId?: string;
+            hotelCode?: string;
+            hotelName?: string;
+            hotelDescription?: string;
+            [key: string]: unknown | string | undefined;
+        }>;
+    };
+};
+
+export type GetApiContentHotelsResponse = GetApiContentHotelsResponses[keyof GetApiContentHotelsResponses];
+
+export type GetApiContentHotelsByHotelCodeData = {
+    body?: never;
+    path: {
+        hotelCode: string;
+    };
+    query?: never;
+    url: '/api/content/hotels/{hotelCode}';
+};
+
+export type GetApiContentHotelsByHotelCodeResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        propertyInfo?: {
+            hotelId?: string;
+            enterpriseId?: string;
+            hotelCode?: string;
+            hotelName?: string;
+            hotelDescription?: string;
+            chainCode?: string;
+            [key: string]: unknown | string | undefined;
+        };
+    };
+};
+
+export type GetApiContentHotelsByHotelCodeResponse = GetApiContentHotelsByHotelCodeResponses[keyof GetApiContentHotelsByHotelCodeResponses];
+
+export type GetApiContentHotelsByHotelCodeRoomTypesData = {
+    body?: never;
+    path: {
+        hotelCode: string;
+    };
+    query?: {
+        includeRoomAmenities?: boolean;
+        roomType?: string;
+        limit?: number;
+        offset?: number;
+    };
+    url: '/api/content/hotels/{hotelCode}/roomTypes';
+};
+
+export type GetApiContentHotelsByHotelCodeRoomTypesResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        roomTypes?: Array<{
+            hotelRoomType?: string;
+            roomType?: string;
+            roomName?: string;
+            [key: string]: unknown | string | undefined;
+        }>;
+        count?: number;
+        hasMore?: boolean;
+        limit?: number;
+        offset?: number;
+        totalResults?: number;
+    };
+};
+
+export type GetApiContentHotelsByHotelCodeRoomTypesResponse = GetApiContentHotelsByHotelCodeRoomTypesResponses[keyof GetApiContentHotelsByHotelCodeRoomTypesResponses];
+
+export type GetApiHotelsByHotelIdReservationsData = {
+    body?: never;
+    path: {
+        hotelId: string;
+    };
+    query?: {
+        surname?: string;
+        givenName?: string;
+        arrivalStartDate?: string;
+        arrivalEndDate?: string;
+        confirmationNumberList?: Array<string>;
+        limit?: number;
+        offset?: number;
+    };
+    url: '/api/hotels/{hotelId}/reservations';
+};
+
+export type GetApiHotelsByHotelIdReservationsResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        reservations?: {
+            reservation?: Array<{
+                [key: string]: unknown;
+            }>;
+            [key: string]: unknown | Array<{
+                [key: string]: unknown;
+            }> | undefined;
+        };
+        [key: string]: unknown | {
+            reservation?: Array<{
+                [key: string]: unknown;
+            }>;
+            [key: string]: unknown | Array<{
+                [key: string]: unknown;
+            }> | undefined;
+        } | undefined;
+    };
+};
+
+export type GetApiHotelsByHotelIdReservationsResponse = GetApiHotelsByHotelIdReservationsResponses[keyof GetApiHotelsByHotelIdReservationsResponses];
+
+export type PostApiHotelsByHotelIdReservationsData = {
+    body?: {
+        [key: string]: unknown;
+    };
+    path: {
+        hotelId: string;
+    };
+    query?: never;
+    url: '/api/hotels/{hotelId}/reservations';
+};
+
+export type PostApiHotelsByHotelIdReservationsResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type PostApiHotelsByHotelIdReservationsResponse = PostApiHotelsByHotelIdReservationsResponses[keyof PostApiHotelsByHotelIdReservationsResponses];
+
+export type GetApiHotelsByHotelIdReservationsSummaryData = {
+    body?: never;
+    path: {
+        hotelId: string;
+    };
+    query?: {
+        arrivalDate?: string;
+        lastName?: string;
+        limit?: number;
+        offset?: number;
+    };
+    url: '/api/hotels/{hotelId}/reservations/summary';
+};
+
+export type GetApiHotelsByHotelIdReservationsSummaryResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type GetApiHotelsByHotelIdReservationsSummaryResponse = GetApiHotelsByHotelIdReservationsSummaryResponses[keyof GetApiHotelsByHotelIdReservationsSummaryResponses];
+
+export type GetApiHotelsByHotelIdReservationsStatisticsData = {
+    body?: never;
+    path: {
+        hotelId: string;
+    };
+    query?: {
+        startDate?: string;
+        endDate?: string;
+        limit?: number;
+        offset?: number;
+    };
+    url: '/api/hotels/{hotelId}/reservations/statistics';
+};
+
+export type GetApiHotelsByHotelIdReservationsStatisticsResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type GetApiHotelsByHotelIdReservationsStatisticsResponse = GetApiHotelsByHotelIdReservationsStatisticsResponses[keyof GetApiHotelsByHotelIdReservationsStatisticsResponses];
+
+export type PutApiHotelsByHotelIdReservationsByReservationIdData = {
+    body?: {
+        [key: string]: unknown;
+    };
+    path: {
+        hotelId: string;
+        reservationId: string;
+    };
+    query?: never;
+    url: '/api/hotels/{hotelId}/reservations/{reservationId}';
+};
+
+export type PutApiHotelsByHotelIdReservationsByReservationIdResponses = {
+    /**
+     * Default Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type PutApiHotelsByHotelIdReservationsByReservationIdResponse = PutApiHotelsByHotelIdReservationsByReservationIdResponses[keyof PutApiHotelsByHotelIdReservationsByReservationIdResponses];
+
+export type PostApiHotelsByHotelIdReservationsByReservationIdCancellationsData = {
+    body?: {
+        [key: string]: unknown;
+    };
+    path: {
+        hotelId: string;
+        reservationId: string;
+    };
+    query?: never;
+    url: '/api/hotels/{hotelId}/reservations/{reservationId}/cancellations';
+};
+
+export type PostApiHotelsByHotelIdReservationsByReservationIdCancellationsResponses = {
+    /**
+     * Default Response
+     */
+    201: {
+        [key: string]: unknown;
+    };
+};
+
+export type PostApiHotelsByHotelIdReservationsByReservationIdCancellationsResponse = PostApiHotelsByHotelIdReservationsByReservationIdCancellationsResponses[keyof PostApiHotelsByHotelIdReservationsByReservationIdCancellationsResponses];

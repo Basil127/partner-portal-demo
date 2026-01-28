@@ -5,6 +5,22 @@ export type ClientOptions = {
 };
 
 /**
+ * AdditionalDetails
+ *
+ * Additional information related to the rate plan.
+ */
+export type AdditionalDetails = {
+    /**
+     * Rateplanmatches
+     */
+    ratePlanMatches?: boolean | null;
+    /**
+     * Value
+     */
+    value?: string | null;
+};
+
+/**
  * Address
  *
  * Address information.
@@ -34,6 +50,50 @@ export type Address = {
      * County
      */
     county?: string | null;
+};
+
+/**
+ * AlternatePropertyDistance
+ *
+ * Distance from the property to the alternate property.
+ */
+export type AlternatePropertyDistance = {
+    /**
+     * Distance
+     */
+    distance?: number | null;
+    /**
+     * Distanceunit
+     */
+    distanceUnit?: string | null;
+    /**
+     * Compassdirection
+     */
+    compassDirection?: string | null;
+    /**
+     * Comments
+     */
+    comments?: string | null;
+};
+
+/**
+ * BlockInformation
+ *
+ * Block related information.
+ */
+export type BlockInformation = {
+    /**
+     * Blockcode
+     */
+    blockCode?: string | null;
+    /**
+     * Blockid
+     */
+    blockId?: string | null;
+    /**
+     * Blockname
+     */
+    blockName?: string | null;
 };
 
 /**
@@ -79,9 +139,7 @@ export type CancelReservationRequest = {
     /**
      * Reservations
      */
-    reservations?: Array<{
-        [key: string]: unknown;
-    }> | null;
+    reservations?: Array<ReservationCancellationItem> | null;
 };
 
 /**
@@ -114,6 +172,18 @@ export type Communications = {
      * Email
      */
     email?: string | null;
+};
+
+/**
+ * Connectivity
+ *
+ * Connectivity status information.
+ */
+export type Connectivity = {
+    /**
+     * Connectionstatus
+     */
+    connectionStatus?: string | null;
 };
 
 /**
@@ -267,17 +337,40 @@ export type ContentRoomType = {
 };
 
 /**
+ * Coordinates
+ *
+ * Geographic coordinates.
+ */
+export type Coordinates = {
+    /**
+     * Latitude
+     */
+    latitude?: number | null;
+    /**
+     * Longitude
+     */
+    longitude?: number | null;
+};
+
+/**
  * CreateReservationRequest
  *
  * Request to create a reservation.
  */
 export type CreateReservationRequest = {
+    reservations: ReservationCollectionInput;
+};
+
+/**
+ * Customer
+ *
+ * Customer information.
+ */
+export type Customer = {
     /**
-     * Reservations
+     * Personname
      */
-    reservations: {
-        [key: string]: Array<ReservationInput>;
-    };
+    personName?: Array<PersonName> | null;
 };
 
 /**
@@ -577,12 +670,59 @@ export type Offer = {
      */
     packages?: Array<RatePackage> | null;
     total?: OfferTotalTypeWithTaxes | null;
+    blockInformation?: BlockInformation | null;
+};
+
+/**
+ * OfferCancelPenalty
+ *
+ * Cancellation penalty details.
+ */
+export type OfferCancelPenalty = {
     /**
-     * Blockinformation
+     * Deadline
      */
-    blockInformation?: {
-        [key: string]: unknown;
-    } | null;
+    deadline?: string | null;
+    /**
+     * Amountpercent
+     */
+    amountPercent?: number | null;
+    /**
+     * Currencycode
+     */
+    currencyCode?: string | null;
+    /**
+     * Penaltydescription
+     */
+    penaltyDescription?: string | null;
+};
+
+/**
+ * OfferDepositPolicy
+ *
+ * Deposit policy details.
+ */
+export type OfferDepositPolicy = {
+    /**
+     * Depositrequired
+     */
+    depositRequired?: boolean | null;
+    /**
+     * Amountpercent
+     */
+    amountPercent?: number | null;
+    /**
+     * Currencycode
+     */
+    currencyCode?: string | null;
+    /**
+     * Deadline
+     */
+    deadline?: string | null;
+    /**
+     * Depositdescription
+     */
+    depositDescription?: string | null;
 };
 
 /**
@@ -611,15 +751,8 @@ export type OfferDetailsPropertyInfo = {
     /**
      * Propertyamenities
      */
-    propertyAmenities?: Array<{
-        [key: string]: unknown;
-    }> | null;
-    /**
-     * Distance
-     */
-    distance?: {
-        [key: string]: unknown;
-    } | null;
+    propertyAmenities?: Array<PropertyOffersHotelAmenity> | null;
+    distance?: AlternatePropertyDistance | null;
     generalInformation?: GeneralInformation | null;
     communications?: Communications | null;
     /**
@@ -811,9 +944,7 @@ export type OfferRateInformation = {
     /**
      * Cancellationpolicies
      */
-    cancellationPolicies?: Array<{
-        [key: string]: unknown;
-    }> | null;
+    cancellationPolicies?: Array<OfferCancelPenalty> | null;
     /**
      * Guaranteerequirement
      */
@@ -821,9 +952,7 @@ export type OfferRateInformation = {
     /**
      * Depositpolicies
      */
-    depositPolicies?: Array<{
-        [key: string]: unknown;
-    }> | null;
+    depositPolicies?: Array<OfferDepositPolicy> | null;
 };
 
 /**
@@ -899,17 +1028,45 @@ export type OfferTotalTypeWithTaxes = {
 };
 
 /**
+ * PersonName
+ *
+ * Person name definition.
+ */
+export type PersonName = {
+    /**
+     * Givenname
+     */
+    givenName?: string | null;
+    /**
+     * Surname
+     */
+    surname?: string | null;
+    /**
+     * Nametype
+     */
+    nameType?: string | null;
+};
+
+/**
  * Profile
  *
  * Guest profile definition.
  */
-export type Profile = {
+export type ProfileInput = {
+    customer?: Customer | null;
     /**
-     * Customer
+     * Profiletype
      */
-    customer?: {
-        [key: string]: unknown;
-    } | null;
+    profileType?: string | null;
+};
+
+/**
+ * Profile
+ *
+ * Guest profile definition.
+ */
+export type ProfileOutput = {
+    customer?: Customer | null;
     /**
      * Profiletype
      */
@@ -921,12 +1078,25 @@ export type Profile = {
  *
  * Profile info containing profile details.
  */
-export type ProfileInfo = {
+export type ProfileInfoInput = {
     /**
      * Profileidlist
      */
     profileIdList?: Array<UniqueId> | null;
-    profile?: Profile | null;
+    profile?: ProfileInput | null;
+};
+
+/**
+ * ProfileInfo
+ *
+ * Profile info containing profile details.
+ */
+export type ProfileInfoOutput = {
+    /**
+     * Profileidlist
+     */
+    profileIdList?: Array<UniqueId> | null;
+    profile?: ProfileOutput | null;
 };
 
 /**
@@ -1028,15 +1198,8 @@ export type PropertyOffersPropertyInfo = {
     /**
      * Propertyamenities
      */
-    propertyAmenities?: Array<{
-        [key: string]: unknown;
-    }> | null;
-    /**
-     * Distance
-     */
-    distance?: {
-        [key: string]: unknown;
-    } | null;
+    propertyAmenities?: Array<PropertyOffersHotelAmenity> | null;
+    distance?: AlternatePropertyDistance | null;
 };
 
 /**
@@ -1214,12 +1377,7 @@ export type PropertySearchRatePlan = {
      * Availabilitystatus
      */
     availabilityStatus?: string | null;
-    /**
-     * Additionaldetails
-     */
-    additionalDetails?: {
-        [key: string]: unknown;
-    } | null;
+    additionalDetails?: AdditionalDetails | null;
 };
 
 /**
@@ -1273,18 +1431,8 @@ export type PropertySnippet = {
      */
     hotelDescription?: string | null;
     address?: Operaclone2WebApiContentSchemaAddress;
-    /**
-     * Coordinates
-     */
-    coordinates?: {
-        [key: string]: number;
-    };
-    /**
-     * Connectivity
-     */
-    connectivity?: {
-        [key: string]: string;
-    };
+    coordinates?: Coordinates;
+    connectivity?: Connectivity;
     /**
      * Meta
      */
@@ -1348,6 +1496,30 @@ export type RateTotal = {
 };
 
 /**
+ * RatesByDate
+ *
+ * Daily rates organized by date.
+ */
+export type RatesByDateInput = {
+    /**
+     * Day
+     */
+    day?: Array<Rate> | null;
+};
+
+/**
+ * RatesByDate
+ *
+ * Daily rates organized by date.
+ */
+export type RatesByDateOutput = {
+    /**
+     * Day
+     */
+    day?: Array<Rate> | null;
+};
+
+/**
  * Reservation
  *
  * Reservation model.
@@ -1406,12 +1578,52 @@ export type ReservationOutput = {
 };
 
 /**
+ * ReservationCancellationItem
+ *
+ * Reservation item for cancellation.
+ */
+export type ReservationCancellationItem = {
+    /**
+     * Reservationidlist
+     */
+    reservationIdList?: Array<UniqueId> | null;
+    /**
+     * Hotelid
+     */
+    hotelId?: string | null;
+};
+
+/**
+ * ReservationCollection
+ *
+ * Collection wrapper for reservations.
+ */
+export type ReservationCollectionInput = {
+    /**
+     * Reservation
+     */
+    reservation?: Array<ReservationInput> | null;
+};
+
+/**
+ * ReservationCollection
+ *
+ * Collection wrapper for reservations.
+ */
+export type ReservationCollectionOutput = {
+    /**
+     * Reservation
+     */
+    reservation?: Array<ReservationOutput> | null;
+};
+
+/**
  * ReservationGuest
  *
  * Guest associated with a reservation.
  */
 export type ReservationGuestInput = {
-    profileInfo?: ProfileInfo | null;
+    profileInfo?: ProfileInfoInput | null;
     /**
      * Primary
      */
@@ -1424,7 +1636,7 @@ export type ReservationGuestInput = {
  * Guest associated with a reservation.
  */
 export type ReservationGuestOutput = {
-    profileInfo?: ProfileInfo | null;
+    profileInfo?: ProfileInfoOutput | null;
     /**
      * Primary
      */
@@ -1437,12 +1649,7 @@ export type ReservationGuestOutput = {
  * Response containing a list of reservations.
  */
 export type ReservationListResponse = {
-    /**
-     * Reservations
-     */
-    reservations?: {
-        [key: string]: Array<ReservationOutput>;
-    } | null;
+    reservations?: ReservationCollectionOutput | null;
 };
 
 /**
@@ -1540,12 +1747,7 @@ export type RevenueCategorySummaryType = {
  */
 export type RoomRateInput = {
     total?: RateTotal | null;
-    /**
-     * Rates
-     */
-    rates?: {
-        [key: string]: Array<Rate>;
-    } | null;
+    rates?: RatesByDateInput | null;
     /**
      * Roomtype
      */
@@ -1572,12 +1774,7 @@ export type RoomRateInput = {
  */
 export type RoomRateOutput = {
     total?: RateTotal | null;
-    /**
-     * Rates
-     */
-    rates?: {
-        [key: string]: Array<Rate>;
-    } | null;
+    rates?: RatesByDateOutput | null;
     /**
      * Roomtype
      */

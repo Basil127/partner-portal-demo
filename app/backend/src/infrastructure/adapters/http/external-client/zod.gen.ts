@@ -3,6 +3,22 @@
 import { z } from 'zod';
 
 /**
+ * AdditionalDetails
+ *
+ * Additional information related to the rate plan.
+ */
+export const zAdditionalDetails = z.object({
+    ratePlanMatches: z.optional(z.union([
+        z.boolean(),
+        z.null()
+    ])),
+    value: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+/**
  * Address
  *
  * Address information.
@@ -35,6 +51,50 @@ export const zAddress = z.object({
 });
 
 /**
+ * AlternatePropertyDistance
+ *
+ * Distance from the property to the alternate property.
+ */
+export const zAlternatePropertyDistance = z.object({
+    distance: z.optional(z.union([
+        z.number(),
+        z.null()
+    ])),
+    distanceUnit: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    compassDirection: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    comments: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+/**
+ * BlockInformation
+ *
+ * Block related information.
+ */
+export const zBlockInformation = z.object({
+    blockCode: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    blockId: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    blockName: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+/**
  * CancelReason
  *
  * Reason for cancellation.
@@ -46,22 +106,6 @@ export const zCancelReason = z.object({
     ])),
     code: z.optional(z.union([
         z.string(),
-        z.null()
-    ]))
-});
-
-/**
- * CancelReservationRequest
- *
- * Request to cancel a reservation.
- */
-export const zCancelReservationRequest = z.object({
-    reason: z.optional(z.union([
-        zCancelReason,
-        z.null()
-    ])),
-    reservations: z.optional(z.union([
-        z.array(z.record(z.string(), z.unknown())),
         z.null()
     ]))
 });
@@ -83,6 +127,18 @@ export const zCommunications = z.object({
 });
 
 /**
+ * Connectivity
+ *
+ * Connectivity status information.
+ */
+export const zConnectivity = z.object({
+    connectionStatus: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+/**
  * ContentRoomAmenity
  *
  * Room amenity information.
@@ -93,6 +149,22 @@ export const zContentRoomAmenity = z.object({
     quantity: z.int(),
     includeInRate: z.boolean(),
     confirmable: z.boolean()
+});
+
+/**
+ * Coordinates
+ *
+ * Geographic coordinates.
+ */
+export const zCoordinates = z.object({
+    latitude: z.optional(z.union([
+        z.number(),
+        z.null()
+    ])),
+    longitude: z.optional(z.union([
+        z.number(),
+        z.null()
+    ]))
 });
 
 /**
@@ -386,6 +458,58 @@ export const zContentRoomType = z.object({
 });
 
 /**
+ * OfferCancelPenalty
+ *
+ * Cancellation penalty details.
+ */
+export const zOfferCancelPenalty = z.object({
+    deadline: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    amountPercent: z.optional(z.union([
+        z.number(),
+        z.null()
+    ])),
+    currencyCode: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    penaltyDescription: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+/**
+ * OfferDepositPolicy
+ *
+ * Deposit policy details.
+ */
+export const zOfferDepositPolicy = z.object({
+    depositRequired: z.optional(z.union([
+        z.boolean(),
+        z.null()
+    ])),
+    amountPercent: z.optional(z.union([
+        z.number(),
+        z.null()
+    ])),
+    currencyCode: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    deadline: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    depositDescription: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+/**
  * OfferDetailsRoomType
  *
  * Detailed room type for an offer.
@@ -556,7 +680,7 @@ export const zOfferRateInformation = z.object({
         z.null()
     ])),
     cancellationPolicies: z.optional(z.union([
-        z.array(z.record(z.string(), z.unknown())),
+        z.array(zOfferCancelPenalty),
         z.null()
     ])),
     guaranteeRequirement: z.optional(z.union([
@@ -564,7 +688,7 @@ export const zOfferRateInformation = z.object({
         z.null()
     ])),
     depositPolicies: z.optional(z.union([
-        z.array(z.record(z.string(), z.unknown())),
+        z.array(zOfferDepositPolicy),
         z.null()
     ]))
 });
@@ -590,13 +714,61 @@ export const zOfferTotalTypeWithTaxes = z.object({
 });
 
 /**
+ * PersonName
+ *
+ * Person name definition.
+ */
+export const zPersonName = z.object({
+    givenName: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    surname: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    nameType: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])).default('Primary')
+});
+
+/**
+ * Customer
+ *
+ * Customer information.
+ */
+export const zCustomer = z.object({
+    personName: z.optional(z.union([
+        z.array(zPersonName),
+        z.null()
+    ]))
+});
+
+/**
  * Profile
  *
  * Guest profile definition.
  */
-export const zProfile = z.object({
+export const zProfileInput = z.object({
     customer: z.optional(z.union([
-        z.record(z.string(), z.unknown()),
+        zCustomer,
+        z.null()
+    ])),
+    profileType: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])).default('Guest')
+});
+
+/**
+ * Profile
+ *
+ * Guest profile definition.
+ */
+export const zProfileOutput = z.object({
+    customer: z.optional(z.union([
+        zCustomer,
         z.null()
     ])),
     profileType: z.optional(z.union([
@@ -664,11 +836,11 @@ export const zPropertyOffersPropertyInfo = z.object({
         z.null()
     ])),
     propertyAmenities: z.optional(z.union([
-        z.array(z.record(z.string(), z.unknown())),
+        z.array(zPropertyOffersHotelAmenity),
         z.null()
     ])),
     distance: z.optional(z.union([
-        z.record(z.string(), z.unknown()),
+        zAlternatePropertyDistance,
         z.null()
     ]))
 });
@@ -752,7 +924,7 @@ export const zPropertySearchRatePlan = z.object({
         z.null()
     ])),
     additionalDetails: z.optional(z.union([
-        z.record(z.string(), z.unknown()),
+        zAdditionalDetails,
         z.null()
     ]))
 });
@@ -856,7 +1028,7 @@ export const zOffer = z.object({
         z.null()
     ])),
     blockInformation: z.optional(z.union([
-        z.record(z.string(), z.unknown()),
+        zBlockInformation,
         z.null()
     ]))
 });
@@ -1042,6 +1214,30 @@ export const zRate = z.object({
 });
 
 /**
+ * RatesByDate
+ *
+ * Daily rates organized by date.
+ */
+export const zRatesByDateInput = z.object({
+    day: z.optional(z.union([
+        z.array(zRate),
+        z.null()
+    ]))
+});
+
+/**
+ * RatesByDate
+ *
+ * Daily rates organized by date.
+ */
+export const zRatesByDateOutput = z.object({
+    day: z.optional(z.union([
+        z.array(zRate),
+        z.null()
+    ]))
+});
+
+/**
  * ReservationSummary
  *
  * Simplified reservation summary.
@@ -1178,7 +1374,7 @@ export const zRoomRateInput = z.object({
         z.null()
     ])),
     rates: z.optional(z.union([
-        z.record(z.string(), z.array(zRate)),
+        zRatesByDateInput,
         z.null()
     ])),
     roomType: z.optional(z.union([
@@ -1214,7 +1410,7 @@ export const zRoomRateOutput = z.object({
         z.null()
     ])),
     rates: z.optional(z.union([
-        z.record(z.string(), z.array(zRate)),
+        zRatesByDateOutput,
         z.null()
     ])),
     roomType: z.optional(z.union([
@@ -1450,11 +1646,11 @@ export const zOfferDetailsPropertyInfo = z.object({
         z.null()
     ])),
     propertyAmenities: z.optional(z.union([
-        z.array(z.record(z.string(), z.unknown())),
+        z.array(zPropertyOffersHotelAmenity),
         z.null()
     ])),
     distance: z.optional(z.union([
-        z.record(z.string(), z.unknown()),
+        zAlternatePropertyDistance,
         z.null()
     ])),
     generalInformation: z.optional(z.union([
@@ -1548,13 +1744,61 @@ export const zCancelReservationDetails = z.object({
  *
  * Profile info containing profile details.
  */
-export const zProfileInfo = z.object({
+export const zProfileInfoInput = z.object({
     profileIdList: z.optional(z.union([
         z.array(zUniqueId),
         z.null()
     ])),
     profile: z.optional(z.union([
-        zProfile,
+        zProfileInput,
+        z.null()
+    ]))
+});
+
+/**
+ * ProfileInfo
+ *
+ * Profile info containing profile details.
+ */
+export const zProfileInfoOutput = z.object({
+    profileIdList: z.optional(z.union([
+        z.array(zUniqueId),
+        z.null()
+    ])),
+    profile: z.optional(z.union([
+        zProfileOutput,
+        z.null()
+    ]))
+});
+
+/**
+ * ReservationCancellationItem
+ *
+ * Reservation item for cancellation.
+ */
+export const zReservationCancellationItem = z.object({
+    reservationIdList: z.optional(z.union([
+        z.array(zUniqueId),
+        z.null()
+    ])),
+    hotelId: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+/**
+ * CancelReservationRequest
+ *
+ * Request to cancel a reservation.
+ */
+export const zCancelReservationRequest = z.object({
+    reason: z.optional(z.union([
+        zCancelReason,
+        z.null()
+    ])),
+    reservations: z.optional(z.union([
+        z.array(zReservationCancellationItem),
         z.null()
     ]))
 });
@@ -1566,7 +1810,7 @@ export const zProfileInfo = z.object({
  */
 export const zReservationGuestInput = z.object({
     profileInfo: z.optional(z.union([
-        zProfileInfo,
+        zProfileInfoInput,
         z.null()
     ])),
     primary: z.optional(z.union([
@@ -1608,12 +1852,24 @@ export const zReservationInput = z.object({
 });
 
 /**
+ * ReservationCollection
+ *
+ * Collection wrapper for reservations.
+ */
+export const zReservationCollectionInput = z.object({
+    reservation: z.optional(z.union([
+        z.array(zReservationInput),
+        z.null()
+    ]))
+});
+
+/**
  * CreateReservationRequest
  *
  * Request to create a reservation.
  */
 export const zCreateReservationRequest = z.object({
-    reservations: z.record(z.string(), z.array(zReservationInput))
+    reservations: zReservationCollectionInput
 });
 
 /**
@@ -1623,7 +1879,7 @@ export const zCreateReservationRequest = z.object({
  */
 export const zReservationGuestOutput = z.object({
     profileInfo: z.optional(z.union([
-        zProfileInfo,
+        zProfileInfoOutput,
         z.null()
     ])),
     primary: z.optional(z.union([
@@ -1665,13 +1921,25 @@ export const zReservationOutput = z.object({
 });
 
 /**
+ * ReservationCollection
+ *
+ * Collection wrapper for reservations.
+ */
+export const zReservationCollectionOutput = z.object({
+    reservation: z.optional(z.union([
+        z.array(zReservationOutput),
+        z.null()
+    ]))
+});
+
+/**
  * ReservationListResponse
  *
  * Response containing a list of reservations.
  */
 export const zReservationListResponse = z.object({
     reservations: z.optional(z.union([
-        z.record(z.string(), z.array(zReservationOutput)),
+        zReservationCollectionOutput,
         z.null()
     ]))
 });
@@ -1825,8 +2093,8 @@ export const zPropertySnippet = z.object({
         z.null()
     ])),
     address: z.optional(zOperaclone2WebApiContentSchemaAddress).default({}),
-    coordinates: z.optional(z.record(z.string(), z.number())).default({}),
-    connectivity: z.optional(z.record(z.string(), z.string())).default({}),
+    coordinates: z.optional(zCoordinates).default({}),
+    connectivity: z.optional(zConnectivity).default({}),
     meta: z.optional(z.record(z.string(), z.unknown())).default({})
 });
 

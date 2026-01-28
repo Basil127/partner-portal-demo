@@ -223,3 +223,186 @@ export const zGetApiHotelsByHotelCodeOfferResponse = z.object({
     ratePlan: z.optional(z.record(z.string(), z.unknown())),
     offer: z.optional(z.record(z.string(), z.unknown()))
 });
+
+export const zGetApiContentHotelsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        connectionStatusLastChangedFrom: z.optional(z.iso.datetime()),
+        connectionStatusLastChangedTo: z.optional(z.iso.datetime()),
+        connectionStatus: z.optional(z.string()),
+        fetchInstructions: z.optional(z.string()),
+        limit: z.optional(z.int()).default(20),
+        offset: z.optional(z.int()).default(0)
+    }))
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiContentHotelsResponse = z.object({
+    hasMore: z.optional(z.boolean()),
+    totalResults: z.optional(z.int()),
+    limit: z.optional(z.int()),
+    count: z.optional(z.int()),
+    offset: z.optional(z.int()),
+    hotels: z.optional(z.array(z.object({
+        hotelId: z.optional(z.string()),
+        hotelCode: z.optional(z.string()),
+        hotelName: z.optional(z.string()),
+        hotelDescription: z.optional(z.string())
+    })))
+});
+
+export const zGetApiContentHotelsByHotelCodeData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        hotelCode: z.string()
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiContentHotelsByHotelCodeResponse = z.object({
+    propertyInfo: z.optional(z.object({
+        hotelId: z.optional(z.string()),
+        enterpriseId: z.optional(z.string()),
+        hotelCode: z.optional(z.string()),
+        hotelName: z.optional(z.string()),
+        hotelDescription: z.optional(z.string()),
+        chainCode: z.optional(z.string())
+    }))
+});
+
+export const zGetApiContentHotelsByHotelCodeRoomTypesData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        hotelCode: z.string()
+    }),
+    query: z.optional(z.object({
+        includeRoomAmenities: z.optional(z.boolean()).default(false),
+        roomType: z.optional(z.string()),
+        limit: z.optional(z.int()).default(20),
+        offset: z.optional(z.int()).default(0)
+    }))
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiContentHotelsByHotelCodeRoomTypesResponse = z.object({
+    roomTypes: z.optional(z.array(z.object({
+        hotelRoomType: z.optional(z.string()),
+        roomType: z.optional(z.string()),
+        roomName: z.optional(z.string())
+    }))),
+    count: z.optional(z.int()),
+    hasMore: z.optional(z.boolean()),
+    limit: z.optional(z.int()),
+    offset: z.optional(z.int()),
+    totalResults: z.optional(z.int())
+});
+
+export const zGetApiHotelsByHotelIdReservationsData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        hotelId: z.string()
+    }),
+    query: z.optional(z.object({
+        surname: z.optional(z.string()),
+        givenName: z.optional(z.string()),
+        arrivalStartDate: z.optional(z.iso.date()),
+        arrivalEndDate: z.optional(z.iso.date()),
+        confirmationNumberList: z.optional(z.array(z.string())),
+        limit: z.optional(z.int()).default(100),
+        offset: z.optional(z.int()).default(0)
+    }))
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiHotelsByHotelIdReservationsResponse = z.object({
+    reservations: z.optional(z.object({
+        reservation: z.optional(z.array(z.record(z.string(), z.unknown())))
+    }))
+});
+
+export const zPostApiHotelsByHotelIdReservationsData = z.object({
+    body: z.optional(z.record(z.string(), z.unknown())),
+    path: z.object({
+        hotelId: z.string()
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * Default Response
+ */
+export const zPostApiHotelsByHotelIdReservationsResponse = z.record(z.string(), z.unknown());
+
+export const zGetApiHotelsByHotelIdReservationsSummaryData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        hotelId: z.string()
+    }),
+    query: z.optional(z.object({
+        arrivalDate: z.optional(z.iso.date()),
+        lastName: z.optional(z.string()),
+        limit: z.optional(z.int()).default(200),
+        offset: z.optional(z.int()).default(0)
+    }))
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiHotelsByHotelIdReservationsSummaryResponse = z.record(z.string(), z.unknown());
+
+export const zGetApiHotelsByHotelIdReservationsStatisticsData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        hotelId: z.string()
+    }),
+    query: z.optional(z.object({
+        startDate: z.optional(z.iso.date()),
+        endDate: z.optional(z.iso.date()),
+        limit: z.optional(z.int()).default(20),
+        offset: z.optional(z.int()).default(0)
+    }))
+});
+
+/**
+ * Default Response
+ */
+export const zGetApiHotelsByHotelIdReservationsStatisticsResponse = z.record(z.string(), z.unknown());
+
+export const zPutApiHotelsByHotelIdReservationsByReservationIdData = z.object({
+    body: z.optional(z.record(z.string(), z.unknown())),
+    path: z.object({
+        hotelId: z.string(),
+        reservationId: z.string()
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * Default Response
+ */
+export const zPutApiHotelsByHotelIdReservationsByReservationIdResponse = z.record(z.string(), z.unknown());
+
+export const zPostApiHotelsByHotelIdReservationsByReservationIdCancellationsData = z.object({
+    body: z.optional(z.record(z.string(), z.unknown())),
+    path: z.object({
+        hotelId: z.string(),
+        reservationId: z.string()
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * Default Response
+ */
+export const zPostApiHotelsByHotelIdReservationsByReservationIdCancellationsResponse = z.record(z.string(), z.unknown());

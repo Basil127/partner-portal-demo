@@ -2611,35 +2611,6 @@
 	},
 	"components": {
 		"schemas": {
-			"AdditionalDetails": {
-				"properties": {
-					"ratePlanMatches": {
-						"anyOf": [
-							{
-								"type": "boolean"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Rateplanmatches"
-					},
-					"value": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Value"
-					}
-				},
-				"type": "object",
-				"title": "AdditionalDetails",
-				"description": "Additional information related to the rate plan."
-			},
 			"Address": {
 				"properties": {
 					"addressLine": {
@@ -2715,97 +2686,6 @@
 				"type": "object",
 				"title": "Address",
 				"description": "Address information."
-			},
-			"AlternatePropertyDistance": {
-				"properties": {
-					"distance": {
-						"anyOf": [
-							{
-								"type": "number"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Distance"
-					},
-					"distanceUnit": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Distanceunit"
-					},
-					"compassDirection": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Compassdirection"
-					},
-					"comments": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Comments"
-					}
-				},
-				"type": "object",
-				"title": "AlternatePropertyDistance",
-				"description": "Distance from the property to the alternate property."
-			},
-			"BlockInformation": {
-				"properties": {
-					"blockCode": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Blockcode"
-					},
-					"blockId": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Blockid"
-					},
-					"blockName": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Blockname"
-					}
-				},
-				"type": "object",
-				"title": "BlockInformation",
-				"description": "Block related information."
 			},
 			"CancelReason": {
 				"properties": {
@@ -2895,7 +2775,8 @@
 						"anyOf": [
 							{
 								"items": {
-									"$ref": "#/components/schemas/ReservationCancellationItem"
+									"additionalProperties": true,
+									"type": "object"
 								},
 								"type": "array"
 							},
@@ -2970,24 +2851,6 @@
 				"type": "object",
 				"title": "Communications",
 				"description": "Property communication channels."
-			},
-			"Connectivity": {
-				"properties": {
-					"connectionStatus": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Connectionstatus"
-					}
-				},
-				"type": "object",
-				"title": "Connectivity",
-				"description": "Connectivity status information."
 			},
 			"ContentPropertyInfo": {
 				"properties": {
@@ -3346,66 +3209,23 @@
 				"title": "ContentRoomType",
 				"description": "Room type information."
 			},
-			"Coordinates": {
-				"properties": {
-					"latitude": {
-						"anyOf": [
-							{
-								"type": "number"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Latitude"
-					},
-					"longitude": {
-						"anyOf": [
-							{
-								"type": "number"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Longitude"
-					}
-				},
-				"type": "object",
-				"title": "Coordinates",
-				"description": "Geographic coordinates."
-			},
 			"CreateReservationRequest": {
 				"properties": {
 					"reservations": {
-						"$ref": "#/components/schemas/ReservationCollection-Input"
+						"additionalProperties": {
+							"items": {
+								"$ref": "#/components/schemas/Reservation-Input"
+							},
+							"type": "array"
+						},
+						"type": "object",
+						"title": "Reservations"
 					}
 				},
 				"type": "object",
 				"required": ["reservations"],
 				"title": "CreateReservationRequest",
 				"description": "Request to create a reservation."
-			},
-			"Customer": {
-				"properties": {
-					"personName": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/PersonName"
-								},
-								"type": "array"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Personname"
-					}
-				},
-				"type": "object",
-				"title": "Customer",
-				"description": "Customer information."
 			},
 			"Description": {
 				"properties": {
@@ -3958,130 +3778,19 @@
 					"blockInformation": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/BlockInformation"
+								"additionalProperties": true,
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Blockinformation"
 					}
 				},
 				"type": "object",
 				"title": "Offer",
 				"description": "Offer details."
-			},
-			"OfferCancelPenalty": {
-				"properties": {
-					"deadline": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Deadline"
-					},
-					"amountPercent": {
-						"anyOf": [
-							{
-								"type": "number"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Amountpercent"
-					},
-					"currencyCode": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Currencycode"
-					},
-					"penaltyDescription": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Penaltydescription"
-					}
-				},
-				"type": "object",
-				"title": "OfferCancelPenalty",
-				"description": "Cancellation penalty details."
-			},
-			"OfferDepositPolicy": {
-				"properties": {
-					"depositRequired": {
-						"anyOf": [
-							{
-								"type": "boolean"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Depositrequired"
-					},
-					"amountPercent": {
-						"anyOf": [
-							{
-								"type": "number"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Amountpercent"
-					},
-					"currencyCode": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Currencycode"
-					},
-					"deadline": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Deadline"
-					},
-					"depositDescription": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Depositdescription"
-					}
-				},
-				"type": "object",
-				"title": "OfferDepositPolicy",
-				"description": "Deposit policy details."
 			},
 			"OfferDetailsPropertyInfo": {
 				"properties": {
@@ -4143,7 +3852,8 @@
 						"anyOf": [
 							{
 								"items": {
-									"$ref": "#/components/schemas/PropertyOffersHotelAmenity"
+									"additionalProperties": true,
+									"type": "object"
 								},
 								"type": "array"
 							},
@@ -4156,12 +3866,14 @@
 					"distance": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/AlternatePropertyDistance"
+								"additionalProperties": true,
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Distance"
 					},
 					"generalInformation": {
 						"anyOf": [
@@ -4689,7 +4401,8 @@
 						"anyOf": [
 							{
 								"items": {
-									"$ref": "#/components/schemas/OfferCancelPenalty"
+									"additionalProperties": true,
+									"type": "object"
 								},
 								"type": "array"
 							},
@@ -4714,7 +4427,8 @@
 						"anyOf": [
 							{
 								"items": {
-									"$ref": "#/components/schemas/OfferDepositPolicy"
+									"additionalProperties": true,
+									"type": "object"
 								},
 								"type": "array"
 							},
@@ -4867,58 +4581,19 @@
 				"title": "OfferTotalTypeWithTaxes",
 				"description": "Total cost including taxes."
 			},
-			"PersonName": {
-				"properties": {
-					"givenName": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Givenname"
-					},
-					"surname": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Surname"
-					},
-					"nameType": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Nametype",
-						"default": "Primary"
-					}
-				},
-				"type": "object",
-				"title": "PersonName",
-				"description": "Person name definition."
-			},
-			"Profile-Input": {
+			"Profile": {
 				"properties": {
 					"customer": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/Customer"
+								"additionalProperties": true,
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Customer"
 					},
 					"profileType": {
 						"anyOf": [
@@ -4937,36 +4612,7 @@
 				"title": "Profile",
 				"description": "Guest profile definition."
 			},
-			"Profile-Output": {
-				"properties": {
-					"customer": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Customer"
-							},
-							{
-								"type": "null"
-							}
-						]
-					},
-					"profileType": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Profiletype",
-						"default": "Guest"
-					}
-				},
-				"type": "object",
-				"title": "Profile",
-				"description": "Guest profile definition."
-			},
-			"ProfileInfo-Input": {
+			"ProfileInfo": {
 				"properties": {
 					"profileIdList": {
 						"anyOf": [
@@ -4985,38 +4631,7 @@
 					"profile": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/Profile-Input"
-							},
-							{
-								"type": "null"
-							}
-						]
-					}
-				},
-				"type": "object",
-				"title": "ProfileInfo",
-				"description": "Profile info containing profile details."
-			},
-			"ProfileInfo-Output": {
-				"properties": {
-					"profileIdList": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/UniqueID"
-								},
-								"type": "array"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Profileidlist"
-					},
-					"profile": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Profile-Output"
+								"$ref": "#/components/schemas/Profile"
 							},
 							{
 								"type": "null"
@@ -5209,7 +4824,8 @@
 						"anyOf": [
 							{
 								"items": {
-									"$ref": "#/components/schemas/PropertyOffersHotelAmenity"
+									"additionalProperties": true,
+									"type": "object"
 								},
 								"type": "array"
 							},
@@ -5222,12 +4838,14 @@
 					"distance": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/AlternatePropertyDistance"
+								"additionalProperties": true,
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Distance"
 					}
 				},
 				"type": "object",
@@ -5686,12 +5304,14 @@
 					"additionalDetails": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/AdditionalDetails"
+								"additionalProperties": true,
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Additionaldetails"
 					}
 				},
 				"type": "object",
@@ -5817,11 +5437,19 @@
 						"default": {}
 					},
 					"coordinates": {
-						"$ref": "#/components/schemas/Coordinates",
+						"additionalProperties": {
+							"type": "number"
+						},
+						"type": "object",
+						"title": "Coordinates",
 						"default": {}
 					},
 					"connectivity": {
-						"$ref": "#/components/schemas/Connectivity",
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object",
+						"title": "Connectivity",
 						"default": {}
 					},
 					"meta": {
@@ -5955,48 +5583,6 @@
 				"type": "object",
 				"title": "RateTotal",
 				"description": "Rate total definition."
-			},
-			"RatesByDate-Input": {
-				"properties": {
-					"day": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Rate"
-								},
-								"type": "array"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Day"
-					}
-				},
-				"type": "object",
-				"title": "RatesByDate",
-				"description": "Daily rates organized by date."
-			},
-			"RatesByDate-Output": {
-				"properties": {
-					"day": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Rate"
-								},
-								"type": "array"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Day"
-					}
-				},
-				"type": "object",
-				"title": "RatesByDate",
-				"description": "Daily rates organized by date."
 			},
 			"Reservation-Input": {
 				"properties": {
@@ -6156,86 +5742,12 @@
 				"title": "Reservation",
 				"description": "Reservation model."
 			},
-			"ReservationCancellationItem": {
-				"properties": {
-					"reservationIdList": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/UniqueID"
-								},
-								"type": "array"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Reservationidlist"
-					},
-					"hotelId": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Hotelid"
-					}
-				},
-				"type": "object",
-				"title": "ReservationCancellationItem",
-				"description": "Reservation item for cancellation."
-			},
-			"ReservationCollection-Input": {
-				"properties": {
-					"reservation": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Reservation-Input"
-								},
-								"type": "array"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Reservation"
-					}
-				},
-				"type": "object",
-				"title": "ReservationCollection",
-				"description": "Collection wrapper for reservations."
-			},
-			"ReservationCollection-Output": {
-				"properties": {
-					"reservation": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Reservation-Output"
-								},
-								"type": "array"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Reservation"
-					}
-				},
-				"type": "object",
-				"title": "ReservationCollection",
-				"description": "Collection wrapper for reservations."
-			},
 			"ReservationGuest-Input": {
 				"properties": {
 					"profileInfo": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/ProfileInfo-Input"
+								"$ref": "#/components/schemas/ProfileInfo"
 							},
 							{
 								"type": "null"
@@ -6264,7 +5776,7 @@
 					"profileInfo": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/ProfileInfo-Output"
+								"$ref": "#/components/schemas/ProfileInfo"
 							},
 							{
 								"type": "null"
@@ -6293,12 +5805,19 @@
 					"reservations": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/ReservationCollection-Output"
+								"additionalProperties": {
+									"items": {
+										"$ref": "#/components/schemas/Reservation-Output"
+									},
+									"type": "array"
+								},
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Reservations"
 					}
 				},
 				"type": "object",
@@ -6491,12 +6010,19 @@
 					"rates": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/RatesByDate-Input"
+								"additionalProperties": {
+									"items": {
+										"$ref": "#/components/schemas/Rate"
+									},
+									"type": "array"
+								},
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Rates"
 					},
 					"roomType": {
 						"anyOf": [
@@ -6574,12 +6100,19 @@
 					"rates": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/RatesByDate-Output"
+								"additionalProperties": {
+									"items": {
+										"$ref": "#/components/schemas/Rate"
+									},
+									"type": "array"
+								},
+								"type": "object"
 							},
 							{
 								"type": "null"
 							}
-						]
+						],
+						"title": "Rates"
 					},
 					"roomType": {
 						"anyOf": [

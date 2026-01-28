@@ -269,3 +269,79 @@ export interface RoomTypesResponse {
 	offset?: number | null;
 	totalResults?: number | null;
 }
+
+export interface ReservationListResponse {
+	reservations?: any[] | null;
+	count?: number | null;
+	hasMore?: boolean | null;
+	limit?: number | null;
+	offset?: number | null;
+	totalResults?: number | null;
+}
+
+export interface ReservationSummaryResponse {
+	reservations?: any[] | null;
+	count?: number | null;
+	hasMore?: boolean | null;
+	limit?: number | null;
+	offset?: number | null;
+	totalResults?: number | null;
+}
+
+export interface CheckDistributionReservationsSummary {
+	statistics?: any[] | null;
+	count?: number | null;
+	hasMore?: boolean | null;
+	limit?: number | null;
+	offset?: number | null;
+	totalResults?: number | null;
+}
+
+export interface CancelReservationDetails {
+	cancellationNumber?: string | null;
+	status?: string | null;
+}
+
+export interface CreateReservationRequest {
+	[key: string]: any;
+}
+
+export interface CancelReservationRequest {
+	reason?: {
+		description?: string | null;
+		code?: string | null;
+	} | null;
+	reservations?: Array<Record<string, any>> | null;
+}
+
+export interface HotelReservationsRequestHeaders {
+	channelCode: string;
+	authorization?: string;
+	appKey?: string;
+	requestId?: string;
+	originatingApplication?: string;
+}
+
+export interface GetHotelReservationsQuery {
+	surname?: string | null;
+	givenName?: string | null;
+	arrivalStartDate?: string | null;
+	arrivalEndDate?: string | null;
+	confirmationNumberList?: string[] | null;
+	limit?: number;
+	offset?: number;
+}
+
+export interface GetReservationsSummaryQuery {
+	arrivalDate?: string | null;
+	lastName?: string | null;
+	limit?: number;
+	offset?: number;
+}
+
+export interface GetReservationStatisticsQuery {
+	startDate?: string | null;
+	endDate?: string | null;
+	limit?: number;
+	offset?: number;
+}

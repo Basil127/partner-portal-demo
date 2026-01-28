@@ -1,0 +1,62 @@
+architecture-beta
+    group cicd(cloud)[CI CD Pipeline - GitHub Actions]
+    group staging(cloud)[Staging Environment]
+    group production(cloud)[Production Environment]
+    group aws_infra(cloud)[AWS Shared Infrastructure]
+
+    service github_secrets(disk)[GitHub Secrets] in cicd
+    service ci_tests(server)[CI Tests] in cicd
+    service sonarqube(server)[SonarQube SAST] in cicd
+    service owasp(server)[OWASP ZAP] in cicd
+    service k6(server)[K6 Performance] in cicd
+
+    service stage_backend(server)[Backend FastAPI AppRunner] in staging
+    service stage_frontend(server)[Frontend Next.js Amplify] in staging
+    service stage_url(internet)[dev.zirorapulse.com] in staging
+
+    service prod_backend(server)[Backend FastAPI AppRunner] in production
+    service prod_frontend(server)[Frontend Next.js Amplify] in production
+    service prod_admin(server)[Admin Next.js Amplify] in production
+    service prod_url(internet)[www.zirorapulse.com] in production
+
+    service mongodb(database)[MongoDB EC2] in aws_infra
+    service db_test(disk)[Test DB] in aws_infra
+    service db_staging(disk)[Staging DB] in aws_infra
+    service db_production(disk)[Production DB] in aws_infra
+    service ssm(disk)[Systems Manager Parameter Store] in aws_infra
+    service amplify_shared(server)[Amplify Shared Hosting] in aws_infra
+
+    github_secrets:R --> L:ci_tests
+    ci_tests:R --> L:sonarqube
+    sonarqube:B --> T:owasp
+    owasp{group}:R --> L:stage_url{group}
+    
+    stage_url:B --> T:stage_backend
+    stage_url:B --> T:stage_frontend
+    stage_backend:R --> L:stage_frontend
+    
+    stage_backend:B --> T:db_staging
+    mongodb:T -- B:db_staging
+    mongodb:T -- B:db_test
+    mongodb:B -- T:db_production
+    
+    k6:R --> L:stage_backend
+    
+    stage_backend{group}:R --> L:prod_url{group}
+    
+    prod_url:B --> T:prod_backend
+    prod_url:B --> T:prod_frontend
+    prod_url:B --> T:prod_admin
+    prod_backend:R --> L:prod_frontend
+    prod_frontend:R --> L:prod_admin
+    
+    prod_backend:B --> T:db_production
+    
+    ssm:T -- B:stage_backend
+    ssm:T -- B:stage_frontend
+    ssm:T -- B:prod_backend
+    ssm:T -- B:prod_frontend
+    ssm:T -- B:prod_admin
+    
+    amplify_shared:L -- R:stage_frontend
+    amplify_shared:L -- R:prod_frontend

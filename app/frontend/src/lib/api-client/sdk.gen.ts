@@ -2,7 +2,7 @@
 
 import { client } from './client.gen';
 import type { Client, Options as Options2, TDataShape } from './client/index';
-import type { DeleteApiBookingsByIdData, DeleteApiBookingsByIdErrors, DeleteApiBookingsByIdResponses, GetApiBookingsByIdData, GetApiBookingsByIdErrors, GetApiBookingsByIdResponses, GetApiBookingsData, GetApiBookingsResponses, GetApiHotelsAvailabilityData, GetApiHotelsAvailabilityErrors, GetApiHotelsAvailabilityResponses, GetApiHotelsByHotelCodeOfferData, GetApiHotelsByHotelCodeOfferErrors, GetApiHotelsByHotelCodeOfferResponses, GetApiHotelsByHotelCodeOffersData, GetApiHotelsByHotelCodeOffersErrors, GetApiHotelsByHotelCodeOffersResponses, PostApiBookingsData, PostApiBookingsResponses, PutApiBookingsByIdData, PutApiBookingsByIdErrors, PutApiBookingsByIdResponses } from './types.gen';
+import type { DeleteApiBookingsByIdData, DeleteApiBookingsByIdErrors, DeleteApiBookingsByIdResponses, GetApiBookingsByIdData, GetApiBookingsByIdErrors, GetApiBookingsByIdResponses, GetApiBookingsData, GetApiBookingsResponses, GetApiContentHotelsByHotelCodeData, GetApiContentHotelsByHotelCodeResponses, GetApiContentHotelsByHotelCodeRoomTypesData, GetApiContentHotelsByHotelCodeRoomTypesResponses, GetApiContentHotelsData, GetApiContentHotelsResponses, GetApiHotelsAvailabilityData, GetApiHotelsAvailabilityErrors, GetApiHotelsAvailabilityResponses, GetApiHotelsByHotelCodeOfferData, GetApiHotelsByHotelCodeOfferErrors, GetApiHotelsByHotelCodeOfferResponses, GetApiHotelsByHotelCodeOffersData, GetApiHotelsByHotelCodeOffersErrors, GetApiHotelsByHotelCodeOffersResponses, GetApiHotelsByHotelIdReservationsData, GetApiHotelsByHotelIdReservationsResponses, GetApiHotelsByHotelIdReservationsStatisticsData, GetApiHotelsByHotelIdReservationsStatisticsResponses, GetApiHotelsByHotelIdReservationsSummaryData, GetApiHotelsByHotelIdReservationsSummaryResponses, PostApiBookingsData, PostApiBookingsResponses, PostApiHotelsByHotelIdReservationsByReservationIdCancellationsData, PostApiHotelsByHotelIdReservationsByReservationIdCancellationsResponses, PostApiHotelsByHotelIdReservationsData, PostApiHotelsByHotelIdReservationsResponses, PutApiBookingsByIdData, PutApiBookingsByIdErrors, PutApiBookingsByIdResponses, PutApiHotelsByHotelIdReservationsByReservationIdData, PutApiHotelsByHotelIdReservationsByReservationIdResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -71,3 +71,69 @@ export const getApiHotelsByHotelCodeOffers = <ThrowOnError extends boolean = fal
  * Get a property offer from external provider
  */
 export const getApiHotelsByHotelCodeOffer = <ThrowOnError extends boolean = false>(options: Options<GetApiHotelsByHotelCodeOfferData, ThrowOnError>) => (options.client ?? client).get<GetApiHotelsByHotelCodeOfferResponses, GetApiHotelsByHotelCodeOfferErrors, ThrowOnError>({ url: '/api/hotels/{hotelCode}/offer', ...options });
+
+/**
+ * Get properties summary
+ */
+export const getApiContentHotels = <ThrowOnError extends boolean = false>(options?: Options<GetApiContentHotelsData, ThrowOnError>) => (options?.client ?? client).get<GetApiContentHotelsResponses, unknown, ThrowOnError>({ url: '/api/content/hotels', ...options });
+
+/**
+ * Get detailed property information
+ */
+export const getApiContentHotelsByHotelCode = <ThrowOnError extends boolean = false>(options: Options<GetApiContentHotelsByHotelCodeData, ThrowOnError>) => (options.client ?? client).get<GetApiContentHotelsByHotelCodeResponses, unknown, ThrowOnError>({ url: '/api/content/hotels/{hotelCode}', ...options });
+
+/**
+ * Get room types for a property
+ */
+export const getApiContentHotelsByHotelCodeRoomTypes = <ThrowOnError extends boolean = false>(options: Options<GetApiContentHotelsByHotelCodeRoomTypesData, ThrowOnError>) => (options.client ?? client).get<GetApiContentHotelsByHotelCodeRoomTypesResponses, unknown, ThrowOnError>({ url: '/api/content/hotels/{hotelCode}/roomTypes', ...options });
+
+/**
+ * Get reservations for a hotel
+ */
+export const getApiHotelsByHotelIdReservations = <ThrowOnError extends boolean = false>(options: Options<GetApiHotelsByHotelIdReservationsData, ThrowOnError>) => (options.client ?? client).get<GetApiHotelsByHotelIdReservationsResponses, unknown, ThrowOnError>({ url: '/api/hotels/{hotelId}/reservations', ...options });
+
+/**
+ * Create a reservation
+ */
+export const postApiHotelsByHotelIdReservations = <ThrowOnError extends boolean = false>(options: Options<PostApiHotelsByHotelIdReservationsData, ThrowOnError>) => (options.client ?? client).post<PostApiHotelsByHotelIdReservationsResponses, unknown, ThrowOnError>({
+    url: '/api/hotels/{hotelId}/reservations',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get reservations summary
+ */
+export const getApiHotelsByHotelIdReservationsSummary = <ThrowOnError extends boolean = false>(options: Options<GetApiHotelsByHotelIdReservationsSummaryData, ThrowOnError>) => (options.client ?? client).get<GetApiHotelsByHotelIdReservationsSummaryResponses, unknown, ThrowOnError>({ url: '/api/hotels/{hotelId}/reservations/summary', ...options });
+
+/**
+ * Get reservation statistics
+ */
+export const getApiHotelsByHotelIdReservationsStatistics = <ThrowOnError extends boolean = false>(options: Options<GetApiHotelsByHotelIdReservationsStatisticsData, ThrowOnError>) => (options.client ?? client).get<GetApiHotelsByHotelIdReservationsStatisticsResponses, unknown, ThrowOnError>({ url: '/api/hotels/{hotelId}/reservations/statistics', ...options });
+
+/**
+ * Update a reservation
+ */
+export const putApiHotelsByHotelIdReservationsByReservationId = <ThrowOnError extends boolean = false>(options: Options<PutApiHotelsByHotelIdReservationsByReservationIdData, ThrowOnError>) => (options.client ?? client).put<PutApiHotelsByHotelIdReservationsByReservationIdResponses, unknown, ThrowOnError>({
+    url: '/api/hotels/{hotelId}/reservations/{reservationId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Cancel a reservation
+ */
+export const postApiHotelsByHotelIdReservationsByReservationIdCancellations = <ThrowOnError extends boolean = false>(options: Options<PostApiHotelsByHotelIdReservationsByReservationIdCancellationsData, ThrowOnError>) => (options.client ?? client).post<PostApiHotelsByHotelIdReservationsByReservationIdCancellationsResponses, unknown, ThrowOnError>({
+    url: '/api/hotels/{hotelId}/reservations/{reservationId}/cancellations',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
