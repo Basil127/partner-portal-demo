@@ -7,6 +7,7 @@ from fastapi import Depends
 from operaclone2.db.dao.hotel_dao import HotelDAO
 from operaclone2.web.api.shop.schema import (
     Address,
+    BlockInformation,
     HotelAvailabilityStatus,
     Offer,
     OfferDetailsPropertyInfo,
@@ -331,6 +332,6 @@ class ShopService:
                     amountAfterTax=total_with_tax,
                     currencyCode="USD",
                 ),
-                blockInformation={"blockCode": "BLK1"},
+                blockInformation=BlockInformation(blockCode="BLK1"),
             ),
         )

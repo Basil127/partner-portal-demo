@@ -15,6 +15,19 @@ class Address(BaseModel):
     state: str | None = None
 
 
+class Coordinates(BaseModel):
+    """Geographic coordinates."""
+
+    latitude: float | None = None
+    longitude: float | None = None
+
+
+class Connectivity(BaseModel):
+    """Connectivity status information."""
+
+    connectionStatus: str | None = None
+
+
 class PropertyOffersHotelAmenity(BaseModel):
     """Hotel amenity information."""
 
@@ -38,9 +51,9 @@ class PropertySnippet(BaseModel):
     hotelName: str | None = None
     hotelDescription: str | None = None
     address: Address = Address()
-    coordinates: dict[str, float] = {}
-    connectivity: dict[str, str] = {}
-    meta: dict[str, Any] = {}
+    coordinates: Coordinates = Coordinates()
+    connectivity: Connectivity = Connectivity()
+    meta: dict[str, Any] = {}  # Keep for extra metadata
 
 
 class ContentPropertyInfo(BaseModel):

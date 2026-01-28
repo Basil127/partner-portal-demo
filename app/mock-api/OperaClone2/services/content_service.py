@@ -6,9 +6,11 @@ from operaclone2.db.models.room_type import RoomType
 from operaclone2.errors.exceptions import HotelNotFoundError
 from operaclone2.web.api.content.schema import (
     Address,
+    Connectivity,
     ContentPropertyInfo,
     ContentRoomAmenity,
     ContentRoomType,
+    Coordinates,
     Occupancy,
     OfferPointOfInterest,
     PropertyInfoResponse,
@@ -106,13 +108,13 @@ class ContentService:
             hotelName=hotel.hotel_name,
             hotelDescription=hotel.hotel_description,
             address=self._map_address(hotel),
-            coordinates={
-                "latitude": hotel.latitude or 0.0,
-                "longitude": hotel.longitude or 0.0,
-            },
-            connectivity={
-                "connectionStatus": "Connected",  # Placeholder
-            },
+            coordinates=Coordinates(
+                latitude=hotel.latitude or 0.0,
+                longitude=hotel.longitude or 0.0,
+            ),
+            connectivity=Connectivity(
+                connectionStatus="Connected",  # Placeholder
+            ),
             meta=hotel.meta or {},
         )
 

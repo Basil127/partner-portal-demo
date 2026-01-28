@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Any
 
 from pydantic import BaseModel, ConfigDict
 
@@ -21,10 +20,16 @@ class PersonName(BaseModel):
     nameType: str | None = "Primary"
 
 
+class Customer(BaseModel):
+    """Customer information."""
+
+    personName: list[PersonName] | None = None
+
+
 class Profile(BaseModel):
     """Guest profile definition."""
 
-    customer: dict[str, Any] | None = None
+    customer: Customer | None = None
     profileType: str | None = "Guest"
 
 
@@ -73,11 +78,17 @@ class Rate(BaseModel):
     end: date | None = None
 
 
+class RatesByDate(BaseModel):
+    """Daily rates organized by date."""
+
+    day: list[Rate] | None = None
+
+
 class RoomRate(BaseModel):
     """Room rate details."""
 
     total: RateTotal | None = None
-    rates: dict[str, list[Rate]] | None = None
+    rates: RatesByDate | None = None
     roomType: str | None = None
     ratePlanCode: str | None = None
     start: date | None = None
@@ -108,10 +119,16 @@ class Reservation(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ReservationCollection(BaseModel):
+    """Collection wrapper for reservations."""
+
+    reservation: list[Reservation] | None = None
+
+
 class ReservationListResponse(BaseModel):
     """Response containing a list of reservations."""
 
-    reservations: dict[str, list[Reservation]] | None = None
+    reservations: ReservationCollection | None = None
 
 
 class ReservationSummary(BaseModel):
@@ -134,7 +151,7 @@ class ReservationSummaryResponse(BaseModel):
 class CreateReservationRequest(BaseModel):
     """Request to create a reservation."""
 
-    reservations: dict[str, list[Reservation]]
+    reservations: ReservationCollection
 
 
 class CancelReason(BaseModel):
@@ -144,11 +161,18 @@ class CancelReason(BaseModel):
     code: str | None = None
 
 
+class ReservationCancellationItem(BaseModel):
+    """Reservation item for cancellation."""
+
+    reservationIdList: list[UniqueID] | None = None
+    hotelId: str | None = None
+
+
 class CancelReservationRequest(BaseModel):
     """Request to cancel a reservation."""
 
     reason: CancelReason | None = None
-    reservations: list[dict[str, Any]] | None = None
+    reservations: list[ReservationCancellationItem] | None = None
 
 
 class CancelReservationDetails(BaseModel):

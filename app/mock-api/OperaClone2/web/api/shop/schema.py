@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any
 
 from pydantic import BaseModel
 
@@ -26,10 +25,33 @@ class Address(BaseModel):
     county: str | None = None
 
 
+class AlternatePropertyDistance(BaseModel):
+    """Distance from the property to the alternate property."""
+
+    distance: float | None = None
+    distanceUnit: str | None = None
+    compassDirection: str | None = None
+    comments: str | None = None
+
+
 class Description(BaseModel):
     """Description text."""
 
     text: str | None = None
+
+
+class AdditionalDetails(BaseModel):
+    """Additional information related to the rate plan."""
+
+    ratePlanMatches: bool | None = None
+    value: str | None = None
+
+
+class PropertyOffersHotelAmenity(BaseModel):
+    """Hotel amenity information."""
+
+    code: str | None = None
+    description: str | None = None
 
 
 class OfferRatePlanCommission(BaseModel):
@@ -52,6 +74,33 @@ class OfferMealPlan(BaseModel):
 
     code: str | None = None
     description: str | None = None
+
+
+class OfferCancelPenalty(BaseModel):
+    """Cancellation penalty details."""
+
+    deadline: str | None = None
+    amountPercent: float | None = None
+    currencyCode: str | None = None
+    penaltyDescription: str | None = None
+
+
+class OfferDepositPolicy(BaseModel):
+    """Deposit policy details."""
+
+    depositRequired: bool | None = None
+    amountPercent: float | None = None
+    currencyCode: str | None = None
+    deadline: str | None = None
+    depositDescription: str | None = None
+
+
+class BlockInformation(BaseModel):
+    """Block related information."""
+
+    blockCode: str | None = None
+    blockId: str | None = None
+    blockName: str | None = None
 
 
 class PromotionCodeItem(BaseModel):
@@ -81,8 +130,8 @@ class PropertyOffersPropertyInfo(PropertySearchPropertyInfo):
     """Property info for offers, extends search info."""
 
     address: Address | None = None
-    propertyAmenities: list[dict[str, Any]] | None = None
-    distance: dict[str, Any] | None = None
+    propertyAmenities: list[PropertyOffersHotelAmenity] | None = None
+    distance: AlternatePropertyDistance | None = None
 
 
 class OfferRateMode(BaseModel):
@@ -123,7 +172,7 @@ class PropertySearchRatePlan(BaseModel):
     identificationRequired: bool | None = None
     accountId: str | None = None
     availabilityStatus: str | None = None  # Enum/Ref
-    additionalDetails: dict[str, Any] | None = None
+    additionalDetails: AdditionalDetails | None = None
 
 
 class PropertySearchRoomStay(BaseModel):
@@ -183,9 +232,9 @@ class OfferRateInformation(BaseModel):
     """Details on the rate plan of the offer."""
 
     rate: OfferOverallRateInformation | None = None
-    cancellationPolicies: list[dict[str, Any]] | None = None
+    cancellationPolicies: list[OfferCancelPenalty] | None = None
     guaranteeRequirement: str | None = None
-    depositPolicies: list[dict[str, Any]] | None = None
+    depositPolicies: list[OfferDepositPolicy] | None = None
 
 
 class Offer(BaseModel):
@@ -200,7 +249,7 @@ class Offer(BaseModel):
     rateInformation: OfferRateInformation | None = None
     packages: list[RatePackage] | None = None
     total: OfferTotalTypeWithTaxes | None = None
-    blockInformation: dict[str, Any] | None = None
+    blockInformation: BlockInformation | None = None
 
 
 class PropertyOffersRoomStay(BaseModel):

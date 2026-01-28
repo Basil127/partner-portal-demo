@@ -11,8 +11,13 @@ from operaclone2.web.api.reservation.schema import (
     CancelReservationRequest,
     CheckDistributionReservationsSummary,
     CreateReservationRequest,
+    Customer,
     DistributionReservationSummaryType,
+    PersonName,
+    Profile,
+    ProfileInfo,
     Reservation,
+    ReservationCollection,
     ReservationGuest,
     ReservationListResponse,
     ReservationSummary,
@@ -72,40 +77,37 @@ class ReservationService:
 
         if not models:
             # Fallback mock data
-            mock_res = SimpleNamespace(
-                reservation_id="571062",
-                confirmation_number="813595",
-                hotel_id=hotel_id,
-                reservation_status="Reserved",
-                arrival_date=date(2026, 1, 22),
-                departure_date=date(2026, 1, 23),
-                guest_first_name="Jennifer",
-                guest_last_name="Clarke",
-                room_stay={
-                    "arrivalDate": date(2026, 1, 22),
-                    "departureDate": date(2026, 1, 23),
-                    "guarantee": {"guaranteeCode": "6PM", "shortDescription": "6pm Hold"},
-                },
-                reservation_guests=[
-                    {
-                        "profileInfo": {
-                            "profile": {
-                                "customer": {
-                                    "personName": [{"givenName": "Jennifer", "surname": "Clarke"}]
-                                }
-                            }
-                        },
-                        "primary": True,
-                    }
+            mock_reservation = Reservation(
+                reservationIdList=[
+                    UniqueID(id="571062", type="Reservation"),
+                    UniqueID(id="813595", type="Confirmation"),
                 ],
-                create_date_time=datetime.now(),
+                hotelId=hotel_id,
+                reservationStatus="Reserved",
+                roomStay=RoomStay(
+                    arrivalDate=date(2026, 1, 22),
+                    departureDate=date(2026, 1, 23),
+                ),
+                reservationGuests=[
+                    ReservationGuest(
+                        profileInfo=ProfileInfo(
+                            profile=Profile(
+                                customer=Customer(
+                                    personName=[PersonName(givenName="Jennifer", surname="Clarke")]
+                                )
+                            )
+                        ),
+                        primary=True,
+                    )
+                ],
+                createDateTime=datetime.now(),
             )
             return ReservationListResponse(
-                reservations={"reservation": [self._map_to_schema(mock_res)]}
+                reservations=ReservationCollection(reservation=[mock_reservation])
             )
 
         return ReservationListResponse(
-            reservations={"reservation": [self._map_to_schema(m) for m in models]}
+            reservations=ReservationCollection(reservation=[self._map_to_schema(m) for m in models])
         )
 
     async def get_reservations_summary(
@@ -158,17 +160,11 @@ class ReservationService:
         self, hotel_id: str, request: CreateReservationRequest
     ) -> ReservationListResponse:
         """Create a new reservation."""
-        # For simplicity, we take the first reservation in the request
-        reservation_list = request.reservations.get("reservation")
-        if not reservation_list and request.reservations:
-            # Fallback for Swagger UI's "additionalProp1" or other keys
-            reservation_list = next(iter(request.reservations.values()))
+        # Get reservation list from the ReservationCollection
+        if not request.reservations or not request.reservations.reservation:
+            return ReservationListResponse(reservations=ReservationCollection(reservation=[]))
 
-        if not reservation_list:
-            # Should probably raise an error or return empty, but to avoid crash:
-            return ReservationListResponse(reservations={"reservation": []})
-
-        res_data = reservation_list[0]
+        res_data = request.reservations.reservation[0]
 
         # Extract guest names for the top-level columns
         guest = res_data.reservationGuests[0] if res_data.reservationGuests else None
@@ -179,11 +175,12 @@ class ReservationService:
             and guest.profileInfo
             and guest.profileInfo.profile
             and guest.profileInfo.profile.customer
+            and guest.profileInfo.profile.customer.personName
         ):
-            person_names = guest.profileInfo.profile.customer.get("personName", [])
+            person_names = guest.profileInfo.profile.customer.personName
             if person_names:
-                first_name = person_names[0].get("givenName", "")
-                last_name = person_names[0].get("surname", "")
+                first_name = person_names[0].givenName or ""
+                last_name = person_names[0].surname or ""
 
         conf_num = str(uuid4().int)[:8]
         res_id = str(uuid4().int)[:6]
@@ -206,7 +203,9 @@ class ReservationService:
             reservation_status="Reserved",
         )
 
-        return ReservationListResponse(reservations={"reservation": [self._map_to_schema(model)]})
+        return ReservationListResponse(
+            reservations=ReservationCollection(reservation=[self._map_to_schema(model)])
+        )
 
     async def update_reservation(
         self, hotel_id: str, reservation_id: str, request: Any
@@ -236,11 +235,11 @@ class ReservationService:
                 create_date_time=datetime.now(),
             )
             return ReservationListResponse(
-                reservations={"reservation": [self._map_to_schema(mock_res)]}
+                reservations=ReservationCollection(reservation=[self._map_to_schema(mock_res)])
             )
 
         return ReservationListResponse(
-            reservations={"reservation": [self._map_to_schema(updated_model)]}
+            reservations=ReservationCollection(reservation=[self._map_to_schema(updated_model)])
         )
 
     async def cancel_reservation(
