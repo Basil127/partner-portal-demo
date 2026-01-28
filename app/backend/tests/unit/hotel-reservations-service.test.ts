@@ -32,7 +32,9 @@ describe('HotelReservationsService', () => {
 		const query: GetHotelReservationsQuery = { limit: 10 };
 		const headers: HotelReservationsRequestHeaders = { channelCode: 'OPERA' };
 		const expected: ReservationListResponse = {
-			reservations: [{ reservationId: '123' }],
+			reservations: {
+				reservation: [{ hotelId: 'HTL1', reservationStatus: 'Reserved' }],
+			},
 		};
 
 		repository.getHotelReservations.mockResolvedValue(expected);
@@ -48,7 +50,9 @@ describe('HotelReservationsService', () => {
 		const body = { guestId: 'G1' };
 		const headers: HotelReservationsRequestHeaders = { channelCode: 'OPERA' };
 		const expected: ReservationListResponse = {
-			reservations: [{ reservationId: '123' }],
+			reservations: {
+				reservation: [{ hotelId: 'HTL1', reservationStatus: 'Reserved' }],
+			},
 		};
 
 		repository.createReservation.mockResolvedValue(expected);
@@ -97,7 +101,9 @@ describe('HotelReservationsService', () => {
 		const body = { guestId: 'G1' };
 		const headers: HotelReservationsRequestHeaders = { channelCode: 'OPERA' };
 		const expected: ReservationListResponse = {
-			reservations: [{ reservationId: '123' }],
+			reservations: {
+				reservation: [{ hotelId: 'HTL1', reservationStatus: 'Reserved' }],
+			},
 		};
 
 		repository.updateReservation.mockResolvedValue(expected);

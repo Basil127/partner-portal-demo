@@ -37,7 +37,12 @@ import { config } from '../../../config/config.js';
  */
 const zLenientReservationListResponse = z.object({
 	reservations: z.optional(
-		z.union([z.record(z.string(), z.array(z.record(z.string(), z.unknown()))), z.null()]),
+		z.union([
+			z.object({
+				reservation: z.optional(z.union([z.array(z.record(z.string(), z.unknown())), z.null()])),
+			}),
+			z.null(),
+		]),
 	),
 });
 

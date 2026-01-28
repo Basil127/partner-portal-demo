@@ -270,13 +270,83 @@ export interface RoomTypesResponse {
 	totalResults?: number | null;
 }
 
-export interface ReservationListResponse {
-	reservations?: any[] | null;
+// Reservation types matching the mock-opera API structure
+export interface UniqueId {
+	id?: string | null;
+	type?: string | null;
+}
+
+export interface RoomRateAmount {
+	amountBeforeTax?: number | null;
+	amountAfterTax?: number | null;
+	currencyCode?: string | null;
+}
+
+export interface RoomRate {
+	start?: string | null;
+	end?: string | null;
+	roomType?: string | null;
+	ratePlanCode?: string | null;
+	total?: RoomRateAmount | null;
+}
+
+export interface GuestCount {
+	ageQualifyingCode?: string | null;
 	count?: number | null;
-	hasMore?: boolean | null;
-	limit?: number | null;
-	offset?: number | null;
-	totalResults?: number | null;
+}
+
+export interface Guarantee {
+	guaranteeCode?: string | null;
+	shortDescription?: string | null;
+}
+
+export interface RoomStay {
+	arrivalDate?: string | null;
+	departureDate?: string | null;
+	guarantee?: Guarantee | null;
+	roomRates?: RoomRate[] | null;
+	guestCounts?: GuestCount[] | null;
+}
+
+export interface PersonName {
+	givenName?: string | null;
+	surname?: string | null;
+}
+
+export interface Customer {
+	personName?: PersonName[] | null;
+}
+
+export interface Profile {
+	customer?: Customer | null;
+	profileType?: string | null;
+}
+
+export interface ProfileInfo {
+	profileIdList?: UniqueId[] | null;
+	profile?: Profile | null;
+}
+
+export interface ReservationGuest {
+	profileInfo?: ProfileInfo | null;
+	primary?: boolean | null;
+}
+
+export interface Reservation {
+	reservationIdList?: UniqueId[] | null;
+	roomStay?: RoomStay | null;
+	reservationGuests?: ReservationGuest[] | null;
+	hotelId?: string | null;
+	reservationStatus?: string | null;
+	createDateTime?: string | null;
+}
+
+export interface ReservationCollection {
+	reservation?: Reservation[] | null;
+}
+
+export interface ReservationListResponse {
+	reservations?: ReservationCollection | null;
 }
 
 export interface ReservationSummaryResponse {
