@@ -415,3 +415,128 @@ export interface GetReservationStatisticsQuery {
 	limit?: number;
 	offset?: number;
 }
+
+// ============================================
+// Hotel Inventory Types
+// ============================================
+
+/**
+ * Report code types for inventory statistics.
+ * Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.
+ */
+export type InventoryReportCode =
+	| 'DetailedAvailabiltySummary'
+	| 'RoomCalendarStatistics'
+	| 'SellLimitSummary'
+	| 'RoomsAvailabilitySummary';
+
+/**
+ * Request headers for hotel inventory API calls.
+ */
+export interface HotelInventoryRequestHeaders {
+	/** Channel code for the distribution channel */
+	channelCode: string;
+	/** Bearer authorization token */
+	authorization?: string;
+	/** Application key for API access */
+	appKey?: string;
+	/** Language preference for the response */
+	acceptLanguage?: string;
+	/** Unique request tracing ID */
+	requestId?: string;
+	/** Identifier for the originating application */
+	originatingApplication?: string;
+}
+
+/**
+ * Query parameters for fetching hotel inventory statistics.
+ */
+export interface InventoryStatisticsQuery {
+	/** Unique ID of the hotel where inventory statistics are searched */
+	hotelId: string;
+	/** The starting value of the date range (YYYY-MM-DD format) */
+	dateRangeStart: string;
+	/** The ending value of the date range (YYYY-MM-DD format) */
+	dateRangeEnd: string;
+	/** Identifies the type of statistics collected */
+	reportCode: InventoryReportCode;
+	/** Optional parameter names for filtering */
+	parameterName?: string[] | null;
+	/** Optional parameter values for filtering */
+	parameterValue?: string[] | null;
+}
+
+/**
+ * Revenue category summary for a statistic.
+ */
+export interface RevenueCategorySummary {
+	/** Revenue category code */
+	categoryCode?: string | null;
+	/** Revenue category description */
+	description?: string | null;
+	/** Revenue amount value */
+	amount?: number | null;
+	/** Currency code for the revenue amount */
+	currencyCode?: string | null;
+}
+
+/**
+ * Numeric/inventory category summary for a statistic.
+ */
+export interface NumericCategorySummary {
+	/** Category code for the numeric value */
+	categoryCode?: string | null;
+	/** Category description */
+	description?: string | null;
+	/** Numeric value for this category */
+	value?: number | null;
+}
+
+/**
+ * An instance of a statistic containing revenue and inventory summaries.
+ */
+export interface StatisticSet {
+	/** Collection of revenue category summaries */
+	revenue?: RevenueCategorySummary[] | null;
+	/** Collection of inventory/count category summaries */
+	inventory?: NumericCategorySummary[] | null;
+	/** Date of the statistic (YYYY-MM-DD format) */
+	statisticDate?: string | null;
+	/** Whether this statistic date is a weekend date */
+	weekendDate?: boolean | null;
+}
+
+/**
+ * Defines the codes and corresponding categories for statistics.
+ */
+export interface StatisticCode {
+	/** Collection of statistic summary data by date */
+	statisticDate?: StatisticSet[] | null;
+	/** Actual code used by the system to collect statistics */
+	statCode?: string | null;
+	/** Category code of the stat code (e.g., Market Segment) */
+	statCategoryCode?: string | null;
+	/** Class grouping of the stat code */
+	statCodeClass?: string | null;
+	/** Description of the statistic code */
+	description?: string | null;
+}
+
+/**
+ * Defines all details needed to create a statistical report.
+ */
+export interface InventoryStatistic {
+	/** Collection of statistic codes */
+	statistics?: StatisticCode[] | null;
+	/** Name of the hotel */
+	hotelName?: string | null;
+	/** Type of statistics collected */
+	reportCode?: string | null;
+	/** Description with revenue amount data */
+	description?: string | null;
+}
+
+/**
+ * Response containing an array of inventory statistics.
+ */
+export type InventoryStatisticsResponse = InventoryStatistic[];

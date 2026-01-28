@@ -3,14 +3,17 @@ import { BookingController } from '../../controllers/booking-controller.js';
 import { HotelShopController } from '../../controllers/hotel-shop/hotel-shop-controller.js';
 import { HotelContentController } from '../../controllers/hotel-content/hotel-content-controller.js';
 import { HotelReservationsController } from '../../controllers/hotel-reservations/hotel-reservations-controller.js';
+import { HotelInventoryController } from '../../controllers/hotel-inventory/hotel-inventory-controller.js';
 import { BookingService } from '../../../application/services/booking-service.js';
 import { HotelShopService } from '../../../application/services/hotel-shop/hotel-shop-service.js';
 import { HotelContentService } from '../../../application/services/hotel-content/hotel-content-service.js';
 import { HotelReservationsService } from '../../../application/services/hotel-reservations/hotel-reservations-service.js';
+import { HotelInventoryService } from '../../../application/services/hotel-inventory/hotel-inventory-service.js';
 import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
 import { HotelShopRepositoryImpl } from '../../repositories/hotel-shop/hotel-shop-repository-impl.js';
 import { HotelContentRepositoryImpl } from '../../repositories/hotel-content/hotel-content-repository-impl.js';
 import { HotelReservationsRepositoryImpl } from '../../repositories/hotel-reservations/hotel-reservations-repository-impl.js';
+import { HotelInventoryRepositoryImpl } from '../../repositories/hotel-inventory/hotel-inventory-repository-impl.js';
 import { createDatabaseAdapter } from '../database.js';
 
 export function setupRoutes(fastify: FastifyInstance) {
@@ -28,6 +31,9 @@ export function setupRoutes(fastify: FastifyInstance) {
 	const hotelReservationsRepository = new HotelReservationsRepositoryImpl();
 	const hotelReservationsService = new HotelReservationsService(hotelReservationsRepository);
 	const hotelReservationsController = new HotelReservationsController(hotelReservationsService);
+	const hotelInventoryRepository = new HotelInventoryRepositoryImpl();
+	const hotelInventoryService = new HotelInventoryService(hotelInventoryRepository);
+	const hotelInventoryController = new HotelInventoryController(hotelInventoryService);
 
 	// Booking routes
 	fastify.get('/api/bookings', {
@@ -1014,5 +1020,192 @@ export function setupRoutes(fastify: FastifyInstance) {
 			},
 		},
 		handler: hotelReservationsController.cancelReservation.bind(hotelReservationsController),
+	});
+
+	// Hotel Inventory endpoints
+	fastify.get('/api/hotels/:hotelId/inventory/statistics', {
+		schema: {
+			tags: ['hotel inventory'],
+			summary: 'Get Inventory Statistics',
+			description:
+				"Get a hotel's inventory statistics for a specified date range. This endpoint fetches inventory statistics based on the provided report code, which determines the type of statistics collected (e.g., DetailedAvailabilitySummary, RoomCalendarStatistics, SellLimitSummary, RoomsAvailabilitySummary).",
+			params: {
+				type: 'object',
+				required: ['hotelId'],
+				properties: {
+					hotelId: {
+						type: 'string',
+						minLength: 1,
+						maxLength: 2000,
+						description: 'Unique ID of the hotel where inventory statistics are searched.',
+					},
+				},
+			},
+			querystring: {
+				type: 'object',
+				required: ['dateRangeStart', 'dateRangeEnd', 'reportCode'],
+				properties: {
+					dateRangeStart: {
+						type: 'string',
+						format: 'date',
+						description: 'The starting value of the date range (YYYY-MM-DD format).',
+					},
+					dateRangeEnd: {
+						type: 'string',
+						format: 'date',
+						description: 'The ending value of the date range (YYYY-MM-DD format).',
+					},
+					reportCode: {
+						type: 'string',
+						enum: [
+							'DetailedAvailabiltySummary',
+							'RoomCalendarStatistics',
+							'SellLimitSummary',
+							'RoomsAvailabilitySummary',
+						],
+						description:
+							'Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.',
+					},
+					parameterName: {
+						type: 'array',
+						items: { type: 'string' },
+						nullable: true,
+						description: 'Optional parameter names for filtering statistics.',
+					},
+					parameterValue: {
+						type: 'array',
+						items: { type: 'string' },
+						nullable: true,
+						description: 'Optional parameter values for filtering statistics.',
+					},
+				},
+			},
+			response: {
+				200: {
+					type: 'array',
+					description: 'Array of inventory statistics for the requested hotel and date range.',
+					items: {
+						type: 'object',
+						description: 'Defines all details needed to create a statistical report.',
+						properties: {
+							statistics: {
+								type: 'array',
+								nullable: true,
+								description: 'Collection of statistic codes with their data.',
+								items: {
+									type: 'object',
+									description: 'Defines the codes and corresponding categories.',
+									properties: {
+										statisticDate: {
+											type: 'array',
+											nullable: true,
+											description: 'Collection of statistic summary data by date.',
+											items: {
+												type: 'object',
+												description:
+													'An instance of a statistic containing revenue and inventory summaries.',
+												properties: {
+													revenue: {
+														type: 'array',
+														nullable: true,
+														description: 'Collection of revenue category summaries.',
+														items: {
+															type: 'object',
+															properties: {
+																categoryCode: { type: 'string', nullable: true },
+																description: { type: 'string', nullable: true },
+																amount: { type: 'number', nullable: true },
+																currencyCode: { type: 'string', nullable: true },
+															},
+														},
+													},
+													inventory: {
+														type: 'array',
+														nullable: true,
+														description: 'Collection of inventory/count category summaries.',
+														items: {
+															type: 'object',
+															properties: {
+																categoryCode: { type: 'string', nullable: true },
+																description: { type: 'string', nullable: true },
+																value: { type: 'number', nullable: true },
+															},
+														},
+													},
+													statisticDate: {
+														type: 'string',
+														nullable: true,
+														description: 'Date of the statistic (YYYY-MM-DD format).',
+													},
+													weekendDate: {
+														type: 'boolean',
+														nullable: true,
+														description: 'Whether this statistic date is a weekend date.',
+													},
+												},
+											},
+										},
+										statCode: {
+											type: 'string',
+											nullable: true,
+											description:
+												'Actual code used by the system to collect statistics (e.g., CORP, RACK if category is Market Segment).',
+										},
+										statCategoryCode: {
+											type: 'string',
+											nullable: true,
+											description: 'Category code of the stat code (e.g., Market Segment).',
+										},
+										statCodeClass: {
+											type: 'string',
+											nullable: true,
+											description: 'Class grouping of the stat code.',
+										},
+										description: {
+											type: 'string',
+											nullable: true,
+											description: 'Description of the statistic code.',
+										},
+									},
+								},
+							},
+							hotelName: {
+								type: 'string',
+								nullable: true,
+								description: 'A text field used to communicate the proper name of the hotel.',
+							},
+							reportCode: {
+								type: 'string',
+								nullable: true,
+								description:
+									'Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.',
+							},
+							description: {
+								type: 'string',
+								nullable: true,
+								description:
+									'This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue.',
+							},
+						},
+					},
+				},
+				400: {
+					type: 'object',
+					description: 'Validation error response.',
+					properties: {
+						error: { type: 'string', description: 'Error message.' },
+						details: { type: 'array', description: 'Validation error details.' },
+					},
+				},
+				422: {
+					type: 'object',
+					description: 'Unprocessable entity error from external provider.',
+					properties: {
+						error: { type: 'string' },
+					},
+				},
+			},
+		},
+		handler: hotelInventoryController.getInventoryStatistics.bind(hotelInventoryController),
 	});
 }
