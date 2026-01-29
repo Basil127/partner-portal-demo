@@ -39,9 +39,9 @@ export default function HotelSearchCard({
 
 	return (
 		<div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
-			<div className="p-5 sm:p-6">
+			<div className="p-5 sm:p-3">
 				<div className="flex flex-wrap items-end justify-between gap-4">
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:flex lg:items-end">
+					<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:flex lg:items-end">
 						<div className="w-full lg:w-44">
 							<DatePicker
 								id="arrivalDate"
@@ -76,23 +76,27 @@ export default function HotelSearchCard({
 						</div>
 
 						{!isExpanded && (
-							<div className="flex items-center gap-2">
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => setIsExpanded(true)}
-									className="flex items-center gap-2"
-								>
-									More Filters <ChevronDownIcon className="w-4 h-4" />
-								</Button>
-								<Button
-									onClick={onSearch}
-									disabled={isDateRangeInvalid}
-									startIcon={<SearchIcon width={20} height={20} />}
-								>
-									Search
-								</Button>
-							</div>
+							<>
+								<div className="flex items-center gap-2">
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() => setIsExpanded(true)}
+										className="flex items-center gap-2"
+									>
+										More Filters <ChevronDownIcon className="w-4 h-4" />
+									</Button>
+								</div>
+								<div className="flex items-center gap-2">
+									<Button
+										onClick={onSearch}
+										disabled={isDateRangeInvalid}
+										startIcon={<SearchIcon width={20} height={20} />}
+									>
+										Search
+									</Button>
+								</div>
+							</>
 						)}
 					</div>
 
@@ -107,7 +111,7 @@ export default function HotelSearchCard({
 				</div>
 
 				{isExpanded && (
-					<div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 border-t border-gray-100 dark:border-gray-800 pt-6">
+					<div className="mt-6 grid gap-6 grid-cols-2 lg:grid-cols-4 border-t border-gray-100 dark:border-gray-800 pt-6">
 						<div className="grid grid-cols-2 gap-2">
 							<div>
 								<Label htmlFor="adults">Adults</Label>

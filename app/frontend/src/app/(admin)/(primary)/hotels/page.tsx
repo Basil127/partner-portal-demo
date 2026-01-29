@@ -69,29 +69,28 @@ export default function HotelsPage() {
 										// Updated for getApiContentHotels structure
 										const hotelName = hotel.hotelName || 'Hotel Name';
 										const hotelCode = hotel.hotelCode || 'CODE';
-										
+
 										// Fallback for address if it's not in the content API response yet
 										const address =
 											hotel.address ||
-											(hotelCode === 'MOV_EG_001'
-												? { cityName: 'El Gouna', countryCode: 'EG' }
-												: {});
+											(hotelCode === 'MOV_EG_001' ? { city: 'El Gouna', countryCode: 'EG' } : {});
 
-										const cityName = address?.cityName || 'City';
+										const cityName = address?.city || 'City';
 										const countryName = address?.countryCode || 'Country';
 
 										const detailsLink = `/hotels/${hotelCode}`;
 
 										return (
-											<TableRow key={index} className="border-b border-gray-100 dark:border-white/5">
+											<TableRow
+												key={index}
+												className="border-b border-gray-100 dark:border-white/5"
+											>
 												<TableCell className="px-5 py-4 text-sm text-gray-800 dark:text-white/90">
 													<Link
 														href={detailsLink}
 														className="block hover:text-brand-500 hover:underline"
 													>
-														<div className="font-medium">
-															{hotelName}
-														</div>
+														<div className="font-medium">{hotelName}</div>
 														<div className="text-xs text-gray-500">{hotelCode}</div>
 													</Link>
 												</TableCell>

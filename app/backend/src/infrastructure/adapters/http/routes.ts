@@ -248,13 +248,29 @@ export function setupRoutes(fastify: FastifyInstance) {
 											hotelCode: { type: 'string', nullable: true },
 											hotelName: { type: 'string', nullable: true },
 											chainCode: { type: 'string', nullable: true },
+											isAlternate: { type: 'boolean', nullable: true },
 										},
 									},
 									availability: { type: 'string', nullable: true },
 									ratePlans: {
 										type: 'array',
 										nullable: true,
-										items: { type: 'object', additionalProperties: true },
+										items: {
+											type: 'object',
+											properties: {
+												ratePlanCode: { type: 'string', nullable: true },
+												ratePlanName: { type: 'string', nullable: true },
+												ratePlanType: { type: 'string', nullable: true },
+												identificationRequired: { type: 'boolean', nullable: true },
+												accountId: { type: 'string', nullable: true },
+												availabilityStatus: { type: 'string', nullable: true },
+												additionalDetails: {
+													type: 'object',
+													nullable: true,
+													additionalProperties: true,
+												},
+											},
+										},
 									},
 									minRate: {
 										type: 'object',
@@ -349,6 +365,31 @@ export function setupRoutes(fastify: FastifyInstance) {
 											hotelCode: { type: 'string', nullable: true },
 											hotelName: { type: 'string', nullable: true },
 											chainCode: { type: 'string', nullable: true },
+											isAlternate: { type: 'boolean', nullable: true },
+											address: {
+												type: 'object',
+												nullable: true,
+												properties: {
+													addressLine: {
+														type: 'array',
+														items: { type: 'string' },
+														nullable: true,
+													},
+													city: { type: 'string', nullable: true },
+													postalCode: { type: 'string', nullable: true },
+													countryCode: { type: 'string', nullable: true },
+													state: { type: 'string', nullable: true },
+													county: { type: 'string', nullable: true },
+												},
+											},
+											distance: {
+												type: 'object',
+												nullable: true,
+												properties: {
+													distance: { type: 'number', nullable: true },
+													distanceUnit: { type: 'string', nullable: true },
+												},
+											},
 										},
 									},
 									availability: { type: 'string', nullable: true },
@@ -380,12 +421,61 @@ export function setupRoutes(fastify: FastifyInstance) {
 									ratePlans: {
 										type: 'array',
 										nullable: true,
-										items: { type: 'object', additionalProperties: true },
+										items: {
+											type: 'object',
+											additionalProperties: true,
+											properties: {
+												ratePlanCode: { type: 'string', nullable: true },
+												ratePlanName: { type: 'string', nullable: true },
+												ratePlanType: { type: 'string', nullable: true },
+												accessCode: { type: 'string', nullable: true },
+												identificationRequired: { type: 'boolean', nullable: true },
+												accountId: { type: 'string', nullable: true },
+												ratePlanLevel: { type: 'string', nullable: true },
+												ratePlanCategory: { type: 'string', nullable: true },
+												commissionable: { type: 'boolean', nullable: true },
+												commissionDescription: { type: 'string', nullable: true },
+											},
+										},
 									},
 									offers: {
 										type: 'array',
 										nullable: true,
-										items: { type: 'object', additionalProperties: true },
+										items: {
+											type: 'object',
+											properties: {
+												bookingCode: { type: 'string', nullable: true },
+												offerName: { type: 'string', nullable: true },
+												availabilityStatus: { type: 'string', nullable: true },
+												roomType: { type: 'string', nullable: true },
+												ratePlanCode: { type: 'string', nullable: true },
+												rateChangeDuringStay: { type: 'boolean', nullable: true },
+												rateInformation: {
+													type: 'object',
+													nullable: true,
+													additionalProperties: true,
+												},
+												packages: {
+													type: 'array',
+													nullable: true,
+													items: { type: 'object', additionalProperties: true },
+												},
+												total: {
+													type: 'object',
+													nullable: true,
+													properties: {
+														amountBeforeTax: { type: 'number', nullable: true },
+														amountAfterTax: { type: 'number', nullable: true },
+														currencyCode: { type: 'string', nullable: true },
+													},
+												},
+												blockInformation: {
+													type: 'object',
+													nullable: true,
+													additionalProperties: true,
+												},
+											},
+										},
 									},
 								},
 							},
@@ -447,6 +537,32 @@ export function setupRoutes(fastify: FastifyInstance) {
 								hotelCode: { type: 'string', nullable: true },
 								hotelName: { type: 'string', nullable: true },
 								chainCode: { type: 'string', nullable: true },
+								isAlternate: { type: 'boolean', nullable: true },
+								address: {
+									type: 'object',
+									nullable: true,
+									properties: {
+										addressLine: {
+											type: 'array',
+											items: { type: 'string' },
+											nullable: true,
+										},
+										city: { type: 'string', nullable: true },
+										postalCode: { type: 'string', nullable: true },
+										countryCode: { type: 'string', nullable: true },
+										state: { type: 'string', nullable: true },
+										county: { type: 'string', nullable: true },
+									},
+								},
+								distance: {
+									type: 'object',
+									nullable: true,
+									properties: {
+										distance: { type: 'number', nullable: true },
+										distanceUnit: { type: 'string', nullable: true },
+									},
+								},
+								// ... other fields from OfferDetailsPropertyInfo can be added here
 							},
 						},
 						availability: { type: 'string', nullable: true },
@@ -469,6 +585,14 @@ export function setupRoutes(fastify: FastifyInstance) {
 								ratePlanCode: { type: 'string', nullable: true },
 								ratePlanName: { type: 'string', nullable: true },
 								description: { type: 'string', nullable: true },
+								ratePlanType: { type: 'string', nullable: true },
+								accessCode: { type: 'string', nullable: true },
+								identificationRequired: { type: 'boolean', nullable: true },
+								accountId: { type: 'string', nullable: true },
+								ratePlanLevel: { type: 'string', nullable: true },
+								ratePlanCategory: { type: 'string', nullable: true },
+								commissionable: { type: 'boolean', nullable: true },
+								commissionDescription: { type: 'string', nullable: true },
 							},
 						},
 						offer: {
@@ -487,6 +611,16 @@ export function setupRoutes(fastify: FastifyInstance) {
 										amountAfterTax: { type: 'number', nullable: true },
 										currencyCode: { type: 'string', nullable: true },
 									},
+								},
+								rates: {
+									type: 'array',
+									nullable: true,
+									items: { type: 'object', additionalProperties: true },
+								},
+								guestCounts: {
+									type: 'object',
+									nullable: true,
+									additionalProperties: true,
 								},
 							},
 						},
@@ -539,6 +673,40 @@ export function setupRoutes(fastify: FastifyInstance) {
 									hotelCode: { type: 'string', nullable: true },
 									hotelName: { type: 'string', nullable: true },
 									hotelDescription: { type: 'string', nullable: true },
+									address: {
+										type: 'object',
+										nullable: true,
+										properties: {
+											lines: {
+												type: 'array',
+												items: { type: 'string' },
+												nullable: true,
+											},
+											city: { type: 'string', nullable: true },
+											postalCode: { type: 'string', nullable: true },
+											countryCode: { type: 'string', nullable: true },
+											state: { type: 'string', nullable: true },
+										},
+									},
+									coordinates: {
+										type: 'object',
+										nullable: true,
+										properties: {
+											latitude: { type: 'number', nullable: true },
+											longitude: { type: 'number', nullable: true },
+										},
+									},
+									connectivity: {
+										type: 'object',
+										nullable: true,
+										properties: {
+											connectionStatus: { type: 'string', nullable: true },
+										},
+									},
+									meta: {
+										type: 'object',
+										additionalProperties: true,
+									},
 								},
 							},
 						},
@@ -575,6 +743,52 @@ export function setupRoutes(fastify: FastifyInstance) {
 								hotelName: { type: 'string', nullable: true },
 								hotelDescription: { type: 'string', nullable: true },
 								chainCode: { type: 'string', nullable: true },
+								clusterCode: { type: 'string', nullable: true },
+								address: {
+									type: 'object',
+									nullable: true,
+									properties: {
+										lines: {
+											type: 'array',
+											items: { type: 'string' },
+											nullable: true,
+										},
+										city: { type: 'string', nullable: true },
+										postalCode: { type: 'string', nullable: true },
+										countryCode: { type: 'string', nullable: true },
+										state: { type: 'string', nullable: true },
+									},
+								},
+								latitude: { type: 'number', nullable: true },
+								longitude: { type: 'number', nullable: true },
+								propertyAmenities: {
+									type: 'array',
+									nullable: true,
+									items: {
+										type: 'object',
+										properties: {
+											code: { type: 'string', nullable: true },
+											description: { type: 'string', nullable: true },
+										},
+									},
+								},
+								pointOfInterest: {
+									type: 'array',
+									nullable: true,
+									items: {
+										type: 'object',
+										properties: {
+											name: { type: 'string', nullable: true },
+											distance: { type: 'number', nullable: true },
+											unit: { type: 'string', nullable: true },
+										},
+									},
+								},
+								marketingMessage: { type: 'string', nullable: true },
+								currencyCode: { type: 'string', nullable: true },
+								primaryLanguage: { type: 'string', nullable: true },
+								totalNumberOfRooms: { type: 'integer', nullable: true },
+								petPolicy: { type: 'string', nullable: true },
 							},
 						},
 					},
@@ -618,6 +832,44 @@ export function setupRoutes(fastify: FastifyInstance) {
 									hotelRoomType: { type: 'string', nullable: true },
 									roomType: { type: 'string', nullable: true },
 									roomName: { type: 'string', nullable: true },
+									description: {
+										type: 'array',
+										items: { type: 'string' },
+										nullable: true,
+									},
+									roomCategory: { type: 'string', nullable: true },
+									roomAmenities: {
+										type: 'array',
+										nullable: true,
+										items: {
+											type: 'object',
+											properties: {
+												roomAmenity: { type: 'string', nullable: true },
+												description: { type: 'string', nullable: true },
+												quantity: { type: 'integer', nullable: true },
+												includeInRate: { type: 'boolean', nullable: true },
+												confirmable: { type: 'boolean', nullable: true },
+											},
+										},
+									},
+									roomViewType: { type: 'string', nullable: true },
+									roomPrimaryBedType: { type: 'string', nullable: true },
+									nonSmokingInd: { type: 'boolean', nullable: true },
+									occupancy: {
+										type: 'object',
+										nullable: true,
+										properties: {
+											minOccupancy: { type: 'integer', nullable: true },
+											maxOccupancy: { type: 'integer', nullable: true },
+											minAge: { type: 'integer', nullable: true },
+											maxAge: { type: 'integer', nullable: true },
+											minAdults: { type: 'integer', nullable: true },
+											maxAdults: { type: 'integer', nullable: true },
+											minChildren: { type: 'integer', nullable: true },
+											maxChildren: { type: 'integer', nullable: true },
+										},
+									},
+									numberOfUnits: { type: 'integer', nullable: true },
 								},
 							},
 						},
@@ -708,10 +960,26 @@ export function setupRoutes(fastify: FastifyInstance) {
 														items: { type: 'object', additionalProperties: true },
 													},
 													guestCounts: {
-														type: 'array',
+														type: 'object',
 														nullable: true,
-														items: { type: 'object', additionalProperties: true },
+														properties: {
+															adults: { type: 'integer', nullable: true },
+															children: { type: 'integer', nullable: true },
+														},
 													},
+													total: {
+														type: 'object',
+														nullable: true,
+														properties: {
+															amountBeforeTax: { type: 'number', nullable: true },
+															amountAfterTax: { type: 'number', nullable: true },
+															currencyCode: { type: 'string', nullable: true },
+														},
+													},
+													roomType: { type: 'string', nullable: true },
+													ratePlanCode: { type: 'string', nullable: true },
+													marketCode: { type: 'string', nullable: true },
+													sourceCode: { type: 'string', nullable: true },
 												},
 											},
 											reservationGuests: {
@@ -896,6 +1164,10 @@ export function setupRoutes(fastify: FastifyInstance) {
 									numberOfRooms: { type: 'integer', nullable: true },
 									reservationStatus: { type: 'string', nullable: true },
 									confirmationId: { type: 'string', nullable: true },
+									legNumber: { type: 'string', nullable: true },
+									reservationId: { type: 'string', nullable: true },
+									guestName: { type: 'string', nullable: true },
+									creatorId: { type: 'string', nullable: true },
 								},
 							},
 						},
@@ -1091,6 +1363,27 @@ export function setupRoutes(fastify: FastifyInstance) {
 									type: 'object',
 									description: 'Defines the codes and corresponding categories.',
 									properties: {
+										statCode: {
+											type: 'string',
+											nullable: true,
+											description:
+												'Actual code used by the system to collect statistics (e.g., CORP, RACK if category is Market Segment).',
+										},
+										statCategoryCode: {
+											type: 'string',
+											nullable: true,
+											description: 'Category code of the stat code (e.g., Market Segment).',
+										},
+										statCodeClass: {
+											type: 'string',
+											nullable: true,
+											description: 'Class grouping of the stat code.',
+										},
+										description: {
+											type: 'string',
+											nullable: true,
+											description: 'Description of the statistic code.',
+										},
 										statisticDate: {
 											type: 'array',
 											nullable: true,
@@ -1100,6 +1393,17 @@ export function setupRoutes(fastify: FastifyInstance) {
 												description:
 													'An instance of a statistic containing revenue and inventory summaries.',
 												properties: {
+													statisticDate: {
+														type: 'string',
+														format: 'date',
+														nullable: true,
+														description: 'Date of the statistic (YYYY-MM-DD format).',
+													},
+													weekendDate: {
+														type: 'boolean',
+														nullable: true,
+														description: 'Whether this statistic date is a weekend date.',
+													},
 													revenue: {
 														type: 'array',
 														nullable: true,
@@ -1127,39 +1431,8 @@ export function setupRoutes(fastify: FastifyInstance) {
 															},
 														},
 													},
-													statisticDate: {
-														type: 'string',
-														nullable: true,
-														description: 'Date of the statistic (YYYY-MM-DD format).',
-													},
-													weekendDate: {
-														type: 'boolean',
-														nullable: true,
-														description: 'Whether this statistic date is a weekend date.',
-													},
 												},
 											},
-										},
-										statCode: {
-											type: 'string',
-											nullable: true,
-											description:
-												'Actual code used by the system to collect statistics (e.g., CORP, RACK if category is Market Segment).',
-										},
-										statCategoryCode: {
-											type: 'string',
-											nullable: true,
-											description: 'Category code of the stat code (e.g., Market Segment).',
-										},
-										statCodeClass: {
-											type: 'string',
-											nullable: true,
-											description: 'Class grouping of the stat code.',
-										},
-										description: {
-											type: 'string',
-											nullable: true,
-											description: 'Description of the statistic code.',
 										},
 									},
 								},

@@ -18,7 +18,7 @@
 		"build:frontend": "npm run build --workspace=app/frontend",
 		"test": "npm run test --workspace=app/backend",
 		"test:unit": "npm run test --workspace=app/backend",
-		"pre-commit": "npm run lint && npm run typecheck && npm run format:check",
+		"pre-commit": "npm run lint && npm run typecheck && npm run format",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",

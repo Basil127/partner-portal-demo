@@ -35,7 +35,7 @@ export const useHotelDetails = (hotelId: string) => {
 				path: { hotelCode: hotelId },
 				query: { includeRoomAmenities: true },
 			});
-			
+
 			if (roomsResponse.data?.roomTypes && roomsResponse.data.roomTypes.length > 0) {
 				setRoomTypes(roomsResponse.data.roomTypes as RoomType[]);
 			} else {

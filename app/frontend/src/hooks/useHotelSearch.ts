@@ -1,5 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { getApiContentHotels } from '@/lib/api-client/sdk.gen';
+import type { GetApiContentHotelsResponse } from '@/lib/api-client/types.gen';
+
+// Extract the Hotel type from the API response
+type Hotel = NonNullable<GetApiContentHotelsResponse['hotels']>[number];
 
 export const useHotelSearch = () => {
 	const today = new Date();
@@ -20,7 +24,7 @@ export const useHotelSearch = () => {
 		city: '',
 	});
 
-	const [hotels, setHotels] = useState<any[]>([]);
+	const [hotels, setHotels] = useState<Hotel[]>([]);
 	const [loading, setLoading] = useState(false);
 
 	const fetchHotels = useCallback(async () => {
@@ -30,8 +34,8 @@ export const useHotelSearch = () => {
 
 			console.log('Hotel Content Response:', response);
 
-			if (response.data && 'hotels' in response.data) {
-				setHotels(response.data.hotels as any[]);
+			if (response.data && 'hotels' in response.data && response.data.hotels) {
+				setHotels(response.data.hotels);
 			} else {
 				setHotels([]);
 			}

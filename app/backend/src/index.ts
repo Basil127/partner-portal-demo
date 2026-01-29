@@ -80,8 +80,8 @@ async function start() {
 			description: 'Health check endpoint',
 		},
 		handler: async () => {
-		return { status: 'ok', timestamp: new Date().toISOString() };
-	},
+			return { status: 'ok', timestamp: new Date().toISOString() };
+		},
 	});
 
 	try {
