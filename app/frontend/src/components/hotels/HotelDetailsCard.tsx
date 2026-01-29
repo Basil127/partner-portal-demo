@@ -15,16 +15,7 @@ export default function HotelDetailsCard({ hotelInfo }: HotelDetailsCardProps) {
 	const propertyAmenities =
 		hotelInfo.propertyAmenities && hotelInfo.propertyAmenities.length > 0
 			? hotelInfo.propertyAmenities
-			: [
-					{ code: 'wifi', description: 'Free Wi-Fi' },
-					{ code: 'parking', description: 'Free Parking' },
-					{ code: 'pool', description: 'Swimming Pool' },
-					{ code: 'gym', description: 'Fitness Center' },
-					{ code: 'spa', description: 'Spa & Wellness' },
-					{ code: 'restaurant', description: 'Restaurant' },
-					{ code: 'room-service', description: '24/7 Room Service' },
-					{ code: 'air-conditioning', description: 'Air Conditioning' },
-				];
+			: [{ code: 'missing', description: 'Missing Amenities Data' }];
 
 	// Mock images if none exist
 	const images = hotelInfo.images || [
@@ -38,10 +29,12 @@ export default function HotelDetailsCard({ hotelInfo }: HotelDetailsCardProps) {
 	const TagsAction = (
 		<div className="flex flex-wrap items-center gap-2 justify-end">
 			<Badge variant="light" color="info">
+				<span>Hotel Code: </span>
 				{hotelInfo.hotelCode}
 			</Badge>
 			{hotelInfo.chainCode && (
 				<Badge variant="light" color="light">
+					<span>Chain: </span>
 					{hotelInfo.chainCode}
 				</Badge>
 			)}
