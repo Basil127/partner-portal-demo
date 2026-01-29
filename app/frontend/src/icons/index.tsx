@@ -54,8 +54,22 @@ import BellIcon from './bell.svg';
 import BedIcon from './bed.svg';
 import BuildingsIcon from './buildings.svg';
 import SearchIcon from './search-outline.svg';
+import WifiIcon from './wifi-outline-svgrepo-com.svg';
+import BarbelIcon from './barbell-outline-svgrepo-com.svg';
+import GolfIcon from './golf-outline-svgrepo-com.svg';
+import WaterIcon from './water-outline-svgrepo-com.svg';
+import CallIcon from './call-outline-svgrepo-com.svg';
+import ChevronForward from './chevron-forward-outline-svgrepo-com.svg';
+import ChevronBack from './chevron-back-outline-svgrepo-com.svg';
 
 export {
+	ChevronBack,
+	ChevronForward,
+	CallIcon,
+	WaterIcon,
+	GolfIcon,
+	BarbelIcon,
+	WifiIcon,
 	DownloadIcon,
 	BellIcon,
 	MoreDotIcon,

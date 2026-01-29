@@ -6,18 +6,12 @@ import { usePathname } from 'next/navigation';
 import { useSidebar } from '../context/SidebarContext';
 import {
 	BedIcon,
-	BoxCubeIcon,
 	BuildingsIcon,
 	CalenderIcon,
 	ChatIcon,
 	ChevronDownIcon,
 	GridIcon,
 	HorizontaLDots,
-	ListIcon,
-	PageIcon,
-	PieChartIcon,
-	PlugInIcon,
-	TableIcon,
 	UserCircleIcon,
 } from '@/icons/index';
 
@@ -126,7 +120,7 @@ const AppSidebar: React.FC = () => {
 					{nav.subItems ? (
 						<button
 							onClick={() => handleSubmenuToggle(index, menuType)}
-							className={`menu-item ${!isExpanded && !isHovered && !isMobileOpen? 'flex justify-center' : ''} group ${
+							className={`menu-item ${!isExpanded && !isHovered && !isMobileOpen ? 'flex justify-center' : ''} group ${
 								openSubmenu?.type === menuType && openSubmenu?.index === index
 									? 'menu-item-active'
 									: 'menu-item-inactive'
@@ -160,7 +154,7 @@ const AppSidebar: React.FC = () => {
 						nav.path && (
 							<Link
 								href={nav.path}
-								className={`menu-item ${!isExpanded && !isHovered && !isMobileOpen? 'flex justify-center' : ''} group ${
+								className={`menu-item ${!isExpanded && !isHovered && !isMobileOpen ? 'flex justify-center' : ''} group ${
 									isActive(nav.path) ? 'menu-item-active' : 'menu-item-inactive'
 								}`}
 							>
@@ -251,7 +245,7 @@ const AppSidebar: React.FC = () => {
 		// Check if the current path matches any submenu item
 		let submenuMatched = false;
 		// ['main', 'others'].forEach((menuType) => {
-			// const items = menuType === 'main' ? navItems : othersItems;
+		// const items = menuType === 'main' ? navItems : othersItems;
 		const items = navItems;
 		items.forEach((nav, index) => {
 			if (nav.subItems) {
