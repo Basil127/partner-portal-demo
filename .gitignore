@@ -157,3 +157,7 @@ data/
 local/*
 local
 base-admin-dashboard
+
+# Generated openapi clients
+**/api-client
+**/external-client/

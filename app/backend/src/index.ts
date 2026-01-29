@@ -54,9 +54,8 @@ async function start() {
 			],
 			tags: [
 				{ name: 'health', description: 'Health check endpoints' },
-				{ name: 'bookings', description: 'Booking management endpoints' },
 				{ name: 'hotel shop', description: 'External hotel shopping endpoints' },
-				{ name: 'hotel inv', description: 'External hotel inventory endpoints' },
+				{ name: 'hotel inventory', description: 'External hotel inventory endpoints' },
 				{ name: 'hotel content', description: 'External hotel content endpoints' },
 				{ name: 'hotel reservations', description: 'External hotel reservations endpoints' },
 			],
@@ -75,8 +74,14 @@ async function start() {
 	setupRoutes(fastify);
 
 	// Health check
-	fastify.get('/health', async () => {
+	fastify.get('/health', {
+		schema: {
+			tags: ['health'],
+			description: 'Health check endpoint',
+		},
+		handler: async () => {
 		return { status: 'ok', timestamp: new Date().toISOString() };
+	},
 	});
 
 	try {

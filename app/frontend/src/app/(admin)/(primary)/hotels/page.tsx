@@ -1,5 +1,6 @@
 'use client';
 import ComponentCard from '@/components/common/ComponentCard';
+import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/components/ui/table';
 import Badge from '@/components/ui/badge/Badge';
 import Button from '@/components/ui/button/Button';
@@ -64,36 +65,58 @@ export default function HotelsPage() {
 										</TableCell>
 									</TableRow>
 								) : hotels.length > 0 ? (
-									hotels.map((hotel, index) => (
-										<TableRow key={index} className="border-b border-gray-100 dark:border-white/5">
-											<TableCell className="px-5 py-4 text-sm text-gray-800 dark:text-white/90">
-												<div className="font-medium">
-													{(hotel.propertyInfo as any)?.hotelName || 'Hotel Name'}
-												</div>
-												<div className="text-xs text-gray-500">
-													{(hotel.propertyInfo as any)?.hotelCode || 'CODE'}
-												</div>
-											</TableCell>
-											<TableCell className="px-5 py-4 text-sm text-gray-500">
-												{(hotel.propertyInfo as any)?.address?.cityName || 'City'},{' '}
-												{(hotel.propertyInfo as any)?.address?.countryCode || 'Country'}
-											</TableCell>
-											<TableCell className="px-5 py-4 text-sm text-gray-800 dark:text-white/90">
-												{hotel.minRate?.amountBeforeTax || '0.00'}{' '}
-												{hotel.minRate?.currencyCode || 'USD'}
-											</TableCell>
-											<TableCell className="px-5 py-4">
-												<Badge color="success" variant="light">
-													Available
-												</Badge>
-											</TableCell>
-											<TableCell className="px-5 py-4 text-right">
-												<Button size="sm" variant="outline">
-													View Offers
-												</Button>
-											</TableCell>
-										</TableRow>
-									))
+									hotels.map((hotel, index) => {
+										// Updated for getApiContentHotels structure
+										const hotelName = hotel.hotelName || 'Hotel Name';
+										const hotelCode = hotel.hotelCode || 'CODE';
+										
+										// Fallback for address if it's not in the content API response yet
+										const address =
+											hotel.address ||
+											(hotelCode === 'MOV_EG_001'
+												? { cityName: 'El Gouna', countryCode: 'EG' }
+												: {});
+
+										const cityName = address?.cityName || 'City';
+										const countryName = address?.countryCode || 'Country';
+
+										const detailsLink = `/hotels/${hotelCode}`;
+
+										return (
+											<TableRow key={index} className="border-b border-gray-100 dark:border-white/5">
+												<TableCell className="px-5 py-4 text-sm text-gray-800 dark:text-white/90">
+													<Link
+														href={detailsLink}
+														className="block hover:text-brand-500 hover:underline"
+													>
+														<div className="font-medium">
+															{hotelName}
+														</div>
+														<div className="text-xs text-gray-500">{hotelCode}</div>
+													</Link>
+												</TableCell>
+												<TableCell className="px-5 py-4 text-sm text-gray-500">
+													{cityName}, {countryName}
+												</TableCell>
+												<TableCell className="px-5 py-4 text-sm text-gray-800 dark:text-white/90">
+													{/* Price not available in content list */}
+													<span className="text-gray-400 text-xs">View for rates</span>
+												</TableCell>
+												<TableCell className="px-5 py-4">
+													<Badge color="info" variant="light">
+														Active
+													</Badge>
+												</TableCell>
+												<TableCell className="px-5 py-4 text-right">
+													<Link href={detailsLink}>
+														<Button size="sm" variant="outline">
+															View Details
+														</Button>
+													</Link>
+												</TableCell>
+											</TableRow>
+										);
+									})
 								) : (
 									<TableRow>
 										<TableCell colSpan={5} className="px-5 py-10 text-center text-gray-500">

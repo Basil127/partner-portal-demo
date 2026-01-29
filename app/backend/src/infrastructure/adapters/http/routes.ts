@@ -38,7 +38,6 @@ export function setupRoutes(fastify: FastifyInstance) {
 	// Booking routes
 	fastify.get('/api/bookings', {
 		schema: {
-			tags: ['bookings'],
 			description: 'Get all bookings',
 			response: {
 				200: {
@@ -65,7 +64,6 @@ export function setupRoutes(fastify: FastifyInstance) {
 
 	fastify.get('/api/bookings/:id', {
 		schema: {
-			tags: ['bookings'],
 			description: 'Get a booking by ID',
 			params: {
 				type: 'object',
@@ -101,7 +99,6 @@ export function setupRoutes(fastify: FastifyInstance) {
 
 	fastify.post('/api/bookings', {
 		schema: {
-			tags: ['bookings'],
 			description: 'Create a new booking',
 			body: {
 				type: 'object',
@@ -136,7 +133,6 @@ export function setupRoutes(fastify: FastifyInstance) {
 
 	fastify.put('/api/bookings/:id', {
 		schema: {
-			tags: ['bookings'],
 			description: 'Update a booking',
 			params: {
 				type: 'object',
@@ -181,7 +177,6 @@ export function setupRoutes(fastify: FastifyInstance) {
 
 	fastify.delete('/api/bookings/:id', {
 		schema: {
-			tags: ['bookings'],
 			description: 'Delete a booking',
 			params: {
 				type: 'object',

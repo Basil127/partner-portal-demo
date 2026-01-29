@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getApiHotelsAvailability } from '@/lib/api-client/sdk.gen';
+import { getApiContentHotels } from '@/lib/api-client/sdk.gen';
 
 export const useHotelSearch = () => {
 	const today = new Date();
@@ -26,23 +26,12 @@ export const useHotelSearch = () => {
 	const fetchHotels = useCallback(async () => {
 		setLoading(true);
 		try {
-			// In a real app, we'd use the provided hotelCodes. For demo, we might use a default or empty string.
-			const response = await getApiHotelsAvailability({
-				query: {
-					hotelCodes: 'MOV_EG_001', // Placeholder
-					arrivalDate: filters.arrivalDate,
-					departureDate: filters.departureDate,
-					adults: filters.adults,
-					children: filters.children,
-					minRate: filters.minRate ? Number(filters.minRate) : undefined,
-					maxRate: filters.maxRate ? Number(filters.maxRate) : undefined,
-				},
-			});
+			const response = await getApiContentHotels();
 
-			console.log('Hotel Search Response:', response);
+			console.log('Hotel Content Response:', response);
 
-			if (response.data && 'roomStays' in response.data) {
-				setHotels(response.data.roomStays as any[]);
+			if (response.data && 'hotels' in response.data) {
+				setHotels(response.data.hotels as any[]);
 			} else {
 				setHotels([]);
 			}
@@ -52,7 +41,7 @@ export const useHotelSearch = () => {
 		} finally {
 			setLoading(false);
 		}
-	}, [filters]);
+	}, []); // filters are not used in content api fetch, but we keep them for the search bar state
 
 	useEffect(() => {
 		fetchHotels();
