@@ -15,17 +15,39 @@ const AppHeader: React.FC = () => {
 
 	const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
-	const getPageTitle = (path: string) => {
+	const getBreadcrumbData = (path: string) => {
 		const segments = path.split('/').filter(Boolean);
-		if (segments.length === 0) return 'Dashboard';
-		const lastSegment = segments[segments.length - 1];
-		return lastSegment
+        let items: { label: string; href: string }[] = [];
+        let title = '';
+
+		if (segments.length === 0) return { title: 'Dashboard', items };
+
+        // Handle Hotels Routes
+        if (segments[0] === 'hotels') {
+            if (segments.length === 1) {
+                title = 'Hotels';
+            } else if (segments.length === 2) {
+                items.push({ label: 'Hotels', href: '/hotels' });
+                title = 'Hotel Details';
+            } else if (segments.length === 4 && segments[2] === 'room') {
+                items.push({ label: 'Hotels', href: '/hotels' });
+                items.push({ label: 'Hotel Details', href: `/hotels/${segments[1]}` });
+                title = 'Room Details';
+            }
+        }
+
+        if (!title) {
+             const lastSegment = segments[segments.length - 1];
+             title = lastSegment
 			.split('-')
 			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 			.join(' ');
+        }
+        
+		return { title, items };
 	};
 
-	const pageTitle = getPageTitle(pathname);
+	const { title: pageTitle, items: breadcrumbItems } = getBreadcrumbData(pathname);
 
 	const handleToggle = () => {
 		if (window.innerWidth >= 1024) {
@@ -84,7 +106,7 @@ const AppHeader: React.FC = () => {
 						</button>
 
 						<div className="hidden lg:block">
-							<PageBreadcrumb pageTitle={pageTitle} />
+							<PageBreadcrumb pageTitle={pageTitle} items={breadcrumbItems} />
 						</div>
 					</div>
 

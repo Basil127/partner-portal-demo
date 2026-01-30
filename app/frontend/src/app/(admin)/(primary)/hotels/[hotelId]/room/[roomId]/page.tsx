@@ -33,7 +33,7 @@ export default function RoomDetailPage() {
             { url: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&h=600&fit=crop' },
             { url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=600&fit=crop' },
         ],
-        // @ts-ignore - amenities might not be in generic RoomType yet but used in UI
+        // //@ts-expect-error - amenities might not be in generic RoomType yet but used in UI
         amenities: [
             { code: 'wifi', description: 'Free Wi-Fi (Mock)' },
             { code: 'ac', description: 'Air Conditioning (Mock)' },

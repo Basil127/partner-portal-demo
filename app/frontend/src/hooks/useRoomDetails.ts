@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useHotelDetails } from './useHotelDetails';
-import { RoomType, HotelInfo } from '@/components/hotels/types';
+import { RoomType } from '@/components/hotels/types';
 
 export const useRoomDetails = (hotelId: string, roomId: string) => {
 	const { hotelInfo, roomTypes, loading: hotelLoading, error: hotelError } = useHotelDetails(hotelId);

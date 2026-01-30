@@ -25,7 +25,7 @@ export const useHotelDetails = (hotelId: string) => {
 			const hotelResponse = await getApiContentHotelsByHotelCode({
 				path: { hotelCode: hotelId },
 			});
-
+			console.log('Hotel Details Response:', hotelResponse);
 			if (hotelResponse.data?.propertyInfo) {
 				setHotelInfo(hotelResponse.data.propertyInfo as HotelInfo);
 			}
@@ -37,6 +37,7 @@ export const useHotelDetails = (hotelId: string) => {
 			});
 
 			if (roomsResponse.data?.roomTypes && roomsResponse.data.roomTypes.length > 0) {
+				console.log('Room Types Response:', roomsResponse);
 				setRoomTypes(roomsResponse.data.roomTypes as RoomType[]);
 			} else {
 				// If no room data from API, add sample rooms for demonstration
