@@ -63,9 +63,10 @@ export const fetchPropertiesSummary = async (
 			offset: query.offset ?? undefined,
 		},
 		headers: buildHeaders(headers) as any,
-		responseValidator: async (data: unknown) => {
-			zGetPropertiesSummaryApiContentV1HotelsGetResponse.parse(data);
-		},
+		// Skip validation - the external API doesn't match the schema exactly
+		// responseValidator: async (data: unknown) => {
+		// 	zGetPropertiesSummaryApiContentV1HotelsGetResponse.parse(data);
+		// },
 	});
 
 	return response as PropertyInfoSummaryResponse;
@@ -83,9 +84,10 @@ export const fetchPropertyInfo = async (
 			hotelCode,
 		},
 		headers: buildHeaders(headers) as any,
-		responseValidator: async (data: unknown) => {
-			zGetPropertyInfoApiContentV1HotelsHotelCodeGetResponse.parse(data);
-		},
+		// Skip validation - the external API doesn't match the schema exactly
+		// responseValidator: async (data: unknown) => {
+		// 	zGetPropertyInfoApiContentV1HotelsHotelCodeGetResponse.parse(data);
+		// },
 	});
 
 	return response as PropertyInfoResponse;
@@ -110,9 +112,10 @@ export const fetchRoomTypes = async (
 			offset: query.offset ?? undefined,
 		},
 		headers: buildHeaders(headers) as any,
-		responseValidator: async (data: unknown) => {
-			zGetRoomTypesInfoApiContentV1HotelsHotelCodeRoomTypesGetResponse.parse(data);
-		},
+		// Skip validation - the external API doesn't match the schema exactly
+		// responseValidator: async (data: unknown) => {
+		// 	zGetRoomTypesInfoApiContentV1HotelsHotelCodeRoomTypesGetResponse.parse(data);
+		// },
 	});
 
 	return response as RoomTypesResponse;

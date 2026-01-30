@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
 	getApiContentHotelsByHotelCode,
 	getApiContentHotelsByHotelCodeRoomTypes,
-} from '@/lib/api-client/sdk.gen';
+} from '@/lib/api-client';
 import { HotelInfo, RoomType } from '@/components/hotels/types';
 
 export const useHotelDetails = (hotelId: string) => {
@@ -37,7 +37,7 @@ export const useHotelDetails = (hotelId: string) => {
 			});
 
 			if (roomsResponse.data?.roomTypes && roomsResponse.data.roomTypes.length > 0) {
-				console.log('Room Types Response:', roomsResponse);
+				console.log('Room Types Responses:', roomsResponse);
 				setRoomTypes(roomsResponse.data.roomTypes as RoomType[]);
 			} else {
 				// If no room data from API, add sample rooms for demonstration
