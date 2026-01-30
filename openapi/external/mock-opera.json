@@ -2678,7 +2678,7 @@
       },
       "Address": {
         "properties": {
-          "lines": {
+          "addressLine": {
             "anyOf": [
               {
                 "items": {
@@ -2690,7 +2690,7 @@
                 "type": "null"
               }
             ],
-            "title": "Lines"
+            "title": "Addressline"
           },
           "city": {
             "anyOf": [
@@ -2735,6 +2735,17 @@
               }
             ],
             "title": "State"
+          },
+          "county": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "County"
           }
         },
         "type": "object",
@@ -3096,7 +3107,7 @@
           "address": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/Address"
+                "$ref": "#/components/schemas/operaclone2__web__api__content__schema__Address"
               },
               {
                 "type": "null"
@@ -3879,7 +3890,7 @@
           "minOccupancy": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "number"
               },
               {
                 "type": "null"
@@ -3890,7 +3901,7 @@
           "maxOccupancy": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "number"
               },
               {
                 "type": "null"
@@ -3901,7 +3912,7 @@
           "maxAdultOccupancy": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "number"
               },
               {
                 "type": "null"
@@ -3912,7 +3923,7 @@
           "maxChildOccupancy": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "number"
               },
               {
                 "type": "null"
@@ -4204,7 +4215,7 @@
           "address": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/operaclone2__web__api__shop__schema__Address"
+                "$ref": "#/components/schemas/Address"
               },
               {
                 "type": "null"
@@ -5270,7 +5281,7 @@
           "address": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/operaclone2__web__api__shop__schema__Address"
+                "$ref": "#/components/schemas/Address"
               },
               {
                 "type": "null"
@@ -5885,7 +5896,7 @@
             "title": "Hoteldescription"
           },
           "address": {
-            "$ref": "#/components/schemas/Address",
+            "$ref": "#/components/schemas/operaclone2__web__api__content__schema__Address",
             "default": {
 
             }
@@ -7223,9 +7234,9 @@
         ],
         "title": "ValidationError"
       },
-      "operaclone2__web__api__shop__schema__Address": {
+      "operaclone2__web__api__content__schema__Address": {
         "properties": {
-          "addressLine": {
+          "lines": {
             "anyOf": [
               {
                 "items": {
@@ -7237,7 +7248,7 @@
                 "type": "null"
               }
             ],
-            "title": "Addressline"
+            "title": "Lines"
           },
           "city": {
             "anyOf": [
@@ -7282,17 +7293,6 @@
               }
             ],
             "title": "State"
-          },
-          "county": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "County"
           }
         },
         "type": "object",

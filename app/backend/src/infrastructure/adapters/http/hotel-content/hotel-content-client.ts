@@ -63,10 +63,9 @@ export const fetchPropertiesSummary = async (
 			offset: query.offset ?? undefined,
 		},
 		headers: buildHeaders(headers) as any,
-		// Skip validation - the external API doesn't match the schema exactly
-		// responseValidator: async (data: unknown) => {
-		// 	zGetPropertiesSummaryApiContentV1HotelsGetResponse.parse(data);
-		// },
+		responseValidator: async (data: unknown) => {
+			zGetPropertiesSummaryApiContentV1HotelsGetResponse.parse(data);
+		},
 	});
 
 	return response as PropertyInfoSummaryResponse;
