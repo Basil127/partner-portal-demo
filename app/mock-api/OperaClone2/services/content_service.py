@@ -183,6 +183,18 @@ class ContentService:
 
         occupancy_data = room_type.occupancy or {}
 
+        # Map DB keys to Schema keys if needed
+        parsed_occupancy = None
+        if occupancy_data:
+            parsed_occupancy = Occupancy(
+                minOccupancy=occupancy_data.get("minOccupancy"),
+                maxOccupancy=occupancy_data.get("maxOccupancy"),
+                maxAdultOccupancy=occupancy_data.get("maxAdultOccupancy")
+                or occupancy_data.get("maxAdults"),
+                maxChildOccupancy=occupancy_data.get("maxChildOccupancy")
+                or occupancy_data.get("maxChildren"),
+            )
+
         return ContentRoomType(
             hotelRoomType=room_type.hotel_room_type,
             roomType=room_type.room_type,
@@ -193,6 +205,6 @@ class ContentService:
             roomViewType=room_type.room_view_type,
             roomPrimaryBedType=room_type.room_primary_bed_type,
             nonSmokingInd=room_type.non_smoking_ind,
-            occupancy=Occupancy(**occupancy_data) if occupancy_data else None,
+            occupancy=parsed_occupancy,
             numberOfUnits=room_type.number_of_units,
         )

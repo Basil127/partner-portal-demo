@@ -97,10 +97,10 @@ class ContentRoomAmenity(BaseModel):
 class Occupancy(BaseModel):
     """Details on the occupancy of the room type."""
 
-    minOccupancy: int
-    maxOccupancy: int
-    maxAdultOccupancy: int
-    maxChildOccupancy: int
+    minOccupancy: int | None = None
+    maxOccupancy: int | None = None
+    maxAdultOccupancy: int | None = None
+    maxChildOccupancy: int | None = None
 
 
 class ContentRoomType(BaseModel):
