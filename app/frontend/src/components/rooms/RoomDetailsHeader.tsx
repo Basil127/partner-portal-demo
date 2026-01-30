@@ -1,5 +1,5 @@
 import React from 'react';
-import { RoomType } from './types';
+import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
 import CarouselImages from '@/components/ui/images/CarouselImages';
 import Badge from '@/components/ui/badge/Badge';
 

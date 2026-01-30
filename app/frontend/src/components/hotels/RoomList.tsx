@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RoomType } from './types';
+import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
 import ComponentCard from '@/components/common/ComponentCard';
 import RoomCard from './RoomCard';
 import { ListIcon } from '@/icons/index';
@@ -32,17 +32,13 @@ export default function RoomList({ rooms }: RoomListProps) {
 	};
 
 	const filteredRooms = rooms.filter((room) => {
-		const price = room.rate?.base || 0;
-		const minP = filters.minPrice ? Number(filters.minPrice) : 0;
-		const maxP = filters.maxPrice ? Number(filters.maxPrice) : Infinity;
+		// Price filter removed as rate is not in the API response
 		const reqAdults = filters.adults ? Number(filters.adults) : 0;
 		const reqChildren = filters.children ? Number(filters.children) : 0;
 
 		// Basic filtering logic
-		if (price < minP) return false;
-		if (price > maxP) return false;
-		if (reqAdults > 0 && (room.maxAdults || 0) < reqAdults) return false;
-		if (reqChildren > 0 && (room.maxChildren || 0) < reqChildren) return false;
+		if (reqAdults > 0 && (room.occupancy?.maxAdultOccupancy || 0) < reqAdults) return false;
+		if (reqChildren > 0 && (room.occupancy?.maxChildOccupancy || 0) < reqChildren) return false;
 
 		return true;
 	});

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useHotelDetails } from './useHotelDetails';
-import { RoomType } from '@/components/hotels/types';
+import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
 
 export const useRoomDetails = (hotelId: string, roomId: string) => {
 	const { hotelInfo, roomTypes, loading: hotelLoading, error: hotelError } = useHotelDetails(hotelId);

@@ -4,6 +4,9 @@
 	"description": "Partner Portal Backend API - Fastify with Hexagonal Architecture",
 	"type": "module",
 	"main": "dist/index.js",
+	"exports": {
+		"./api-types": "./src/infrastructure/adapters/http/external-client/index.ts"
+	},
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
 		"build": "tsc -p tsconfig.build.json",

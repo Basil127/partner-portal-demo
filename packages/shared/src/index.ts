@@ -247,22 +247,12 @@ export interface RoomTypesQuery {
 	offset?: number | null;
 }
 
-export interface ContentRoomType {
-	hotelRoomType?: string | null;
-	roomType?: string | null;
-	description?: string[] | null;
-	roomName?: string | null;
-	roomCategory?: string | null;
-	roomAmenities?: any[] | null;
-	roomViewType?: string | null;
-	roomPrimaryBedType?: string | null;
-	nonSmokingInd?: boolean | null;
-	occupancy?: Record<string, any> | null;
-	numberOfUnits?: number | null;
-}
+// Note: ContentRoomType, ContentRoomAmenity, and Occupancy types are auto-generated 
+// from the OpenAPI spec in the backend. Frontend should import them directly from:
+// app/backend/src/infrastructure/adapters/http/external-client/index.ts
 
 export interface RoomTypesResponse {
-	roomTypes?: ContentRoomType[] | null;
+	roomTypes?: any[] | null; // Use backend's ContentRoomType[]
 	count?: number | null;
 	hasMore?: boolean | null;
 	limit?: number | null;

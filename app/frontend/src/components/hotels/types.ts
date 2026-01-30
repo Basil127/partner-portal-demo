@@ -23,28 +23,6 @@ export interface HotelInfo {
 	[key: string]: any;
 }
 
-export interface RoomType {
-	hotelRoomType?: string;
-	roomType?: string;
-	roomName?: string;
-	roomDescription?: string;
-	maxOccupancy?: number;
-	maxAdults?: number;
-	maxChildren?: number;
-	bedTypes?: string;
-	roomSize?: number;
-	roomSizeUOM?: string;
-	images?: Array<{
-		url?: string;
-		caption?: string;
-	}>;
-	rate?: {
-		base?: number;
-		currency?: string;
-	};
-	[key: string]: any;
-}
-
 export interface Amenity {
 	code?: string;
 	description?: string;

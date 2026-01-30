@@ -11,10 +11,10 @@ import {
 	CalenderIcon,
 } from '@/icons/index';
 
-export interface Amenity {
-	code?: string;
-	description?: string;
-}
+// Support both hotel amenities and room amenities
+export type Amenity = 
+	| { roomAmenity: string; description: string; quantity: number; includeInRate: boolean; confirmable: boolean }
+	| { code?: string; description?: string };
 
 interface AmenitiesListProps {
 	amenities: Amenity[];
@@ -59,7 +59,11 @@ export default function AmenitiesList({ amenities, title, className = '' }: Amen
 			)}
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-2">
 				{amenities.map((amenity, index) => {
-					const IconComponent = getAmenityIcon(amenity.code);
+					// Handle both room amenities and hotel amenities
+					const amenityCode = 'roomAmenity' in amenity ? amenity.roomAmenity : amenity.code;
+					const amenityDescription = amenity.description;
+					
+					const IconComponent = getAmenityIcon(amenityCode);
 					return (
 						<div
 							key={index}
@@ -70,9 +74,9 @@ export default function AmenitiesList({ amenities, title, className = '' }: Amen
 							</div>
 							<span
 								className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate"
-								title={amenity.description || amenity.code}
+								title={amenityDescription}
 							>
-								{amenity.description || amenity.code}
+								{amenityDescription}
 							</span>
 						</div>
 					);

@@ -3,7 +3,8 @@ import {
 	getApiContentHotelsByHotelCode,
 	getApiContentHotelsByHotelCodeRoomTypes,
 } from '@/lib/api-client';
-import { HotelInfo, RoomType } from '@/components/hotels/types';
+import { HotelInfo } from '@/components/hotels/types';
+import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
 
 export const useHotelDetails = (hotelId: string) => {
 	const [hotelInfo, setHotelInfo] = useState<HotelInfo | null>(null);
@@ -43,55 +44,55 @@ export const useHotelDetails = (hotelId: string) => {
 				// If no room data from API, add sample rooms for demonstration
 				setRoomTypes([
 					{
+						hotelRoomType: 'DLX',
 						roomType: 'DELUXE',
 						roomName: 'Deluxe Room',
-						roomDescription: 'Spacious room with king bed and sea view',
-						maxOccupancy: 2,
-						maxAdults: 2,
-						maxChildren: 0,
-						bedTypes: 'King Bed',
-						roomSize: 35,
-						roomSizeUOM: 'sqm',
-						images: [
-							{
-								url: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&h=600&fit=crop',
-							},
-						],
-						rate: { base: 150, currency: 'USD' },
+						description: ['Spacious room with king bed and sea view'],
+						roomCategory: 'Deluxe',
+						roomViewType: 'Sea View',
+						roomPrimaryBedType: 'King',
+						nonSmokingInd: true,
+						occupancy: {
+							minOccupancy: 1,
+							maxOccupancy: 2,
+							maxAdultOccupancy: 2,
+							maxChildOccupancy: 0,
+						},
+						numberOfUnits: 10,
 					},
 					{
+						hotelRoomType: 'STE',
 						roomType: 'SUITE',
 						roomName: 'Executive Suite',
-						roomDescription: 'Luxurious suite with separate living area and panoramic views',
-						maxOccupancy: 4,
-						maxAdults: 2,
-						maxChildren: 2,
-						bedTypes: 'King Bed + Sofa Bed',
-						roomSize: 60,
-						roomSizeUOM: 'sqm',
-						images: [
-							{
-								url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=600&fit=crop',
-							},
-						],
-						rate: { base: 280, currency: 'USD' },
+						description: ['Luxurious suite with separate living area and panoramic views'],
+						roomCategory: 'Suite',
+						roomViewType: 'Panoramic',
+						roomPrimaryBedType: 'King',
+						nonSmokingInd: true,
+						occupancy: {
+							minOccupancy: 1,
+							maxOccupancy: 4,
+							maxAdultOccupancy: 2,
+							maxChildOccupancy: 2,
+						},
+						numberOfUnits: 5,
 					},
 					{
+						hotelRoomType: 'FAM',
 						roomType: 'FAMILY',
 						roomName: 'Family Room',
-						roomDescription: 'Perfect for families with two bedrooms and connecting spaces',
-						maxOccupancy: 5,
-						maxAdults: 2,
-						maxChildren: 3,
-						bedTypes: '2 Queen Beds',
-						roomSize: 45,
-						roomSizeUOM: 'sqm',
-						images: [
-							{
-								url: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&h=600&fit=crop',
-							},
-						],
-						rate: { base: 200, currency: 'USD' },
+						description: ['Perfect for families with two bedrooms and connecting spaces'],
+						roomCategory: 'Family',
+						roomViewType: 'Garden View',
+						roomPrimaryBedType: 'Twin',
+						nonSmokingInd: true,
+						occupancy: {
+							minOccupancy: 2,
+							maxOccupancy: 5,
+							maxAdultOccupancy: 2,
+							maxChildOccupancy: 3,
+						},
+						numberOfUnits: 8,
 					},
 				]);
 			}
