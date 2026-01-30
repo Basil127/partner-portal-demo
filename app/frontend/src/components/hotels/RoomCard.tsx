@@ -2,12 +2,17 @@ import React from 'react';
 import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
 import Button from '@/components/ui/button/Button';
 import { UserIcon, BoxIcon, DollarLineIcon } from '@/icons/index';
+import WrappingBox from '@/components/ui/WrappingBox.tsx';
+import Link from 'next/link';
+
 
 interface RoomCardProps {
+	hotelCode: string;
 	room: RoomType;
 }
 
-export default function RoomCard({ room }: RoomCardProps) {
+
+export default function RoomCard({ hotelCode, room }: RoomCardProps) {
 	const imageUrl = 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&h=600&fit=crop';
 
 	return (
@@ -33,49 +38,56 @@ export default function RoomCard({ room }: RoomCardProps) {
 
 			{/* Room Details */}
 			<div className="p-4 space-y-3">
-				{room.description && room.description.length > 0 && (
-					<p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 min-h-10">
-						{room.description[0]}
-					</p>
+				{room.description && room.description.length > 1 && (
+					<>
+						<p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 min-h-10">
+							{room.description[0]}
+						</p>
+						<p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 min-h-10">
+							{room.description[1]}
+						</p>
+					</>
 				)}
 
 				{/* Room Features */}
 				<div className="flex flex-wrap gap-2">
 					{room.occupancy?.maxOccupancy && (
-						<div className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-md">
+						<WrappingBox>
 							<UserIcon className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0" />
 							<span className="text-xs font-medium text-gray-700 dark:text-gray-300">
 								Up to {room.occupancy.maxOccupancy} guests
 							</span>
-						</div>
+						</WrappingBox>
 					)}
 					{room.roomPrimaryBedType && (
-						<div className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-md">
+						<WrappingBox>
 							<BoxIcon className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0" />
 							<span className="text-xs font-medium text-gray-700 dark:text-gray-300">
 								{room.roomPrimaryBedType}
 							</span>
-						</div>
+						</WrappingBox>
 					)}
 					{room.roomViewType && (
-						<div className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-md">
+						<WrappingBox>
 							<span className="text-xs font-medium text-gray-700 dark:text-gray-300">
 								{room.roomViewType}
 							</span>
-						</div>
+						</WrappingBox>
 					)}
 				</div>
 
 				{/* Action Button */}
 				<div className="pt-2">
-					<Button
-						variant="primary"
-						size="sm"
-						className="w-full"
-						onClick={() => console.log('Book room:', room.roomType)}
-					>
-						View Details
-					</Button>
+					<Link href={`/hotels/${hotelCode}/room/${room.hotelRoomType}`}>
+						<Button
+							variant="primary"
+							size="sm"
+							className="w-full"
+							onClick={() => {}}
+						>
+							View Details
+						</Button>
+					</Link>
 				</div>
 			</div>
 		</div>

@@ -40,7 +40,7 @@ export default function HotelDetailPage() {
 	return (
 		<div className="space-y-6">
 			<HotelDetailsCard hotelInfo={hotelInfo} />
-			<RoomList rooms={roomTypes} />
+			<RoomList rooms={roomTypes} hotelCode={hotelInfo.hotelCode || ''}/>
 		</div>
 	);
 }

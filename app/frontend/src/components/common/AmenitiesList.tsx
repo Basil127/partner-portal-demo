@@ -20,6 +20,7 @@ interface AmenitiesListProps {
 	amenities: Amenity[];
 	title?: string;
     className?: string;
+    maxItems?: number;
 }
 
 const amenityIcons: Record<string, React.FC<any>> = {
@@ -47,8 +48,17 @@ const getAmenityIcon = (amenityCode?: string) => {
 	return amenityIcons.default;
 };
 
-export default function AmenitiesList({ amenities, title, className = '' }: AmenitiesListProps) {
+export default function AmenitiesList({ amenities, title, className = '', maxItems }: AmenitiesListProps) {
 	if (!amenities || amenities.length === 0) return null;
+
+    const [showMore, setShowMore] = React.useState(false);
+
+    if (!maxItems) maxItems = 8;  // default show 8 items
+    const totalAmenities = amenities.length;
+    
+    if (!showMore && maxItems && amenities.length > maxItems) {
+        amenities = amenities.slice(0, maxItems);
+    }
 
 	return (
 		<div className={className}>
@@ -81,6 +91,17 @@ export default function AmenitiesList({ amenities, title, className = '' }: Amen
 						</div>
 					);
 				})}
+                {totalAmenities > maxItems && (
+                    <div className="col-span-full flex justify-center mt-2">
+                        <button
+                            onClick={() => setShowMore(!showMore)}
+                            className="text-primary-600 dark:text-primary-400 hover:underline"
+                        >
+                            {showMore ? 'Show Less' : 'Show More'}
+                            {showMore ? ' ▲' : ' ▼'}
+                        </button>
+                    </div>
+                )}
 			</div>
 		</div>
 	);

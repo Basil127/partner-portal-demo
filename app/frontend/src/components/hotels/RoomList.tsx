@@ -6,10 +6,11 @@ import { ListIcon } from '@/icons/index';
 import Button from '@/components/ui/button/Button';
 
 interface RoomListProps {
+	hotelCode: string;
 	rooms: RoomType[];
 }
 
-export default function RoomList({ rooms }: RoomListProps) {
+export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 	const [showFilters, setShowFilters] = useState(false);
 	const [filters, setFilters] = useState({
 		minPrice: '',
@@ -134,7 +135,7 @@ export default function RoomList({ rooms }: RoomListProps) {
 
 			<div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 				{filteredRooms.map((room, index) => (
-					<RoomCard key={index} room={room} />
+					<RoomCard key={index} hotelCode={hotelCode} room={room} />
 				))}
 				{filteredRooms.length === 0 && (
 					<div className="col-span-full text-center py-12 border border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
