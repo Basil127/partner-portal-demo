@@ -8,10 +8,10 @@ interface HotelAmenitiesProps {
 
 export default function HotelAmenities({ amenities }: HotelAmenitiesProps) {
 	return (
-        <AmenitiesList 
-            amenities={amenities} 
-            title="Property Amenities" 
-            className="pt-6 border-t border-gray-200 dark:border-gray-700" 
-        />
+		<AmenitiesList
+			amenities={amenities}
+			title="Property Amenities"
+			className="pt-6 border-t border-gray-200 dark:border-gray-700"
+		/>
 	);
 }

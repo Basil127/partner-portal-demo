@@ -3,7 +3,12 @@ import { useHotelDetails } from './useHotelDetails';
 import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
 
 export const useRoomDetails = (hotelId: string, roomId: string) => {
-	const { hotelInfo, roomTypes, loading: hotelLoading, error: hotelError } = useHotelDetails(hotelId);
+	const {
+		hotelInfo,
+		roomTypes,
+		loading: hotelLoading,
+		error: hotelError,
+	} = useHotelDetails(hotelId);
 	const [room, setRoom] = useState<RoomType | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -22,10 +27,10 @@ export const useRoomDetails = (hotelId: string, roomId: string) => {
 
 		if (roomTypes.length > 0) {
 			// Find room by roomType code or logical identifier
-            // Decoding roomId just in case it was encoded in URL
-            const decodedRoomId = decodeURIComponent(roomId);
+			// Decoding roomId just in case it was encoded in URL
+			const decodedRoomId = decodeURIComponent(roomId);
 			const foundRoom = roomTypes.find(
-				(r) => r.roomType === decodedRoomId || r.hotelRoomType === decodedRoomId
+				(r) => r.roomType === decodedRoomId || r.hotelRoomType === decodedRoomId,
 			);
 
 			if (foundRoom) {
@@ -36,10 +41,10 @@ export const useRoomDetails = (hotelId: string, roomId: string) => {
 				setError('Room not found');
 			}
 		} else {
-            // No rooms returned
-            setRoom(null);
-            setError('No rooms available for this hotel');
-        }
+			// No rooms returned
+			setRoom(null);
+			setError('No rooms available for this hotel');
+		}
 		setLoading(false);
 	}, [hotelId, roomId, roomTypes, hotelLoading, hotelError]);
 

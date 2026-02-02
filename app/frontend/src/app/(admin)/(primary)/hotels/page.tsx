@@ -7,9 +7,11 @@ import Button from '@/components/ui/button/Button';
 import React from 'react';
 import HotelSearchCard from '@/components/hotels/HotelSearchCard';
 import { useHotelSearch } from '@/hooks/useHotelSearch';
+// import { useBooking } from '@/context/BookingContext';
 
 export default function HotelsPage() {
 	const { filters, hotels, loading, handleFilterChange, fetchHotels } = useHotelSearch();
+	// const { checkIn, checkOut, adults, children, minPrice, maxPrice } = useBooking();
 
 	return (
 		<div className="space-y-6">
@@ -71,9 +73,7 @@ export default function HotelsPage() {
 										const hotelCode = hotel.hotelCode || 'CODE';
 
 										// Fallback for address if it's not in the content API response yet
-										const address =
-											hotel.address ||
-											(hotelCode === 'MOV_EG_001' ? { city: 'El Gouna', countryCode: 'EG' } : {});
+										const address = hotel.address || { city: 'Unknown', countryCode: 'NA' };
 
 										const cityName = address?.city || 'City';
 										const countryName = address?.countryCode || 'Country';

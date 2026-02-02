@@ -122,7 +122,9 @@ export default function HotelDetailsCard({ hotelInfo }: HotelDetailsCardProps) {
 				<CarouselImages images={images} />
 			</div>
 
-			<HotelAmenities amenities={propertyAmenities} />
+			<div className="@container">
+				<HotelAmenities amenities={propertyAmenities} />
+			</div>
 		</ComponentCard>
 	);
 }

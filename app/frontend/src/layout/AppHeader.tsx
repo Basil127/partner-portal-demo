@@ -17,33 +17,33 @@ const AppHeader: React.FC = () => {
 
 	const getBreadcrumbData = (path: string) => {
 		const segments = path.split('/').filter(Boolean);
-        let items: { label: string; href: string }[] = [];
-        let title = '';
+		let items: { label: string; href: string }[] = [];
+		let title = '';
 
 		if (segments.length === 0) return { title: 'Dashboard', items };
 
-        // Handle Hotels Routes
-        if (segments[0] === 'hotels') {
-            if (segments.length === 1) {
-                title = 'Hotels';
-            } else if (segments.length === 2) {
-                items.push({ label: 'Hotels', href: '/hotels' });
-                title = 'Hotel Details';
-            } else if (segments.length === 4 && segments[2] === 'room') {
-                items.push({ label: 'Hotels', href: '/hotels' });
-                items.push({ label: 'Hotel Details', href: `/hotels/${segments[1]}` });
-                title = 'Room Details';
-            }
-        }
+		// Handle Hotels Routes
+		if (segments[0] === 'hotels') {
+			if (segments.length === 1) {
+				title = 'Hotels';
+			} else if (segments.length === 2) {
+				items.push({ label: 'Hotels', href: '/hotels' });
+				title = 'Hotel Details';
+			} else if (segments.length === 4 && segments[2] === 'room') {
+				items.push({ label: 'Hotels', href: '/hotels' });
+				items.push({ label: 'Hotel Details', href: `/hotels/${segments[1]}` });
+				title = 'Room Details';
+			}
+		}
 
-        if (!title) {
-             const lastSegment = segments[segments.length - 1];
-             title = lastSegment
-			.split('-')
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(' ');
-        }
-        
+		if (!title) {
+			const lastSegment = segments[segments.length - 1];
+			title = lastSegment
+				.split('-')
+				.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+				.join(' ');
+		}
+
 		return { title, items };
 	};
 

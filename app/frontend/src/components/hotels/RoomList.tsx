@@ -4,6 +4,7 @@ import ComponentCard from '@/components/common/ComponentCard';
 import RoomCard from './RoomCard';
 import { ListIcon } from '@/icons/index';
 import Button from '@/components/ui/button/Button';
+import { useBooking } from '@/context/BookingContext';
 
 interface RoomListProps {
 	hotelCode: string;
@@ -12,21 +13,30 @@ interface RoomListProps {
 
 export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 	const [showFilters, setShowFilters] = useState(false);
+	const { adults, children, minPrice, maxPrice, setMinPrice, setMaxPrice } = useBooking();
+
 	const [filters, setFilters] = useState({
-		minPrice: '',
-		maxPrice: '',
-		adults: '',
-		children: '',
+		minPrice: minPrice.toString(),
+		maxPrice: maxPrice.toString(),
+		adults: adults.toString(),
+		children: children.toString(),
 	});
 
 	const handleFilterChange = (key: string, value: string) => {
 		setFilters((prev) => ({ ...prev, [key]: value }));
+
+		// Update context for price filters
+		if (key === 'minPrice') {
+			setMinPrice(Number(value) || 0);
+		} else if (key === 'maxPrice') {
+			setMaxPrice(Number(value) || 1000);
+		}
 	};
 
 	const getActiveFilterSummary = () => {
 		const parts = [];
-		if (filters.minPrice) parts.push(`Min $${filters.minPrice}`);
-		if (filters.maxPrice) parts.push(`Max $${filters.maxPrice}`);
+		if (minPrice > 0) parts.push(`Min $${minPrice}`);
+		if (maxPrice < 1000) parts.push(`Max $${maxPrice}`);
 		if (filters.adults) parts.push(`${filters.adults} Adults`);
 		if (filters.children) parts.push(`${filters.children} Kids`);
 		return parts.join(', ');
@@ -37,9 +47,24 @@ export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 		const reqAdults = filters.adults ? Number(filters.adults) : 0;
 		const reqChildren = filters.children ? Number(filters.children) : 0;
 
-		// Basic filtering logic
-		if (reqAdults > 0 && (room.occupancy?.maxAdultOccupancy || 0) < reqAdults) return false;
-		if (reqChildren > 0 && (room.occupancy?.maxChildOccupancy || 0) < reqChildren) return false;
+		// probably missing data
+		if (
+			room.occupancy == null ||
+			(room.occupancy.maxChildren == null &&
+				room.occupancy.maxAdults == null &&
+				room.occupancy.maxOccupancy == null)
+		)
+			return true;
+
+		if (room.occupancy.maxChildren || room.occupancy.maxAdults) {
+			// Use maxAdults and maxChildren if available
+			if (reqAdults > 0 && (room.occupancy?.maxAdults || 0) < reqAdults) return false;
+			if (reqChildren > 0 && (room.occupancy?.maxChildren || 0) < reqChildren) return false;
+		} else {
+			// Fallback to total occupancy if maxAdults/maxChildren not available
+			const totalReq = reqAdults + reqChildren;
+			if (totalReq > 0 && (room.occupancy?.maxOccupancy || 0) < totalReq) return false;
+		}
 
 		return true;
 	});

@@ -12,11 +12,7 @@ import {
 	getPropertyInfoApiContentV1HotelsHotelCodeGet,
 	getRoomTypesInfoApiContentV1HotelsHotelCodeRoomTypesGet,
 } from '../external-client/sdk.gen.js';
-import {
-	zGetPropertiesSummaryApiContentV1HotelsGetResponse,
-	zGetPropertyInfoApiContentV1HotelsHotelCodeGetResponse,
-	zGetRoomTypesInfoApiContentV1HotelsHotelCodeRoomTypesGetResponse,
-} from '../external-client/zod.gen.js';
+import { zGetPropertiesSummaryApiContentV1HotelsGetResponse } from '../external-client/zod.gen.js';
 import { config } from '../../../config/config.js';
 
 const externalClient = createClient({

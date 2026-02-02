@@ -21,13 +21,17 @@ export default function RoomDetailsHeader({ room }: RoomDetailsHeaderProps) {
 				<div className="h-[300px] md:h-[400px] w-full">
 					<CarouselImages images={images} />
 				</div>
-                <div className="absolute top-4 right-4 z-10">
-                     {room.roomType && (
-                        <Badge variant="light" color="light" className="backdrop-blur-md bg-white/30 dark:bg-black/30 text-white border-white/20">
-                            {room.roomType}
-                        </Badge>
-                     )}
-                </div>
+				<div className="absolute top-4 right-4 z-10">
+					{room.roomType && (
+						<Badge
+							variant="light"
+							color="light"
+							className="backdrop-blur-md bg-white/30 dark:bg-black/30 text-white border-white/20"
+						>
+							{room.roomType}
+						</Badge>
+					)}
+				</div>
 			</div>
 
 			<div>

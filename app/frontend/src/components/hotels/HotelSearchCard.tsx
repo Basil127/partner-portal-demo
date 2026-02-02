@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from '@/components/form/date-picker';
 import Label from '@/components/form/Label';
 import Input from '@/components/form/input/InputField';
 import Select from '@/components/form/Select';
 import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@/icons/index';
+import { useBooking } from '@/context/BookingContext';
 
 interface HotelFilters {
 	arrivalDate: string;
@@ -14,8 +15,8 @@ interface HotelFilters {
 	adults: number;
 	children: number;
 	hotelName: string;
-	minRate: string;
-	maxRate: string;
+	minPrice: number;
+	maxPrice?: number;
 	country: string;
 	city: string;
 }
@@ -32,10 +33,46 @@ export default function HotelSearchCard({
 	onSearch,
 }: HotelSearchCardProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
+	const {
+		checkIn,
+		checkOut,
+		adults,
+		children,
+		minPrice,
+		maxPrice,
+		setCheckIn,
+		setCheckOut,
+		setAdults,
+		setChildren,
+		setMinPrice,
+		setMaxPrice,
+	} = useBooking();
 
 	const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-	const isDateRangeInvalid = new Date(filters.departureDate) <= new Date(filters.arrivalDate);
+	// Sync filters with booking context
+	useEffect(() => {
+		if (filters.arrivalDate !== checkIn) {
+			onFilterChange('arrivalDate', checkIn);
+		}
+		if (filters.departureDate !== checkOut) {
+			onFilterChange('departureDate', checkOut);
+		}
+		if (filters.adults !== adults) {
+			onFilterChange('adults', adults);
+		}
+		if (filters.children !== children) {
+			onFilterChange('children', children);
+		}
+		if (filters.minPrice !== minPrice) {
+			onFilterChange('minPrice', minPrice);
+		}
+		if (filters.maxPrice !== maxPrice) {
+			onFilterChange('maxPrice', maxPrice);
+		}
+	}, [checkIn, checkOut, adults, children, minPrice, maxPrice]);
+
+	const isDateRangeInvalid = new Date(checkOut) <= new Date(checkIn);
 
 	return (
 		<div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
@@ -47,10 +84,12 @@ export default function HotelSearchCard({
 								id="arrivalDate"
 								mode="single"
 								label="Arrival Date"
-								defaultDate={filters.arrivalDate}
+								defaultDate={checkIn}
 								onChange={(dates: Date[]) => {
 									if (dates.length > 0) {
-										onFilterChange('arrivalDate', formatDate(dates[0]));
+										const newDate = formatDate(dates[0]);
+										setCheckIn(newDate);
+										onFilterChange('arrivalDate', newDate);
 									}
 								}}
 							/>
@@ -60,11 +99,13 @@ export default function HotelSearchCard({
 								id="departureDate"
 								mode="single"
 								label="Departure Date"
-								defaultDate={filters.departureDate}
+								defaultDate={checkOut}
 								error={isDateRangeInvalid}
 								onChange={(dates: Date[]) => {
 									if (dates.length > 0) {
-										onFilterChange('departureDate', formatDate(dates[0]));
+										const newDate = formatDate(dates[0]);
+										setCheckOut(newDate);
+										onFilterChange('departureDate', newDate);
 									}
 								}}
 							/>
@@ -119,8 +160,12 @@ export default function HotelSearchCard({
 									id="adults"
 									type="number"
 									min="1"
-									defaultValue={filters.adults}
-									onChange={(e) => onFilterChange('adults', Number(e.target.value))}
+									defaultValue={adults}
+									onChange={(e) => {
+										const newAdults = Number(e.target.value);
+										setAdults(newAdults);
+										onFilterChange('adults', newAdults);
+									}}
 								/>
 							</div>
 							<div>
@@ -129,8 +174,12 @@ export default function HotelSearchCard({
 									id="children"
 									type="number"
 									min="0"
-									defaultValue={filters.children}
-									onChange={(e) => onFilterChange('children', Number(e.target.value))}
+									defaultValue={children}
+									onChange={(e) => {
+										const newChildren = Number(e.target.value);
+										setChildren(newChildren);
+										onFilterChange('children', newChildren);
+									}}
 								/>
 							</div>
 						</div>
@@ -150,8 +199,12 @@ export default function HotelSearchCard({
 									id="minRate"
 									type="number"
 									placeholder="Min"
-									defaultValue={filters.minRate}
-									onChange={(e) => onFilterChange('minRate', e.target.value)}
+									defaultValue={minPrice}
+									onChange={(e) => {
+										const newMinPrice = Number(e.target.value);
+										setMinPrice(newMinPrice);
+										onFilterChange('minPrice', newMinPrice);
+									}}
 								/>
 							</div>
 							<div>
@@ -160,8 +213,12 @@ export default function HotelSearchCard({
 									id="maxRate"
 									type="number"
 									placeholder="Max"
-									defaultValue={filters.maxRate}
-									onChange={(e) => onFilterChange('maxRate', e.target.value)}
+									defaultValue={maxPrice}
+									onChange={(e) => {
+										const newMaxPrice = Number(e.target.value);
+										setMaxPrice(newMaxPrice);
+										onFilterChange('maxPrice', newMaxPrice);
+									}}
 								/>
 							</div>
 						</div>

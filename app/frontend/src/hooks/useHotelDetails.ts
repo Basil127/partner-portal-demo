@@ -55,8 +55,8 @@ export const useHotelDetails = (hotelId: string) => {
 						occupancy: {
 							minOccupancy: 1,
 							maxOccupancy: 2,
-							maxAdultOccupancy: 2,
-							maxChildOccupancy: 0,
+							maxAdults: 2,
+							maxChildren: 0,
 						},
 						numberOfUnits: 10,
 					},
@@ -72,8 +72,8 @@ export const useHotelDetails = (hotelId: string) => {
 						occupancy: {
 							minOccupancy: 1,
 							maxOccupancy: 4,
-							maxAdultOccupancy: 2,
-							maxChildOccupancy: 2,
+							maxAdults: 2,
+							maxChildren: 2,
 						},
 						numberOfUnits: 5,
 					},
@@ -89,8 +89,8 @@ export const useHotelDetails = (hotelId: string) => {
 						occupancy: {
 							minOccupancy: 2,
 							maxOccupancy: 5,
-							maxAdultOccupancy: 2,
-							maxChildOccupancy: 3,
+							maxAdults: 2,
+							maxChildren: 3,
 						},
 						numberOfUnits: 8,
 					},

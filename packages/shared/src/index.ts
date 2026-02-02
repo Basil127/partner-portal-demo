@@ -247,7 +247,7 @@ export interface RoomTypesQuery {
 	offset?: number | null;
 }
 
-// Note: ContentRoomType, ContentRoomAmenity, and Occupancy types are auto-generated 
+// Note: ContentRoomType, ContentRoomAmenity, and Occupancy types are auto-generated
 // from the OpenAPI spec in the backend. Frontend should import them directly from:
 // app/backend/src/infrastructure/adapters/http/external-client/index.ts
 

@@ -12,15 +12,21 @@ import {
 } from '@/icons/index';
 
 // Support both hotel amenities and room amenities
-export type Amenity = 
-	| { roomAmenity: string; description: string; quantity: number; includeInRate: boolean; confirmable: boolean }
+export type Amenity =
+	| {
+			roomAmenity: string;
+			description: string;
+			quantity: number;
+			includeInRate: boolean;
+			confirmable: boolean;
+	  }
 	| { code?: string; description?: string };
 
 interface AmenitiesListProps {
 	amenities: Amenity[];
 	title?: string;
-    className?: string;
-    maxItems?: number;
+	className?: string;
+	maxItems?: number;
 }
 
 const amenityIcons: Record<string, React.FC<any>> = {
@@ -48,31 +54,34 @@ const getAmenityIcon = (amenityCode?: string) => {
 	return amenityIcons.default;
 };
 
-export default function AmenitiesList({ amenities, title, className = '', maxItems }: AmenitiesListProps) {
+export default function AmenitiesList({
+	amenities,
+	title,
+	className = '',
+	maxItems,
+}: AmenitiesListProps) {
 	if (!amenities || amenities.length === 0) return null;
 
-    const [showMore, setShowMore] = React.useState(false);
+	const [showMore, setShowMore] = React.useState(false);
 
-    if (!maxItems) maxItems = 8;  // default show 8 items
-    const totalAmenities = amenities.length;
-    
-    if (!showMore && maxItems && amenities.length > maxItems) {
-        amenities = amenities.slice(0, maxItems);
-    }
+	if (!maxItems) maxItems = 8; // default show 8 items
+	const totalAmenities = amenities.length;
+
+	if (!showMore && maxItems && amenities.length > maxItems) {
+		amenities = amenities.slice(0, maxItems);
+	}
 
 	return (
 		<div className={className}>
 			{title && (
-				<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-					{title}
-				</h3>
+				<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
 			)}
-			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-2">
+			<div className="grid grid-cols-[repeat(auto-fit,minmax(165px,1fr))] gap-4">
 				{amenities.map((amenity, index) => {
 					// Handle both room amenities and hotel amenities
 					const amenityCode = 'roomAmenity' in amenity ? amenity.roomAmenity : amenity.code;
 					const amenityDescription = amenity.description;
-					
+
 					const IconComponent = getAmenityIcon(amenityCode);
 					return (
 						<div
@@ -91,17 +100,16 @@ export default function AmenitiesList({ amenities, title, className = '', maxIte
 						</div>
 					);
 				})}
-                {totalAmenities > maxItems && (
-                    <div className="col-span-full flex justify-center mt-2">
-                        <button
-                            onClick={() => setShowMore(!showMore)}
-                            className="text-primary-600 dark:text-primary-400 hover:underline"
-                        >
-                            {showMore ? 'Show Less' : 'Show More'}
-                            {showMore ? ' ▲' : ' ▼'}
-                        </button>
-                    </div>
-                )}
+				{totalAmenities > maxItems && (
+					<div className="col-span-full flex justify-center mt-2">
+						<button
+							onClick={() => setShowMore(!showMore)}
+							className="text-primary-600 dark:text-primary-400 hover:underline"
+						>
+							{showMore ? 'Show Less ▲' : 'Show More ▼'}
+						</button>
+					</div>
+				)}
 			</div>
 		</div>
 	);
