@@ -16,8 +16,8 @@ export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 	const { adults, children, minPrice, maxPrice, setMinPrice, setMaxPrice } = useBooking();
 
 	const [filters, setFilters] = useState({
-		minPrice: minPrice.toString(),
-		maxPrice: maxPrice.toString(),
+		minPrice: minPrice ? minPrice.toString() : '',
+		maxPrice: maxPrice ? maxPrice.toString() : '',
 		adults: adults.toString(),
 		children: children.toString(),
 	});
