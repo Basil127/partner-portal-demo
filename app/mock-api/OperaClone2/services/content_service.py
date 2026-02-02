@@ -189,10 +189,8 @@ class ContentService:
             parsed_occupancy = Occupancy(
                 minOccupancy=occupancy_data.get("minOccupancy"),
                 maxOccupancy=occupancy_data.get("maxOccupancy"),
-                maxAdultOccupancy=occupancy_data.get("maxAdultOccupancy")
-                or occupancy_data.get("maxAdults"),
-                maxChildOccupancy=occupancy_data.get("maxChildOccupancy")
-                or occupancy_data.get("maxChildren"),
+                maxAdults=occupancy_data.get("maxAdults"),
+                maxChildren=occupancy_data.get("maxChildren"),
             )
 
         return ContentRoomType(
