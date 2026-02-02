@@ -1016,21 +1016,198 @@ export function setupRoutes(fastify: FastifyInstance) {
 	fastify.post('/api/hotels/:hotelId/reservations', {
 		schema: {
 			tags: ['hotel reservations'],
-			description: 'Create a reservation',
+			description: 'Create a new hotel reservation with guest and room stay details',
 			params: {
 				type: 'object',
 				required: ['hotelId'],
 				properties: {
-					hotelId: { type: 'string' },
+					hotelId: { type: 'string', description: 'Hotel identifier' },
 				},
 			},
 			body: {
 				type: 'object',
-				additionalProperties: true,
+				required: ['reservations'],
+				properties: {
+					reservations: {
+						type: 'object',
+						description: 'Collection of reservations to create',
+						properties: {
+							reservation: {
+								type: 'array',
+								nullable: true,
+								items: {
+									type: 'object',
+									properties: {
+										reservationIdList: {
+											type: 'array',
+											nullable: true,
+											description: 'List of reservation identifiers',
+											items: {
+												type: 'object',
+												properties: {
+													id: { type: 'string', nullable: true },
+													type: {
+														type: 'string',
+														nullable: true,
+														description: 'ID type (e.g., CONFIRMATION)',
+													},
+												},
+											},
+										},
+										roomStay: {
+											type: 'object',
+											nullable: true,
+											description: 'Room stay details',
+											properties: {
+												arrivalDate: { type: 'string', format: 'date', nullable: true },
+												departureDate: { type: 'string', format: 'date', nullable: true },
+												guarantee: {
+													type: 'object',
+													nullable: true,
+													properties: {
+														guaranteeCode: { type: 'string', nullable: true },
+														shortDescription: { type: 'string', nullable: true },
+														paymentCard: {
+															type: 'object',
+															nullable: true,
+															properties: {
+																cardType: { type: 'string', nullable: true },
+																cardNumber: { type: 'string', nullable: true },
+																expireDate: { type: 'string', nullable: true },
+																cardHolderName: { type: 'string', nullable: true },
+															},
+														},
+													},
+												},
+												roomRates: {
+													type: 'array',
+													nullable: true,
+													items: {
+														type: 'object',
+														properties: {
+															roomType: { type: 'string', nullable: true },
+															ratePlanCode: { type: 'string', nullable: true },
+															start: { type: 'string', format: 'date', nullable: true },
+															end: { type: 'string', format: 'date', nullable: true },
+															total: {
+																type: 'object',
+																nullable: true,
+																properties: {
+																	amountBeforeTax: { type: 'number', nullable: true },
+																	amountAfterTax: { type: 'number', nullable: true },
+																	currencyCode: { type: 'string', nullable: true },
+																},
+															},
+															guestCounts: {
+																type: 'object',
+																nullable: true,
+																properties: {
+																	adults: { type: 'integer', nullable: true },
+																	children: { type: 'integer', nullable: true },
+																},
+															},
+														},
+													},
+												},
+												guestCounts: {
+													type: 'object',
+													nullable: true,
+													properties: {
+														adults: { type: 'integer', nullable: true },
+														children: { type: 'integer', nullable: true },
+													},
+												},
+												roomType: { type: 'string', nullable: true },
+												ratePlanCode: { type: 'string', nullable: true },
+												marketCode: { type: 'string', nullable: true },
+												sourceCode: { type: 'string', nullable: true },
+											},
+										},
+										reservationGuests: {
+											type: 'array',
+											nullable: true,
+											description: 'List of guests for this reservation',
+											items: {
+												type: 'object',
+												properties: {
+													primary: { type: 'boolean', nullable: true, default: true },
+													profileInfo: {
+														type: 'object',
+														nullable: true,
+														properties: {
+															profileIdList: {
+																type: 'array',
+																nullable: true,
+																items: {
+																	type: 'object',
+																	properties: {
+																		id: { type: 'string', nullable: true },
+																		type: { type: 'string', nullable: true },
+																	},
+																},
+															},
+															profile: {
+																type: 'object',
+																nullable: true,
+																properties: {
+																	customer: {
+																		type: 'object',
+																		nullable: true,
+																		properties: {
+																			personName: {
+																				type: 'array',
+																				nullable: true,
+																				items: {
+																					type: 'object',
+																					properties: {
+																						givenName: { type: 'string', nullable: true },
+																						surname: { type: 'string', nullable: true },
+																						namePrefix: { type: 'string', nullable: true },
+																						middleName: { type: 'string', nullable: true },
+																						nameSuffix: { type: 'string', nullable: true },
+																					},
+																				},
+																			},
+																		},
+																	},
+																	email: { type: 'string', format: 'email', nullable: true },
+																	phoneNumber: { type: 'string', nullable: true },
+																	address: {
+																		type: 'object',
+																		nullable: true,
+																		properties: {
+																			addressLine: {
+																				type: 'array',
+																				items: { type: 'string' },
+																				nullable: true,
+																			},
+																			city: { type: 'string', nullable: true },
+																			postalCode: { type: 'string', nullable: true },
+																			countryCode: { type: 'string', nullable: true },
+																			state: { type: 'string', nullable: true },
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+										hotelId: { type: 'string', nullable: true },
+										reservationStatus: { type: 'string', nullable: true },
+										createDateTime: { type: 'string', format: 'date-time', nullable: true },
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 			response: {
 				200: {
 					type: 'object',
+					description: 'Successful reservation creation response',
 					properties: {
 						reservations: {
 							type: 'object',
@@ -1041,7 +1218,6 @@ export function setupRoutes(fastify: FastifyInstance) {
 									nullable: true,
 									items: {
 										type: 'object',
-										additionalProperties: true,
 										properties: {
 											reservationIdList: {
 												type: 'array',
@@ -1054,20 +1230,21 @@ export function setupRoutes(fastify: FastifyInstance) {
 													},
 												},
 											},
-											roomStay: { type: 'object', nullable: true, additionalProperties: true },
-											reservationGuests: {
-												type: 'array',
-												nullable: true,
-												items: { type: 'object', additionalProperties: true },
-											},
 											hotelId: { type: 'string', nullable: true },
 											reservationStatus: { type: 'string', nullable: true },
-											createDateTime: { type: 'string', nullable: true },
+											createDateTime: { type: 'string', format: 'date-time', nullable: true },
 										},
 									},
 								},
 							},
 						},
+					},
+				},
+				400: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+						details: { type: 'array', items: { type: 'object' } },
 					},
 				},
 			},
@@ -1182,22 +1359,112 @@ export function setupRoutes(fastify: FastifyInstance) {
 	fastify.put('/api/hotels/:hotelId/reservations/:reservationId', {
 		schema: {
 			tags: ['hotel reservations'],
-			description: 'Update a reservation',
+			description: 'Update an existing hotel reservation with new guest or room stay details',
 			params: {
 				type: 'object',
 				required: ['hotelId', 'reservationId'],
 				properties: {
-					hotelId: { type: 'string' },
-					reservationId: { type: 'string' },
+					hotelId: { type: 'string', description: 'Hotel identifier' },
+					reservationId: { type: 'string', description: 'Reservation identifier' },
 				},
 			},
 			body: {
 				type: 'object',
-				additionalProperties: true,
+				required: ['reservations'],
+				description: 'Updated reservation data',
+				properties: {
+					reservations: {
+						type: 'object',
+						description: 'Collection of reservations to update',
+						properties: {
+							reservation: {
+								type: 'array',
+								nullable: true,
+								items: {
+									type: 'object',
+									properties: {
+										reservationIdList: {
+											type: 'array',
+											nullable: true,
+											items: {
+												type: 'object',
+												properties: {
+													id: { type: 'string', nullable: true },
+													type: { type: 'string', nullable: true },
+												},
+											},
+										},
+										roomStay: {
+											type: 'object',
+											nullable: true,
+											properties: {
+												arrivalDate: { type: 'string', format: 'date', nullable: true },
+												departureDate: { type: 'string', format: 'date', nullable: true },
+												roomType: { type: 'string', nullable: true },
+												ratePlanCode: { type: 'string', nullable: true },
+												guestCounts: {
+													type: 'object',
+													nullable: true,
+													properties: {
+														adults: { type: 'integer', nullable: true },
+														children: { type: 'integer', nullable: true },
+													},
+												},
+											},
+										},
+										reservationGuests: {
+											type: 'array',
+											nullable: true,
+											items: {
+												type: 'object',
+												properties: {
+													primary: { type: 'boolean', nullable: true },
+													profileInfo: {
+														type: 'object',
+														nullable: true,
+														properties: {
+															profile: {
+																type: 'object',
+																nullable: true,
+																properties: {
+																	customer: {
+																		type: 'object',
+																		nullable: true,
+																		properties: {
+																			personName: {
+																				type: 'array',
+																				nullable: true,
+																				items: {
+																					type: 'object',
+																					properties: {
+																						givenName: { type: 'string', nullable: true },
+																						surname: { type: 'string', nullable: true },
+																					},
+																				},
+																			},
+																		},
+																	},
+																	email: { type: 'string', format: 'email', nullable: true },
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+										hotelId: { type: 'string', nullable: true },
+										reservationStatus: { type: 'string', nullable: true },
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 			response: {
 				200: {
 					type: 'object',
+					description: 'Successful reservation update response',
 					properties: {
 						reservations: {
 							type: 'object',
@@ -1208,7 +1475,6 @@ export function setupRoutes(fastify: FastifyInstance) {
 									nullable: true,
 									items: {
 										type: 'object',
-										additionalProperties: true,
 										properties: {
 											reservationIdList: {
 												type: 'array',
@@ -1221,20 +1487,21 @@ export function setupRoutes(fastify: FastifyInstance) {
 													},
 												},
 											},
-											roomStay: { type: 'object', nullable: true, additionalProperties: true },
-											reservationGuests: {
-												type: 'array',
-												nullable: true,
-												items: { type: 'object', additionalProperties: true },
-											},
 											hotelId: { type: 'string', nullable: true },
 											reservationStatus: { type: 'string', nullable: true },
-											createDateTime: { type: 'string', nullable: true },
+											createDateTime: { type: 'string', format: 'date-time', nullable: true },
 										},
 									},
 								},
 							},
 						},
+					},
+				},
+				400: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+						details: { type: 'array', items: { type: 'object' } },
 					},
 				},
 			},

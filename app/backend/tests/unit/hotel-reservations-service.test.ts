@@ -3,6 +3,7 @@ import type { HotelReservationsRepository } from '../../src/domain/repositories/
 import type {
 	CancelReservationDetails,
 	CheckDistributionReservationsSummary,
+	CreateReservationRequest,
 	GetHotelReservationsQuery,
 	GetReservationStatisticsQuery,
 	GetReservationsSummaryQuery,
@@ -47,7 +48,28 @@ describe('HotelReservationsService', () => {
 
 	it('should create a reservation via repository', async () => {
 		const hotelId = 'HTL1';
-		const body = { guestId: 'G1' };
+		const body: CreateReservationRequest = {
+			reservations: {
+				reservation: [
+					{
+						roomStay: {
+							arrivalDate: '2024-03-15',
+							departureDate: '2024-03-17',
+							roomType: 'DELUXE',
+						},
+						reservationGuests: [
+							{
+								primary: true,
+								profileInfo: {
+									profileIdList: [{ id: 'G1', type: 'GUEST' }],
+								},
+							},
+						],
+						hotelId: 'HTL1',
+					},
+				],
+			},
+		};
 		const headers: HotelReservationsRequestHeaders = { channelCode: 'OPERA' };
 		const expected: ReservationListResponse = {
 			reservations: {
@@ -98,7 +120,29 @@ describe('HotelReservationsService', () => {
 	it('should update a reservation via repository', async () => {
 		const hotelId = 'HTL1';
 		const reservationId = '123';
-		const body = { guestId: 'G1' };
+		const body: CreateReservationRequest = {
+			reservations: {
+				reservation: [
+					{
+						reservationIdList: [{ id: '123', type: 'CONFIRMATION' }],
+						roomStay: {
+							arrivalDate: '2024-03-15',
+							departureDate: '2024-03-17',
+							roomType: 'DELUXE',
+						},
+						reservationGuests: [
+							{
+								primary: true,
+								profileInfo: {
+									profileIdList: [{ id: 'G1', type: 'GUEST' }],
+								},
+							},
+						],
+						hotelId: 'HTL1',
+					},
+				],
+			},
+		};
 		const headers: HotelReservationsRequestHeaders = { channelCode: 'OPERA' };
 		const expected: ReservationListResponse = {
 			reservations: {
