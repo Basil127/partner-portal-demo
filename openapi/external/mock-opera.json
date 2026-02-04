@@ -2699,8 +2699,29 @@
 							}
 						],
 						"title": "State"
+					}
+				},
+				"type": "object",
+				"title": "Address",
+				"description": "Address information."
+			},
+			"Address-Input": {
+				"properties": {
+					"addressLine": {
+						"anyOf": [
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Addressline"
 					},
-					"county": {
+					"city": {
 						"anyOf": [
 							{
 								"type": "string"
@@ -2709,7 +2730,40 @@
 								"type": "null"
 							}
 						],
-						"title": "County"
+						"title": "City"
+					},
+					"postalCode": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Postalcode"
+					},
+					"countryCode": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Countrycode"
+					},
+					"state": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "State"
 					}
 				},
 				"type": "object",
@@ -4159,7 +4213,7 @@
 					"address": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/Address"
+								"$ref": "#/components/schemas/operaclone2__web__api__shop__schema__Address"
 							},
 							{
 								"type": "null"
@@ -4918,6 +4972,39 @@
 						],
 						"title": "Surname"
 					},
+					"namePrefix": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Nameprefix"
+					},
+					"middleName": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Middlename"
+					},
+					"nameSuffix": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Namesuffix"
+					},
 					"nameType": {
 						"anyOf": [
 							{
@@ -4947,6 +5034,38 @@
 							}
 						]
 					},
+					"email": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Email"
+					},
+					"phoneNumber": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phonenumber"
+					},
+					"address": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Address-Input"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
 					"profileType": {
 						"anyOf": [
 							{
@@ -4970,6 +5089,38 @@
 						"anyOf": [
 							{
 								"$ref": "#/components/schemas/Customer"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"email": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Email"
+					},
+					"phoneNumber": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phonenumber"
+					},
+					"address": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Address"
 							},
 							{
 								"type": "null"
@@ -5225,7 +5376,7 @@
 					"address": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/Address"
+								"$ref": "#/components/schemas/operaclone2__web__api__shop__schema__Address"
 							},
 							{
 								"type": "null"
@@ -7222,6 +7373,82 @@
 							}
 						],
 						"title": "State"
+					}
+				},
+				"type": "object",
+				"title": "Address",
+				"description": "Address information."
+			},
+			"operaclone2__web__api__shop__schema__Address": {
+				"properties": {
+					"addressLine": {
+						"anyOf": [
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Addressline"
+					},
+					"city": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "City"
+					},
+					"postalCode": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Postalcode"
+					},
+					"countryCode": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Countrycode"
+					},
+					"state": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "State"
+					},
+					"county": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "County"
 					}
 				},
 				"type": "object",

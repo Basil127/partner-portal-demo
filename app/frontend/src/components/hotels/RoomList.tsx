@@ -13,39 +13,22 @@ interface RoomListProps {
 
 export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 	const [showFilters, setShowFilters] = useState(false);
-	const { adults, children, minPrice, maxPrice, setMinPrice, setMaxPrice } = useBooking();
-
-	const [filters, setFilters] = useState({
-		minPrice: minPrice ? minPrice.toString() : '',
-		maxPrice: maxPrice ? maxPrice.toString() : '',
-		adults: adults.toString(),
-		children: children.toString(),
-	});
-
-	const handleFilterChange = (key: string, value: string) => {
-		setFilters((prev) => ({ ...prev, [key]: value }));
-
-		// Update context for price filters
-		if (key === 'minPrice') {
-			setMinPrice(Number(value) || 0);
-		} else if (key === 'maxPrice') {
-			setMaxPrice(Number(value) || 1000);
-		}
-	};
+	const { adults, children, minPrice, maxPrice, setMinPrice, setMaxPrice, setAdults, setChildren } =
+		useBooking();
 
 	const getActiveFilterSummary = () => {
 		const parts = [];
-		if (minPrice > 0) parts.push(`Min $${minPrice}`);
-		if (maxPrice < 1000) parts.push(`Max $${maxPrice}`);
-		if (filters.adults) parts.push(`${filters.adults} Adults`);
-		if (filters.children) parts.push(`${filters.children} Kids`);
+		if (minPrice && minPrice > 0) parts.push(`Min $${minPrice}`);
+		if (maxPrice && maxPrice < 1000) parts.push(`Max $${maxPrice}`);
+		if (adults) parts.push(`${adults} Adults`);
+		if (children) parts.push(`${children} Kids`);
 		return parts.join(', ');
 	};
 
 	const filteredRooms = rooms.filter((room) => {
 		// Price filter removed as rate is not in the API response
-		const reqAdults = filters.adults ? Number(filters.adults) : 0;
-		const reqChildren = filters.children ? Number(filters.children) : 0;
+		const reqAdults = adults ? Number(adults) : 0;
+		const reqChildren = children ? Number(children) : 0;
 
 		// probably missing data
 		if (
@@ -114,8 +97,8 @@ export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 								type="number"
 								placeholder="0"
 								className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 text-sm"
-								value={filters.minPrice}
-								onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+								value={minPrice}
+								onChange={(e) => setMinPrice(Number(e.target.value) || 0)}
 							/>
 						</div>
 						<div>
@@ -126,8 +109,8 @@ export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 								type="number"
 								placeholder="Any"
 								className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 text-sm"
-								value={filters.maxPrice}
-								onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+								value={maxPrice || Infinity}
+								onChange={(e) => setMaxPrice(Number(e.target.value) || Infinity)}
 							/>
 						</div>
 						<div>
@@ -138,8 +121,9 @@ export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 								type="number"
 								placeholder="1"
 								className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 text-sm"
-								value={filters.adults}
-								onChange={(e) => handleFilterChange('adults', e.target.value)}
+								value={adults}
+								onChange={(e) => setAdults(Number(e.target.value) || 1)}
+								min={1}
 							/>
 						</div>
 						<div>
@@ -150,8 +134,9 @@ export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 								type="number"
 								placeholder="0"
 								className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 text-sm"
-								value={filters.children}
-								onChange={(e) => handleFilterChange('children', e.target.value)}
+								value={children}
+								onChange={(e) => setChildren(Number(e.target.value) || 0)}
+								min={0}
 							/>
 						</div>
 					</div>
@@ -168,7 +153,12 @@ export default function RoomList({ hotelCode, rooms }: RoomListProps) {
 						<Button
 							variant="primary"
 							className="mt-2 text-primary-500"
-							onClick={() => setFilters({ minPrice: '', maxPrice: '', adults: '', children: '' })}
+							onClick={() => {
+								setMinPrice(0);
+								setMaxPrice(Infinity);
+								setAdults(2);
+								setChildren(0);
+							}}
 						>
 							Clear Filters
 						</Button>

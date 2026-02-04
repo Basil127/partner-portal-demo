@@ -288,6 +288,12 @@ export interface GuestCount {
 export interface Guarantee {
 	guaranteeCode?: string | null;
 	shortDescription?: string | null;
+	paymentCard?: {
+		cardType?: string | null;
+		cardNumber?: string | null;
+		expireDate?: string | null;
+		cardHolderName?: string | null;
+	} | null;
 }
 
 export interface RoomStay {
@@ -296,11 +302,19 @@ export interface RoomStay {
 	guarantee?: Guarantee | null;
 	roomRates?: RoomRate[] | null;
 	guestCounts?: GuestCount[] | null;
+	roomType?: string | null;
+	ratePlanCode?: string | null;
+	marketCode?: string | null;
+	sourceCode?: string | null;
+	total?: RoomRateAmount | null;
 }
 
 export interface PersonName {
 	givenName?: string | null;
 	surname?: string | null;
+	namePrefix?: string | null;
+	middleName?: string | null;
+	nameSuffix?: string | null;
 }
 
 export interface Customer {
@@ -310,6 +324,15 @@ export interface Customer {
 export interface Profile {
 	customer?: Customer | null;
 	profileType?: string | null;
+	email?: string | null;
+	phoneNumber?: string | null;
+	address?: {
+		addressLine?: string[] | null;
+		city?: string | null;
+		postalCode?: string | null;
+		countryCode?: string | null;
+		state?: string | null;
+	} | null;
 }
 
 export interface ProfileInfo {
@@ -362,8 +385,11 @@ export interface CancelReservationDetails {
 	status?: string | null;
 }
 
+/**
+ * Request to create a new reservation.
+ */
 export interface CreateReservationRequest {
-	[key: string]: any;
+	reservations: ReservationCollection;
 }
 
 export interface CancelReservationRequest {

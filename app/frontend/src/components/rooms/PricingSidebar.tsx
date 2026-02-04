@@ -3,6 +3,7 @@ import ComponentCard from '../common/ComponentCard';
 import { useBooking } from '@/context/BookingContext';
 import { ContentRoomType } from '../../../../backend/src/infrastructure/adapters/http/external-client/types.gen';
 import Button from '../ui/button/Button';
+import Link from 'next/link';
 
 interface PricingSidebarProps {
 	hotelId: string;
@@ -119,24 +120,26 @@ export default function PricingSidebar({ hotelId, roomId, room }: PricingSidebar
 								</div>
 							</div>
 
-							<Button
-								variant="primary"
-								size="md"
-								className="w-full mt-4"
-								onClick={() => {
-									console.log('Reserve room', {
-										hotelId,
-										roomId,
-										checkIn,
-										checkOut,
-										adults,
-										children,
-										totalPrice: totalWithTax,
-									});
-								}}
-							>
-								Reserve Room
-							</Button>
+							<Link href={`/reservations/new?hotelId=${hotelId}&roomId=${roomId}`}>
+								<Button
+									variant="primary"
+									size="md"
+									className="w-full mt-4"
+									onClick={() => {
+										console.log('Continue', {
+											hotelId,
+											roomId,
+											checkIn,
+											checkOut,
+											adults,
+											children,
+											totalPrice: totalWithTax,
+										});
+									}}
+								>
+									Continue
+								</Button>
+							</Link>
 							<p className="text-xs text-center text-gray-500 dark:text-gray-400">
 								You won't be charged yet
 							</p>

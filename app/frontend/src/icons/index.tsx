@@ -1,5 +1,5 @@
 import PlusIcon from './plus.svg';
-import CloseIcon from './close.svg';
+// import CloseIcon from './close.svg';
 import BoxIcon from './box.svg';
 import CheckCircleIcon from './check-circle.svg';
 import AlertIcon from './alert.svg';
@@ -61,6 +61,7 @@ import WaterIcon from './water-outline-svgrepo-com.svg';
 import CallIcon from './call-outline-svgrepo-com.svg';
 import ChevronForward from './chevron-forward-outline-svgrepo-com.svg';
 import ChevronBack from './chevron-back-outline-svgrepo-com.svg';
+import CloseIcon from './close-outline-svgrepo-com.svg';
 
 export {
 	ChevronBack,
