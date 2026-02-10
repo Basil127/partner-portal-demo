@@ -1,0 +1,56 @@
+services:
+  api: &main_app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: operaclone2:${OPERACLONE2_VERSION:-latest}
+    restart: always
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      db:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    environment:
+      OPERACLONE2_HOST: 0.0.0.0
+      OPERACLONE2_DB_HOST: OperaClone2-db
+      OPERACLONE2_DB_PORT: 5432
+      OPERACLONE2_DB_USER: OperaClone2
+      OPERACLONE2_DB_PASS: OperaClone2
+      OPERACLONE2_DB_BASE: OperaClone2
+    ports:
+      - "8000:8000"
+
+  db:
+    image: postgres:18.1-bookworm
+    hostname: OperaClone2-db
+    environment:
+      POSTGRES_PASSWORD: "OperaClone2"
+      POSTGRES_USER: "OperaClone2"
+      POSTGRES_DB: "OperaClone2"
+    ports:
+      - "5432:5432"
+    volumes:
+      - OperaClone2-db-data:/var/lib/postgresql
+    restart: always
+    healthcheck:
+      test: pg_isready -U OperaClone2
+      interval: 2s
+      timeout: 3s
+      retries: 40
+
+  migrator:
+    <<: *main_app
+    restart: "no"
+    command: alembic upgrade head
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+
+volumes:
+  OperaClone2-db-data:
+    name: OperaClone2-db-data
