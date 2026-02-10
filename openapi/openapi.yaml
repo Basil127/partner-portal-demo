@@ -1,0 +1,2141 @@
+openapi: 3.1.0
+info:
+  title: Partner Portal API (Generated)
+  version: 0.1.0
+  contact:
+    name: Partner Portal Support
+    email: support@example.com
+    url: https://support.example.com
+components:
+  schemas: {}
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+paths:
+  /api/bookings:
+    get:
+      description: Get all bookings
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    partnerId:
+                      type: string
+                    customerName:
+                      type: string
+                    serviceType:
+                      type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    status:
+                      type: string
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+    post:
+      description: Create a new booking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - partnerId
+                - customerName
+                - serviceType
+                - startDate
+                - endDate
+              properties:
+                partnerId:
+                  type: string
+                customerName:
+                  type: string
+                serviceType:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+        required: true
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+  /api/bookings/{id}:
+    get:
+      description: Get a booking by ID
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: Update a booking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerName:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - pending
+                    - confirmed
+                    - cancelled
+                    - completed
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  partnerId:
+                    type: string
+                  customerName:
+                    type: string
+                  serviceType:
+                    type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      description: Delete a booking
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        '204':
+          description: Default Response
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /api/hotels/availability:
+    get:
+      tags:
+        - hotel shop
+      description: Get available hotels from external provider
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: hotelCodes
+          required: true
+          description: List of Hotel Codes (CSV)
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDate
+          required: true
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDateTo
+          required: false
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: departureDate
+          required: true
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: adults
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: children
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: childrenAges
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: accessCode
+          required: false
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: numberOfUnits
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: rateMode
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: ratePlanCodeMatchOnly
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanType
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: availableOnly
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: minRate
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: maxRate
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: alternateOffers
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: commissionableStatus
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: promotionCodes
+          required: false
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roomStays:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        propertyInfo:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                          properties:
+                            hotelCode:
+                              type: string
+                              nullable: true
+                            hotelName:
+                              type: string
+                              nullable: true
+                            chainCode:
+                              type: string
+                              nullable: true
+                            isAlternate:
+                              type: boolean
+                              nullable: true
+                        availability:
+                          type: string
+                          nullable: true
+                        ratePlans:
+                          type: array
+                          nullable: true
+                          items:
+                            type: object
+                            properties:
+                              ratePlanCode:
+                                type: string
+                                nullable: true
+                              ratePlanName:
+                                type: string
+                                nullable: true
+                              ratePlanType:
+                                type: string
+                                nullable: true
+                              identificationRequired:
+                                type: boolean
+                                nullable: true
+                              accountId:
+                                type: string
+                                nullable: true
+                              availabilityStatus:
+                                type: string
+                                nullable: true
+                              additionalDetails:
+                                type: object
+                                nullable: true
+                                additionalProperties: true
+                        minRate:
+                          type: object
+                          nullable: true
+                          properties:
+                            amountBeforeTax:
+                              type: number
+                              nullable: true
+                            amountAfterTax:
+                              type: number
+                              nullable: true
+                            currencyCode:
+                              type: string
+                              nullable: true
+                        maxRate:
+                          type: object
+                          nullable: true
+                          properties:
+                            amountBeforeTax:
+                              type: number
+                              nullable: true
+                            amountAfterTax:
+                              type: number
+                              nullable: true
+                            currencyCode:
+                              type: string
+                              nullable: true
+        '400':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+  /api/hotels/{hotelCode}/offers:
+    get:
+      tags:
+        - hotel shop
+      description: Get property offers from external provider
+      parameters:
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDate
+          required: true
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: departureDate
+          required: true
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: adults
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: children
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: childrenAges
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomTypes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: accessCode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanType
+          required: false
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: numberOfUnits
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: roomTypeMatchOnly
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: ratePlanCodeMatchOnly
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: rateMode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomAmenity
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: roomAmenityQuantity
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: includeAmenities
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: minRate
+          required: false
+        - schema:
+            type: number
+          in: query
+          name: maxRate
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: alternateOffers
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: commissionableStatus
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: promotionCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: blockCode
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roomStays:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        propertyInfo:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                          properties:
+                            hotelCode:
+                              type: string
+                              nullable: true
+                            hotelName:
+                              type: string
+                              nullable: true
+                            chainCode:
+                              type: string
+                              nullable: true
+                            isAlternate:
+                              type: boolean
+                              nullable: true
+                            address:
+                              type: object
+                              nullable: true
+                              properties:
+                                addressLine:
+                                  type: array
+                                  items:
+                                    type: string
+                                  nullable: true
+                                city:
+                                  type: string
+                                  nullable: true
+                                postalCode:
+                                  type: string
+                                  nullable: true
+                                countryCode:
+                                  type: string
+                                  nullable: true
+                                state:
+                                  type: string
+                                  nullable: true
+                                county:
+                                  type: string
+                                  nullable: true
+                            distance:
+                              type: object
+                              nullable: true
+                              properties:
+                                distance:
+                                  type: number
+                                  nullable: true
+                                distanceUnit:
+                                  type: string
+                                  nullable: true
+                        availability:
+                          type: string
+                          nullable: true
+                        restrictions:
+                          type: array
+                          nullable: true
+                          items:
+                            type: object
+                            properties:
+                              code:
+                                type: string
+                                nullable: true
+                              description:
+                                type: string
+                                nullable: true
+                        roomTypes:
+                          type: array
+                          nullable: true
+                          items:
+                            type: object
+                            additionalProperties: true
+                            properties:
+                              roomTypeCode:
+                                type: string
+                                nullable: true
+                              roomTypeName:
+                                type: string
+                                nullable: true
+                              description:
+                                type: string
+                                nullable: true
+                              availabilityStatus:
+                                type: string
+                                nullable: true
+                        ratePlans:
+                          type: array
+                          nullable: true
+                          items:
+                            type: object
+                            additionalProperties: true
+                            properties:
+                              ratePlanCode:
+                                type: string
+                                nullable: true
+                              ratePlanName:
+                                type: string
+                                nullable: true
+                              ratePlanType:
+                                type: string
+                                nullable: true
+                              accessCode:
+                                type: string
+                                nullable: true
+                              identificationRequired:
+                                type: boolean
+                                nullable: true
+                              accountId:
+                                type: string
+                                nullable: true
+                              ratePlanLevel:
+                                type: string
+                                nullable: true
+                              ratePlanCategory:
+                                type: string
+                                nullable: true
+                              commissionable:
+                                type: boolean
+                                nullable: true
+                              commissionDescription:
+                                type: string
+                                nullable: true
+                        offers:
+                          type: array
+                          nullable: true
+                          items:
+                            type: object
+                            properties:
+                              bookingCode:
+                                type: string
+                                nullable: true
+                              offerName:
+                                type: string
+                                nullable: true
+                              availabilityStatus:
+                                type: string
+                                nullable: true
+                              roomType:
+                                type: string
+                                nullable: true
+                              ratePlanCode:
+                                type: string
+                                nullable: true
+                              rateChangeDuringStay:
+                                type: boolean
+                                nullable: true
+                              rateInformation:
+                                type: object
+                                nullable: true
+                                additionalProperties: true
+                              packages:
+                                type: array
+                                nullable: true
+                                items:
+                                  type: object
+                                  additionalProperties: true
+                              total:
+                                type: object
+                                nullable: true
+                                properties:
+                                  amountBeforeTax:
+                                    type: number
+                                    nullable: true
+                                  amountAfterTax:
+                                    type: number
+                                    nullable: true
+                                  currencyCode:
+                                    type: string
+                                    nullable: true
+                              blockInformation:
+                                type: object
+                                nullable: true
+                                additionalProperties: true
+        '400':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+  /api/hotels/{hotelCode}/offer:
+    get:
+      tags:
+        - hotel shop
+      description: Get a property offer from external provider
+      parameters:
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: arrivalDate
+          required: true
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: departureDate
+          required: true
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: adults
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: children
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: childrenAges
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomType
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: ratePlanCode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: accessCode
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: rateMode
+          required: false
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: numberOfUnits
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: bookingCode
+          required: false
+        - schema:
+            type: boolean
+          in: query
+          name: includeAmenities
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: promotionCodes
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: blockCode
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  propertyInfo:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    properties:
+                      hotelCode:
+                        type: string
+                        nullable: true
+                      hotelName:
+                        type: string
+                        nullable: true
+                      chainCode:
+                        type: string
+                        nullable: true
+                      isAlternate:
+                        type: boolean
+                        nullable: true
+                      address:
+                        type: object
+                        nullable: true
+                        properties:
+                          addressLine:
+                            type: array
+                            items:
+                              type: string
+                            nullable: true
+                          city:
+                            type: string
+                            nullable: true
+                          postalCode:
+                            type: string
+                            nullable: true
+                          countryCode:
+                            type: string
+                            nullable: true
+                          state:
+                            type: string
+                            nullable: true
+                          county:
+                            type: string
+                            nullable: true
+                      distance:
+                        type: object
+                        nullable: true
+                        properties:
+                          distance:
+                            type: number
+                            nullable: true
+                          distanceUnit:
+                            type: string
+                            nullable: true
+                  availability:
+                    type: string
+                    nullable: true
+                  roomType:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    properties:
+                      roomTypeCode:
+                        type: string
+                        nullable: true
+                      roomTypeName:
+                        type: string
+                        nullable: true
+                      description:
+                        type: string
+                        nullable: true
+                      availabilityStatus:
+                        type: string
+                        nullable: true
+                  ratePlan:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    properties:
+                      ratePlanCode:
+                        type: string
+                        nullable: true
+                      ratePlanName:
+                        type: string
+                        nullable: true
+                      description:
+                        type: string
+                        nullable: true
+                      ratePlanType:
+                        type: string
+                        nullable: true
+                      accessCode:
+                        type: string
+                        nullable: true
+                      identificationRequired:
+                        type: boolean
+                        nullable: true
+                      accountId:
+                        type: string
+                        nullable: true
+                      ratePlanLevel:
+                        type: string
+                        nullable: true
+                      ratePlanCategory:
+                        type: string
+                        nullable: true
+                      commissionable:
+                        type: boolean
+                        nullable: true
+                      commissionDescription:
+                        type: string
+                        nullable: true
+                  offer:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    properties:
+                      roomType:
+                        type: string
+                        nullable: true
+                      ratePlanCode:
+                        type: string
+                        nullable: true
+                      bookingCode:
+                        type: string
+                        nullable: true
+                      total:
+                        type: object
+                        nullable: true
+                        properties:
+                          amountBeforeTax:
+                            type: number
+                            nullable: true
+                          amountAfterTax:
+                            type: number
+                            nullable: true
+                          currencyCode:
+                            type: string
+                            nullable: true
+                      rates:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          additionalProperties: true
+                      guestCounts:
+                        type: object
+                        nullable: true
+                        additionalProperties: true
+        '400':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+  /api/content/hotels:
+    get:
+      tags:
+        - hotel content
+      description: Get properties summary
+      parameters:
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: connectionStatusLastChangedFrom
+          required: false
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: connectionStatusLastChangedTo
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: connectionStatus
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: fetchInstructions
+          required: false
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasMore:
+                    type: boolean
+                  totalResults:
+                    type: integer
+                    nullable: true
+                  limit:
+                    type: integer
+                  count:
+                    type: integer
+                  offset:
+                    type: integer
+                  hotels:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        hotelId:
+                          type: string
+                          nullable: true
+                        hotelCode:
+                          type: string
+                          nullable: true
+                        hotelName:
+                          type: string
+                          nullable: true
+                        hotelDescription:
+                          type: string
+                          nullable: true
+                        address:
+                          type: object
+                          nullable: true
+                          properties:
+                            lines:
+                              type: array
+                              items:
+                                type: string
+                              nullable: true
+                            city:
+                              type: string
+                              nullable: true
+                            postalCode:
+                              type: string
+                              nullable: true
+                            countryCode:
+                              type: string
+                              nullable: true
+                            state:
+                              type: string
+                              nullable: true
+                        coordinates:
+                          type: object
+                          nullable: true
+                          properties:
+                            latitude:
+                              type: number
+                              nullable: true
+                            longitude:
+                              type: number
+                              nullable: true
+                        connectivity:
+                          type: object
+                          nullable: true
+                          properties:
+                            connectionStatus:
+                              type: string
+                              nullable: true
+                        meta:
+                          type: object
+                          additionalProperties: true
+  /api/content/hotels/{hotelCode}:
+    get:
+      tags:
+        - hotel content
+      description: Get detailed property information
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  propertyInfo:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    properties:
+                      hotelId:
+                        type: string
+                        nullable: true
+                      enterpriseId:
+                        type: string
+                        nullable: true
+                      hotelCode:
+                        type: string
+                        nullable: true
+                      hotelName:
+                        type: string
+                        nullable: true
+                      hotelDescription:
+                        type: string
+                        nullable: true
+                      chainCode:
+                        type: string
+                        nullable: true
+                      clusterCode:
+                        type: string
+                        nullable: true
+                      address:
+                        type: object
+                        nullable: true
+                        properties:
+                          lines:
+                            type: array
+                            items:
+                              type: string
+                            nullable: true
+                          city:
+                            type: string
+                            nullable: true
+                          postalCode:
+                            type: string
+                            nullable: true
+                          countryCode:
+                            type: string
+                            nullable: true
+                          state:
+                            type: string
+                            nullable: true
+                      latitude:
+                        type: number
+                        nullable: true
+                      longitude:
+                        type: number
+                        nullable: true
+                      propertyAmenities:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              nullable: true
+                            description:
+                              type: string
+                              nullable: true
+                      pointOfInterest:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              nullable: true
+                            distance:
+                              type: number
+                              nullable: true
+                            unit:
+                              type: string
+                              nullable: true
+                      marketingMessage:
+                        type: string
+                        nullable: true
+                      currencyCode:
+                        type: string
+                        nullable: true
+                      primaryLanguage:
+                        type: string
+                        nullable: true
+                      totalNumberOfRooms:
+                        type: integer
+                        nullable: true
+                      petPolicy:
+                        type: string
+                        nullable: true
+  /api/content/hotels/{hotelCode}/roomTypes:
+    get:
+      tags:
+        - hotel content
+      description: Get room types for a property
+      parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: includeRoomAmenities
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: roomType
+          required: false
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelCode
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roomTypes:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        hotelRoomType:
+                          type: string
+                          nullable: true
+                        roomType:
+                          type: string
+                          nullable: true
+                        roomName:
+                          type: string
+                          nullable: true
+                        description:
+                          type: array
+                          items:
+                            type: string
+                          nullable: true
+                        roomCategory:
+                          type: string
+                          nullable: true
+                        roomAmenities:
+                          type: array
+                          nullable: true
+                          items:
+                            type: object
+                            properties:
+                              roomAmenity:
+                                type: string
+                                nullable: true
+                              description:
+                                type: string
+                                nullable: true
+                              quantity:
+                                type: integer
+                                nullable: true
+                              includeInRate:
+                                type: boolean
+                                nullable: true
+                              confirmable:
+                                type: boolean
+                                nullable: true
+                        roomViewType:
+                          type: string
+                          nullable: true
+                        roomPrimaryBedType:
+                          type: string
+                          nullable: true
+                        nonSmokingInd:
+                          type: boolean
+                          nullable: true
+                        occupancy:
+                          type: object
+                          nullable: true
+                          properties:
+                            minOccupancy:
+                              type: integer
+                              nullable: true
+                            maxOccupancy:
+                              type: integer
+                              nullable: true
+                            minAge:
+                              type: integer
+                              nullable: true
+                            maxAge:
+                              type: integer
+                              nullable: true
+                            minAdults:
+                              type: integer
+                              nullable: true
+                            maxAdults:
+                              type: integer
+                              nullable: true
+                            minChildren:
+                              type: integer
+                              nullable: true
+                            maxChildren:
+                              type: integer
+                              nullable: true
+                        numberOfUnits:
+                          type: integer
+                          nullable: true
+                  count:
+                    type: integer
+                    nullable: true
+                  hasMore:
+                    type: boolean
+                    nullable: true
+                  limit:
+                    type: integer
+                    nullable: true
+                  offset:
+                    type: integer
+                    nullable: true
+                  totalResults:
+                    type: integer
+                    nullable: true
+  /api/hotels/{hotelId}/reservations:
+    get:
+      tags:
+        - hotel reservations
+      description: Get reservations for a hotel
+      parameters:
+        - schema:
+            type: string
+            nullable: true
+          in: query
+          name: surname
+          required: false
+        - schema:
+            type: string
+            nullable: true
+          in: query
+          name: givenName
+          required: false
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: arrivalStartDate
+          required: false
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: arrivalEndDate
+          required: false
+        - schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+          in: query
+          name: confirmationNumberList
+          required: false
+        - schema:
+            type: integer
+            default: 100
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservations:
+                    type: object
+                    nullable: true
+                    properties:
+                      reservation:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          additionalProperties: true
+                          properties:
+                            reservationIdList:
+                              type: array
+                              nullable: true
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    nullable: true
+                                  type:
+                                    type: string
+                                    nullable: true
+                            roomStay:
+                              type: object
+                              nullable: true
+                              additionalProperties: true
+                              properties:
+                                arrivalDate:
+                                  type: string
+                                  nullable: true
+                                departureDate:
+                                  type: string
+                                  nullable: true
+                                guarantee:
+                                  type: object
+                                  nullable: true
+                                  properties:
+                                    guaranteeCode:
+                                      type: string
+                                      nullable: true
+                                    shortDescription:
+                                      type: string
+                                      nullable: true
+                                roomRates:
+                                  type: array
+                                  nullable: true
+                                  items:
+                                    type: object
+                                    additionalProperties: true
+                                guestCounts:
+                                  type: object
+                                  nullable: true
+                                  properties:
+                                    adults:
+                                      type: integer
+                                      nullable: true
+                                    children:
+                                      type: integer
+                                      nullable: true
+                                total:
+                                  type: object
+                                  nullable: true
+                                  properties:
+                                    amountBeforeTax:
+                                      type: number
+                                      nullable: true
+                                    amountAfterTax:
+                                      type: number
+                                      nullable: true
+                                    currencyCode:
+                                      type: string
+                                      nullable: true
+                                roomType:
+                                  type: string
+                                  nullable: true
+                                ratePlanCode:
+                                  type: string
+                                  nullable: true
+                                marketCode:
+                                  type: string
+                                  nullable: true
+                                sourceCode:
+                                  type: string
+                                  nullable: true
+                            reservationGuests:
+                              type: array
+                              nullable: true
+                              items:
+                                type: object
+                                additionalProperties: true
+                                properties:
+                                  profileInfo:
+                                    type: object
+                                    nullable: true
+                                    additionalProperties: true
+                                  primary:
+                                    type: boolean
+                                    nullable: true
+                            hotelId:
+                              type: string
+                              nullable: true
+                            reservationStatus:
+                              type: string
+                              nullable: true
+                            createDateTime:
+                              type: string
+                              nullable: true
+    post:
+      tags:
+        - hotel reservations
+      description: Create a reservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservations:
+                    type: object
+                    nullable: true
+                    properties:
+                      reservation:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          additionalProperties: true
+                          properties:
+                            reservationIdList:
+                              type: array
+                              nullable: true
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    nullable: true
+                                  type:
+                                    type: string
+                                    nullable: true
+                            roomStay:
+                              type: object
+                              nullable: true
+                              additionalProperties: true
+                            reservationGuests:
+                              type: array
+                              nullable: true
+                              items:
+                                type: object
+                                additionalProperties: true
+                            hotelId:
+                              type: string
+                              nullable: true
+                            reservationStatus:
+                              type: string
+                              nullable: true
+                            createDateTime:
+                              type: string
+                              nullable: true
+  /api/hotels/{hotelId}/reservations/summary:
+    get:
+      tags:
+        - hotel reservations
+      description: Get reservations summary
+      parameters:
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: arrivalDate
+          required: false
+        - schema:
+            type: string
+            nullable: true
+          in: query
+          name: lastName
+          required: false
+        - schema:
+            type: integer
+            default: 200
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservations:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        reservationId:
+                          type: string
+                          nullable: true
+                        confirmationNumber:
+                          type: string
+                          nullable: true
+                        guestName:
+                          type: string
+                          nullable: true
+                        arrivalDate:
+                          type: string
+                          nullable: true
+                        departureDate:
+                          type: string
+                          nullable: true
+                        status:
+                          type: string
+                          nullable: true
+  /api/hotels/{hotelId}/reservations/statistics:
+    get:
+      tags:
+        - hotel reservations
+      description: Get reservation statistics
+      parameters:
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: startDate
+          required: false
+        - schema:
+            type: string
+            format: date
+            nullable: true
+          in: query
+          name: endDate
+          required: false
+        - schema:
+            type: integer
+            default: 20
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  checkReservations:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        hotelId:
+                          type: string
+                          nullable: true
+                        channelCode:
+                          type: string
+                          nullable: true
+                        enterpriseId:
+                          type: string
+                          nullable: true
+                        arrivalDate:
+                          type: string
+                          nullable: true
+                        departureDate:
+                          type: string
+                          nullable: true
+                        creationDate:
+                          type: string
+                          nullable: true
+                        lastUpdateDate:
+                          type: string
+                          nullable: true
+                        cancellationDate:
+                          type: string
+                          nullable: true
+                        numberOfRooms:
+                          type: integer
+                          nullable: true
+                        reservationStatus:
+                          type: string
+                          nullable: true
+                        confirmationId:
+                          type: string
+                          nullable: true
+                        legNumber:
+                          type: string
+                          nullable: true
+                        reservationId:
+                          type: string
+                          nullable: true
+                        guestName:
+                          type: string
+                          nullable: true
+                        creatorId:
+                          type: string
+                          nullable: true
+                  hasMore:
+                    type: boolean
+                    nullable: true
+  /api/hotels/{hotelId}/reservations/{reservationId}:
+    put:
+      tags:
+        - hotel reservations
+      description: Update a reservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+        - schema:
+            type: string
+          in: path
+          name: reservationId
+          required: true
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservations:
+                    type: object
+                    nullable: true
+                    properties:
+                      reservation:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          additionalProperties: true
+                          properties:
+                            reservationIdList:
+                              type: array
+                              nullable: true
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    nullable: true
+                                  type:
+                                    type: string
+                                    nullable: true
+                            roomStay:
+                              type: object
+                              nullable: true
+                              additionalProperties: true
+                            reservationGuests:
+                              type: array
+                              nullable: true
+                              items:
+                                type: object
+                                additionalProperties: true
+                            hotelId:
+                              type: string
+                              nullable: true
+                            reservationStatus:
+                              type: string
+                              nullable: true
+                            createDateTime:
+                              type: string
+                              nullable: true
+  /api/hotels/{hotelId}/reservations/{reservationId}/cancellations:
+    post:
+      tags:
+        - hotel reservations
+      description: Cancel a reservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: hotelId
+          required: true
+        - schema:
+            type: string
+          in: path
+          name: reservationId
+          required: true
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservationIdList:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          nullable: true
+                        type:
+                          type: string
+                          nullable: true
+                  cancellationNumber:
+                    type: object
+                    nullable: true
+                    properties:
+                      id:
+                        type: string
+                        nullable: true
+                      type:
+                        type: string
+                        nullable: true
+                  status:
+                    type: string
+                    nullable: true
+  /api/hotels/{hotelId}/inventory/statistics:
+    get:
+      summary: Get Inventory Statistics
+      tags:
+        - hotel inventory
+      description: >-
+        Get a hotel's inventory statistics for a specified date range. This
+        endpoint fetches inventory statistics based on the provided report code,
+        which determines the type of statistics collected (e.g.,
+        DetailedAvailabilitySummary, RoomCalendarStatistics, SellLimitSummary,
+        RoomsAvailabilitySummary).
+      parameters:
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: dateRangeStart
+          required: true
+          description: The starting value of the date range (YYYY-MM-DD format).
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: dateRangeEnd
+          required: true
+          description: The ending value of the date range (YYYY-MM-DD format).
+        - schema:
+            type: string
+            enum:
+              - DetailedAvailabiltySummary
+              - RoomCalendarStatistics
+              - SellLimitSummary
+              - RoomsAvailabilitySummary
+          in: query
+          name: reportCode
+          required: true
+          description: >-
+            Identifies the type of statistics collected. Each ReportCode
+            corresponds to a set of category summaries based upon a
+            predetermined agreement.
+        - schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+          in: query
+          name: parameterName
+          required: false
+          description: Optional parameter names for filtering statistics.
+        - schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+          in: query
+          name: parameterValue
+          required: false
+          description: Optional parameter values for filtering statistics.
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 2000
+          in: path
+          name: hotelId
+          required: true
+          description: Unique ID of the hotel where inventory statistics are searched.
+      responses:
+        '200':
+          description: >-
+            Array of inventory statistics for the requested hotel and date
+            range.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: >-
+                  Array of inventory statistics for the requested hotel and date
+                  range.
+                items:
+                  type: object
+                  description: Defines all details needed to create a statistical report.
+                  properties:
+                    statistics:
+                      type: array
+                      nullable: true
+                      description: Collection of statistic codes with their data.
+                      items:
+                        type: object
+                        description: Defines the codes and corresponding categories.
+                        properties:
+                          statCode:
+                            type: string
+                            nullable: true
+                            description: >-
+                              Actual code used by the system to collect
+                              statistics (e.g., CORP, RACK if category is Market
+                              Segment).
+                          statCategoryCode:
+                            type: string
+                            nullable: true
+                            description: >-
+                              Category code of the stat code (e.g., Market
+                              Segment).
+                          statCodeClass:
+                            type: string
+                            nullable: true
+                            description: Class grouping of the stat code.
+                          description:
+                            type: string
+                            nullable: true
+                            description: Description of the statistic code.
+                          statisticDate:
+                            type: array
+                            nullable: true
+                            description: Collection of statistic summary data by date.
+                            items:
+                              type: object
+                              description: >-
+                                An instance of a statistic containing revenue
+                                and inventory summaries.
+                              properties:
+                                statisticDate:
+                                  type: string
+                                  format: date
+                                  nullable: true
+                                  description: Date of the statistic (YYYY-MM-DD format).
+                                weekendDate:
+                                  type: boolean
+                                  nullable: true
+                                  description: >-
+                                    Whether this statistic date is a weekend
+                                    date.
+                                revenue:
+                                  type: array
+                                  nullable: true
+                                  description: Collection of revenue category summaries.
+                                  items:
+                                    type: object
+                                    properties:
+                                      categoryCode:
+                                        type: string
+                                        nullable: true
+                                      description:
+                                        type: string
+                                        nullable: true
+                                      amount:
+                                        type: number
+                                        nullable: true
+                                      currencyCode:
+                                        type: string
+                                        nullable: true
+                                inventory:
+                                  type: array
+                                  nullable: true
+                                  description: >-
+                                    Collection of inventory/count category
+                                    summaries.
+                                  items:
+                                    type: object
+                                    properties:
+                                      categoryCode:
+                                        type: string
+                                        nullable: true
+                                      description:
+                                        type: string
+                                        nullable: true
+                                      value:
+                                        type: number
+                                        nullable: true
+                    hotelName:
+                      type: string
+                      nullable: true
+                      description: >-
+                        A text field used to communicate the proper name of the
+                        hotel.
+                    reportCode:
+                      type: string
+                      nullable: true
+                      description: >-
+                        Identifies the type of statistics collected. Each
+                        ReportCode corresponds to a set of category summaries
+                        based upon a predetermined agreement.
+                    description:
+                      type: string
+                      nullable: true
+                      description: >-
+                        This element has revenue amount data for its revenue
+                        category such as Room Revenue, Food and Beverage
+                        Revenue.
+        '400':
+          description: Validation error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Validation error response.
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                  details:
+                    type: array
+                    description: Validation error details.
+        '422':
+          description: Unprocessable entity error from external provider.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Unprocessable entity error from external provider.
+                properties:
+                  error:
+                    type: string
+tags:
+  - name: bookings
+    x-displayName: Booking Operations
+    description: Full lifecycle management of partner bookings.
+  - name: security
+    description: Authentication and Authorization endpoints.

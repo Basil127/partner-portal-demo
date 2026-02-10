@@ -1,0 +1,7304 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "operaclone2",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Checks the health of a project.\n\nIt returns 200 if the project is healthy.",
+        "operationId": "health_check_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/": {
+      "post": {
+        "tags": [
+          "echo"
+        ],
+        "summary": "Send Echo Message",
+        "description": "Sends echo back to user.\n\n:param incoming_message: incoming message.\n:returns: message same as the incoming.",
+        "operationId": "send_echo_message_api_echo__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dummy/": {
+      "get": {
+        "tags": [
+          "dummy"
+        ],
+        "summary": "Get Dummy Models",
+        "description": "Retrieve all dummy objects from the database.\n\n:param limit: limit of dummy objects, defaults to 10.\n:param offset: offset of dummy objects, defaults to 0.\n:param dummy_dao: DAO for dummy models.\n:return: list of dummy objects from database.",
+        "operationId": "get_dummy_models_api_dummy__get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DummyModelDTO"
+                  },
+                  "title": "Response Get Dummy Models Api Dummy  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "dummy"
+        ],
+        "summary": "Create Dummy Model",
+        "description": "Creates dummy model in the database.\n\n:param new_dummy_object: new dummy model item.\n:param dummy_dao: DAO for dummy models.",
+        "operationId": "create_dummy_model_api_dummy__put",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DummyModelInputDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shop/v1/hotels": {
+      "get": {
+        "tags": [
+          "Shop"
+        ],
+        "summary": "Get Properties",
+        "description": "List the availability status and rate range at multiple properties for given list of properties.\n\n\u003Cp\u003E\u003Cstrong\u003EOperationId:\u003C/strong\u003EgetProperties\u003C/p\u003E",
+        "operationId": "get_properties_api_shop_v1_hotels_get",
+        "parameters": [
+          {
+            "name": "HotelCodes",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "List of Hotel Codes (CSV)",
+              "title": "Hotelcodes"
+            },
+            "description": "List of Hotel Codes (CSV)"
+          },
+          {
+            "name": "ArrivalDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Arrival/Check-in Date",
+              "title": "Arrivaldate"
+            },
+            "description": "Arrival/Check-in Date"
+          },
+          {
+            "name": "ArrivalDateTo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Arrival/Check-in Date To",
+              "title": "Arrivaldateto"
+            },
+            "description": "Arrival/Check-in Date To"
+          },
+          {
+            "name": "DepartureDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Departure/Check-out Date",
+              "title": "Departuredate"
+            },
+            "description": "Departure/Check-out Date"
+          },
+          {
+            "name": "Adults",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Number of adults",
+              "default": 1,
+              "title": "Adults"
+            },
+            "description": "Number of adults"
+          },
+          {
+            "name": "Children",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Number of children",
+              "default": 0,
+              "title": "Children"
+            },
+            "description": "Number of children"
+          },
+          {
+            "name": "ChildrenAges",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "List of Age of the children (CSV)",
+              "title": "Childrenages"
+            },
+            "description": "List of Age of the children (CSV)"
+          },
+          {
+            "name": "RatePlanCodes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "List of Rate Plan codes (CSV)",
+              "title": "Rateplancodes"
+            },
+            "description": "List of Rate Plan codes (CSV)"
+          },
+          {
+            "name": "AccessCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Access code",
+              "title": "Accesscode"
+            },
+            "description": "Access code"
+          },
+          {
+            "name": "NumberOfUnits",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Number of rooms",
+              "default": 1,
+              "title": "Numberofunits"
+            },
+            "description": "Number of rooms"
+          },
+          {
+            "name": "RateMode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Rate mode",
+              "default": "Highest",
+              "title": "Ratemode"
+            },
+            "description": "Rate mode"
+          },
+          {
+            "name": "RatePlanCodeMatchOnly",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": false,
+              "title": "Rateplancodematchonly"
+            }
+          },
+          {
+            "name": "RatePlanType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Rate Plan type",
+              "title": "Rateplantype"
+            },
+            "description": "Rate Plan type"
+          },
+          {
+            "name": "AvailableOnly",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": false,
+              "title": "Availableonly"
+            }
+          },
+          {
+            "name": "minRate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Minrate"
+            }
+          },
+          {
+            "name": "maxRate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Maxrate"
+            }
+          },
+          {
+            "name": "AlternateOffers",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "Always",
+              "title": "Alternateoffers"
+            }
+          },
+          {
+            "name": "CommissionableStatus",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "Both",
+              "title": "Commissionablestatus"
+            }
+          },
+          {
+            "name": "PromotionCodes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "List of Promotion codes (CSV)",
+              "title": "Promotioncodes"
+            },
+            "description": "List of Promotion codes (CSV)"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Bearer token",
+              "title": "Authorization"
+            },
+            "description": "Bearer token"
+          },
+          {
+            "name": "x-channelCode",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Channel code",
+              "title": "X-Channelcode"
+            },
+            "description": "Channel code"
+          },
+          {
+            "name": "x-app-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Application Key",
+              "title": "X-App-Key"
+            },
+            "description": "Application Key"
+          },
+          {
+            "name": "Accept-Language",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Language preference",
+              "title": "Accept-Language"
+            },
+            "description": "Language preference"
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Unique tracing key",
+              "title": "X-Request-Id"
+            },
+            "description": "Unique tracing key"
+          },
+          {
+            "name": "x-originating-application",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Originating Application",
+              "title": "X-Originating-Application"
+            },
+            "description": "Originating Application"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertySearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shop/v1/hotels/{hotelCode}/offers": {
+      "get": {
+        "tags": [
+          "Shop"
+        ],
+        "summary": "Get Property Offers",
+        "description": "List available offers for a single property.\n\n\u003Cp\u003E\u003Cstrong\u003EOperationId:\u003C/strong\u003EgetPropertyOffers\u003C/p\u003E",
+        "operationId": "get_property_offers_api_shop_v1_hotels__hotelCode__offers_get",
+        "parameters": [
+          {
+            "name": "hotelCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Hotel Code",
+              "title": "Hotelcode"
+            },
+            "description": "Hotel Code"
+          },
+          {
+            "name": "ArrivalDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Arrivaldate"
+            }
+          },
+          {
+            "name": "DepartureDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Departuredate"
+            }
+          },
+          {
+            "name": "Adults",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 1,
+              "title": "Adults"
+            }
+          },
+          {
+            "name": "Children",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 0,
+              "title": "Children"
+            }
+          },
+          {
+            "name": "ChildrenAges",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Childrenages"
+            }
+          },
+          {
+            "name": "RoomTypes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Roomtypes"
+            }
+          },
+          {
+            "name": "RatePlanCodes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Rateplancodes"
+            }
+          },
+          {
+            "name": "AccessCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Accesscode"
+            }
+          },
+          {
+            "name": "RatePlanType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Rateplantype"
+            }
+          },
+          {
+            "name": "NumberOfUnits",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Numberofunits"
+            }
+          },
+          {
+            "name": "RoomTypeMatchOnly",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Roomtypematchonly"
+            }
+          },
+          {
+            "name": "RatePlanCodeMatchOnly",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Rateplancodematchonly"
+            }
+          },
+          {
+            "name": "RateMode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ratemode"
+            }
+          },
+          {
+            "name": "RoomAmenity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Roomamenity"
+            }
+          },
+          {
+            "name": "RoomAmenityQuantity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Roomamenityquantity"
+            }
+          },
+          {
+            "name": "IncludeAmenities",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Includeamenities"
+            }
+          },
+          {
+            "name": "minRate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Minrate"
+            }
+          },
+          {
+            "name": "maxRate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Maxrate"
+            }
+          },
+          {
+            "name": "AlternateOffers",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Alternateoffers"
+            }
+          },
+          {
+            "name": "CommissionableStatus",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Commissionablestatus"
+            }
+          },
+          {
+            "name": "PromotionCodes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Promotioncodes"
+            }
+          },
+          {
+            "name": "BlockCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Blockcode"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Bearer token",
+              "title": "Authorization"
+            },
+            "description": "Bearer token"
+          },
+          {
+            "name": "x-channelCode",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Channel code",
+              "title": "X-Channelcode"
+            },
+            "description": "Channel code"
+          },
+          {
+            "name": "x-app-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Application Key",
+              "title": "X-App-Key"
+            },
+            "description": "Application Key"
+          },
+          {
+            "name": "Accept-Language",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Language preference",
+              "title": "Accept-Language"
+            },
+            "description": "Language preference"
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Unique tracing key",
+              "title": "X-Request-Id"
+            },
+            "description": "Unique tracing key"
+          },
+          {
+            "name": "x-originating-application",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Originating-Application"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOffersResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shop/v1/hotels/{hotelCode}/offer": {
+      "get": {
+        "tags": [
+          "Shop"
+        ],
+        "summary": "Get Property Offer",
+        "description": "Retrieve a single offer by room type and rate plan. Or booking code.\n\n\u003Cp\u003E\u003Cstrong\u003EOperationId:\u003C/strong\u003EgetPropertyOffer\u003C/p\u003E",
+        "operationId": "get_property_offer_api_shop_v1_hotels__hotelCode__offer_get",
+        "parameters": [
+          {
+            "name": "hotelCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hotelcode"
+            }
+          },
+          {
+            "name": "ArrivalDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Arrivaldate"
+            }
+          },
+          {
+            "name": "DepartureDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Departuredate"
+            }
+          },
+          {
+            "name": "Adults",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 1,
+              "title": "Adults"
+            }
+          },
+          {
+            "name": "Children",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 0,
+              "title": "Children"
+            }
+          },
+          {
+            "name": "ChildrenAges",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Childrenages"
+            }
+          },
+          {
+            "name": "RoomType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Roomtype"
+            }
+          },
+          {
+            "name": "RatePlanCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Rateplancode"
+            }
+          },
+          {
+            "name": "AccessCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Accesscode"
+            }
+          },
+          {
+            "name": "RateMode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ratemode"
+            }
+          },
+          {
+            "name": "NumberOfUnits",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Numberofunits"
+            }
+          },
+          {
+            "name": "BookingCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Bookingcode"
+            }
+          },
+          {
+            "name": "IncludeAmenities",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Includeamenities"
+            }
+          },
+          {
+            "name": "PromotionCodes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Promotioncodes"
+            }
+          },
+          {
+            "name": "BlockCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Blockcode"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-externalsystem",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Externalsystem"
+            }
+          },
+          {
+            "name": "x-app-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-App-Key"
+            }
+          },
+          {
+            "name": "x-channelCode",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Channelcode"
+            }
+          },
+          {
+            "name": "Accept-Language",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Accept-Language"
+            }
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-originating-application",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Originating-Application"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDetailsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/inv/v1/hotels/{hotelId}/inventoryStatistics": {
+      "get": {
+        "tags": [
+          "Inventory"
+        ],
+        "summary": "Get Inventory Statistics",
+        "description": "Get a hotels Inventory Statistics.\n\nThis will fetch a hotel's inventory statistics for a specified date range\nthat you provided in the request.",
+        "operationId": "get_inventory_statistics_api_inv_v1_hotels__hotelId__inventoryStatistics_get",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "description": "Unique ID of the hotel where inventory statistics are searched.",
+              "title": "Hotelid"
+            },
+            "description": "Unique ID of the hotel where inventory statistics are searched."
+          },
+          {
+            "name": "dateRangeStart",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "The starting value of the date range.",
+              "title": "Daterangestart"
+            },
+            "description": "The starting value of the date range."
+          },
+          {
+            "name": "dateRangeEnd",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "The ending value of the date range.",
+              "title": "Daterangeend"
+            },
+            "description": "The ending value of the date range."
+          },
+          {
+            "name": "reportCode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
+              "enum": [
+                "DetailedAvailabiltySummary",
+                "RoomCalendarStatistics",
+                "SellLimitSummary",
+                "RoomsAvailabilitySummary"
+              ],
+              "title": "Reportcode"
+            },
+            "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement."
+          },
+          {
+            "name": "parameterName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Name of the parameter.",
+              "title": "Parametername"
+            },
+            "description": "Name of the parameter."
+          },
+          {
+            "name": "parameterValue",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Value of the parameter.",
+              "title": "Parametervalue"
+            },
+            "description": "Value of the parameter."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatisticType"
+                  },
+                  "title": "Response Get Inventory Statistics Api Inv V1 Hotels  Hotelid  Inventorystatistics Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/content/v1/hotels": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Get Properties Summary",
+        "description": "Get a summary of properties.\n\n:param authorization: Bearer token.\n:param x_channel_code: Channel code.\n:param x_app_key: Application Key.\n:param x_request_id: Unique tracing key.\n:param x_originating_application: Originating Application.\n:param connection_status_last_changed_from: Last changed from.\n:param connection_status_last_changed_to: Last changed to.\n:param connection_status: Connection status.\n:param fetch_instructions: Fetch instructions.\n:param limit: Page limit.\n:param offset: Page offset.\n:param content_service: Content service instance.\n:returns: Property summary response.",
+        "operationId": "get_properties_summary_api_content_v1_hotels_get",
+        "parameters": [
+          {
+            "name": "connectionStatusLastChangedFrom",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Connectionstatuslastchangedfrom"
+            }
+          },
+          {
+            "name": "connectionStatusLastChangedTo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Connectionstatuslastchangedto"
+            }
+          },
+          {
+            "name": "connectionStatus",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Connectionstatus"
+            }
+          },
+          {
+            "name": "fetchInstructions",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Fetchinstructions"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Bearer token",
+              "title": "Authorization"
+            },
+            "description": "Bearer token"
+          },
+          {
+            "name": "x-channelCode",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Channel code",
+              "title": "X-Channelcode"
+            },
+            "description": "Channel code"
+          },
+          {
+            "name": "x-app-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Application Key",
+              "title": "X-App-Key"
+            },
+            "description": "Application Key"
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Unique tracing key",
+              "title": "X-Request-Id"
+            },
+            "description": "Unique tracing key"
+          },
+          {
+            "name": "x-originating-application",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Originating-Application"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyInfoSummaryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/content/v1/hotels/{hotelCode}": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Get Property Info",
+        "description": "Get detailed property information.\n\n:param hotel_code: Hotel Code.\n:param authorization: Bearer token.\n:param x_channel_code: Channel code.\n:param x_app_key: Application Key.\n:param x_request_id: Unique tracing key.\n:param x_originating_application: Originating Application.\n:param content_service: Content service instance.\n:returns: Property info response.",
+        "operationId": "get_property_info_api_content_v1_hotels__hotelCode__get",
+        "parameters": [
+          {
+            "name": "hotelCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Hotel Code",
+              "title": "Hotelcode"
+            },
+            "description": "Hotel Code"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Bearer token",
+              "title": "Authorization"
+            },
+            "description": "Bearer token"
+          },
+          {
+            "name": "x-channelCode",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Channel code",
+              "title": "X-Channelcode"
+            },
+            "description": "Channel code"
+          },
+          {
+            "name": "x-app-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Application Key",
+              "title": "X-App-Key"
+            },
+            "description": "Application Key"
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Unique tracing key",
+              "title": "X-Request-Id"
+            },
+            "description": "Unique tracing key"
+          },
+          {
+            "name": "x-originating-application",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Originating-Application"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyInfoResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/content/v1/hotels/{hotelCode}/roomTypes": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Get Room Types Info",
+        "description": "Get room types for a property.\n\n:param hotel_code: Hotel Code.\n:param authorization: Bearer token.\n:param x_channel_code: Channel code.\n:param x_app_key: Application Key.\n:param x_request_id: Unique tracing key.\n:param x_originating_application: Originating Application.\n:param include_room_amenities: Include room amenities.\n:param room_type: Room type filter.\n:param limit: Page limit.\n:param offset: Page offset.\n:param content_service: Content service instance.\n:returns: Room types response.",
+        "operationId": "get_room_types_info_api_content_v1_hotels__hotelCode__roomTypes_get",
+        "parameters": [
+          {
+            "name": "hotelCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Hotel Code",
+              "title": "Hotelcode"
+            },
+            "description": "Hotel Code"
+          },
+          {
+            "name": "includeRoomAmenities",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": false,
+              "title": "Includeroomamenities"
+            }
+          },
+          {
+            "name": "roomType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Roomtype"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Bearer token",
+              "title": "Authorization"
+            },
+            "description": "Bearer token"
+          },
+          {
+            "name": "x-channelCode",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Channel code",
+              "title": "X-Channelcode"
+            },
+            "description": "Channel code"
+          },
+          {
+            "name": "x-app-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Application Key",
+              "title": "X-App-Key"
+            },
+            "description": "Application Key"
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Unique tracing key",
+              "title": "X-Request-Id"
+            },
+            "description": "Unique tracing key"
+          },
+          {
+            "name": "x-originating-application",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Originating-Application"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomTypesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rsv/v1/hotels/{hotelId}/reservations": {
+      "get": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Get Hotel Reservations",
+        "description": "Get Reservations for a hotel.",
+        "operationId": "get_hotel_reservations_api_rsv_v1_hotels__hotelId__reservations_get",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hotelid"
+            }
+          },
+          {
+            "name": "surname",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Surname"
+            }
+          },
+          {
+            "name": "givenName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Givenname"
+            }
+          },
+          {
+            "name": "arrivalStartDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Arrivalstartdate"
+            }
+          },
+          {
+            "name": "arrivalEndDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Arrivalenddate"
+            }
+          },
+          {
+            "name": "confirmationNumberList",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Confirmationnumberlist"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Create Reservation",
+        "description": "Create Reservation.",
+        "operationId": "create_reservation_api_rsv_v1_hotels__hotelId__reservations_post",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hotelid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rsv/v1/hotels/{hotelId}/reservations/summary": {
+      "get": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Get Reservations Summary",
+        "description": "Get brief summary for Reservations.",
+        "operationId": "get_reservations_summary_api_rsv_v1_hotels__hotelId__reservations_summary_get",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hotelid"
+            }
+          },
+          {
+            "name": "arrivalDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Arrivaldate"
+            }
+          },
+          {
+            "name": "lastName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lastname"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 200,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationSummaryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rsv/v1/hotels/{hotelId}/reservations/statistics": {
+      "get": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Get Reservation Statistics",
+        "description": "Get reservation statistics.",
+        "operationId": "get_reservation_statistics_api_rsv_v1_hotels__hotelId__reservations_statistics_get",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hotelid"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Startdate"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Enddate"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDistributionReservationsSummary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rsv/v1/hotels/{hotelId}/reservations/{reservationId}": {
+      "put": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Update Reservation",
+        "description": "Update Reservation by ID.",
+        "operationId": "update_reservation_api_rsv_v1_hotels__hotelId__reservations__reservationId__put",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hotelid"
+            }
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Reservationid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rsv/v1/hotels/{hotelId}/reservations/{reservationId}/cancellations": {
+      "post": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Cancel Reservation",
+        "description": "Cancel Reservation by ID.",
+        "operationId": "cancel_reservation_api_rsv_v1_hotels__hotelId__reservations__reservationId__cancellations_post",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hotelid"
+            }
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Reservationid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelReservationDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdditionalDetails": {
+        "properties": {
+          "ratePlanMatches": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplanmatches"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "title": "AdditionalDetails",
+        "description": "Additional information related to the rate plan."
+      },
+      "Address": {
+        "properties": {
+          "addressLine": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Addressline"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "postalCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Postalcode"
+          },
+          "countryCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Countrycode"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          },
+          "county": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "County"
+          }
+        },
+        "type": "object",
+        "title": "Address",
+        "description": "Address information."
+      },
+      "AlternatePropertyDistance": {
+        "properties": {
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "distanceUnit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distanceunit"
+          },
+          "compassDirection": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compassdirection"
+          },
+          "comments": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comments"
+          }
+        },
+        "type": "object",
+        "title": "AlternatePropertyDistance",
+        "description": "Distance from the property to the alternate property."
+      },
+      "BlockInformation": {
+        "properties": {
+          "blockCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blockcode"
+          },
+          "blockId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blockid"
+          },
+          "blockName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blockname"
+          }
+        },
+        "type": "object",
+        "title": "BlockInformation",
+        "description": "Block related information."
+      },
+      "CancelReason": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "title": "CancelReason",
+        "description": "Reason for cancellation."
+      },
+      "CancelReservationDetails": {
+        "properties": {
+          "reservationIdList": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/UniqueID"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationidlist"
+          },
+          "cancellationNumber": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UniqueID"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status",
+            "default": "Cancelled"
+          }
+        },
+        "type": "object",
+        "title": "CancelReservationDetails",
+        "description": "Details of a canceled reservation."
+      },
+      "CancelReservationRequest": {
+        "properties": {
+          "reason": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CancelReason"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reservations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ReservationCancellationItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservations"
+          }
+        },
+        "type": "object",
+        "title": "CancelReservationRequest",
+        "description": "Request to cancel a reservation."
+      },
+      "CheckDistributionReservationsSummary": {
+        "properties": {
+          "checkReservations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/DistributionReservationSummaryType"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checkreservations"
+          },
+          "hasMore": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasmore"
+          }
+        },
+        "type": "object",
+        "title": "CheckDistributionReservationsSummary",
+        "description": "Response wrapper for distribution statistics."
+      },
+      "Communications": {
+        "properties": {
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "title": "Communications",
+        "description": "Property communication channels."
+      },
+      "Connectivity": {
+        "properties": {
+          "connectionStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Connectionstatus"
+          }
+        },
+        "type": "object",
+        "title": "Connectivity",
+        "description": "Connectivity status information."
+      },
+      "ContentPropertyInfo": {
+        "properties": {
+          "hotelId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelid"
+          },
+          "enterpriseId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enterpriseid"
+          },
+          "hotelCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelcode"
+          },
+          "hotelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelname"
+          },
+          "hotelDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hoteldescription"
+          },
+          "chainCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chaincode"
+          },
+          "clusterCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clustercode"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/operaclone2__web__api__content__schema__Address"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "propertyAmenities": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertyOffersHotelAmenity"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Propertyamenities"
+          },
+          "pointOfInterest": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/OfferPointOfInterest"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pointofinterest"
+          },
+          "marketingMessage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marketingmessage"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          },
+          "primaryLanguage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primarylanguage"
+          },
+          "totalNumberOfRooms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Totalnumberofrooms"
+          },
+          "petPolicy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Petpolicy"
+          }
+        },
+        "type": "object",
+        "title": "ContentPropertyInfo",
+        "description": "Property information details."
+      },
+      "ContentRoomAmenity": {
+        "properties": {
+          "roomAmenity": {
+            "type": "string",
+            "title": "Roomamenity"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity"
+          },
+          "includeInRate": {
+            "type": "boolean",
+            "title": "Includeinrate"
+          },
+          "confirmable": {
+            "type": "boolean",
+            "title": "Confirmable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "roomAmenity",
+          "description",
+          "quantity",
+          "includeInRate",
+          "confirmable"
+        ],
+        "title": "ContentRoomAmenity",
+        "description": "Room amenity information."
+      },
+      "ContentRoomType": {
+        "properties": {
+          "hotelRoomType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelroomtype"
+          },
+          "roomType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtype"
+          },
+          "description": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Description",
+            "default": []
+          },
+          "roomName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomname"
+          },
+          "roomCategory": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomcategory"
+          },
+          "roomAmenities": {
+            "items": {
+              "$ref": "#/components/schemas/ContentRoomAmenity"
+            },
+            "type": "array",
+            "title": "Roomamenities",
+            "default": []
+          },
+          "roomViewType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomviewtype"
+          },
+          "roomPrimaryBedType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomprimarybedtype"
+          },
+          "nonSmokingInd": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nonsmokingind"
+          },
+          "occupancy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Occupancy"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numberOfUnits": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Numberofunits"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hotelRoomType",
+          "roomType",
+          "roomName",
+          "roomCategory",
+          "roomViewType",
+          "roomPrimaryBedType",
+          "nonSmokingInd"
+        ],
+        "title": "ContentRoomType",
+        "description": "Room type information."
+      },
+      "Coordinates": {
+        "properties": {
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          }
+        },
+        "type": "object",
+        "title": "Coordinates",
+        "description": "Geographic coordinates."
+      },
+      "CreateReservationRequest": {
+        "properties": {
+          "reservations": {
+            "$ref": "#/components/schemas/ReservationCollection-Input"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reservations"
+        ],
+        "title": "CreateReservationRequest",
+        "description": "Request to create a reservation."
+      },
+      "Customer": {
+        "properties": {
+          "personName": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PersonName"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Personname"
+          }
+        },
+        "type": "object",
+        "title": "Customer",
+        "description": "Customer information."
+      },
+      "Description": {
+        "properties": {
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "title": "Description",
+        "description": "Description text."
+      },
+      "Direction": {
+        "properties": {
+          "propertyDirection": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Propertydirection"
+          }
+        },
+        "type": "object",
+        "title": "Direction",
+        "description": "Directions to property."
+      },
+      "DistributionReservationSummaryType": {
+        "properties": {
+          "hotelId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelid"
+          },
+          "channelCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channelcode"
+          },
+          "enterpriseId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enterpriseid"
+          },
+          "arrivalDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrivaldate"
+          },
+          "departureDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Departuredate"
+          },
+          "creationDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creationdate"
+          },
+          "lastUpdateDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastupdatedate"
+          },
+          "cancellationDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancellationdate"
+          },
+          "numberOfRooms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Numberofrooms"
+          },
+          "reservationStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationstatus"
+          },
+          "confirmationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confirmationid"
+          },
+          "legNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Legnumber"
+          },
+          "reservationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationid"
+          },
+          "guestName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guestname"
+          },
+          "creatorId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creatorid"
+          }
+        },
+        "type": "object",
+        "title": "DistributionReservationSummaryType",
+        "description": "Detailed statistics item for distribution summary."
+      },
+      "DummyModelDTO": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "DummyModelDTO",
+        "description": "DTO for dummy models.\n\nIt returned when accessing dummy models from the API."
+      },
+      "DummyModelInputDTO": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "DummyModelInputDTO",
+        "description": "DTO for creating new dummy model."
+      },
+      "GeneralInformation": {
+        "properties": {
+          "checkInTime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checkintime"
+          },
+          "checkOutTime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checkouttime"
+          }
+        },
+        "type": "object",
+        "title": "GeneralInformation",
+        "description": "General property information."
+      },
+      "Guarantee": {
+        "properties": {
+          "guaranteeCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guaranteecode"
+          },
+          "shortDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shortdescription"
+          }
+        },
+        "type": "object",
+        "title": "Guarantee",
+        "description": "Reservation guarantee info."
+      },
+      "GuestCounts": {
+        "properties": {
+          "adults": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adults",
+            "default": 1
+          },
+          "children": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Children",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "GuestCounts",
+        "description": "Guest counts."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HotelAvailabilityStatus": {
+        "type": "string",
+        "enum": [
+          "AvailableForSale",
+          "NoAvailability",
+          "NotFound",
+          "OtherAvailable"
+        ],
+        "title": "HotelAvailabilityStatus",
+        "description": "Availability status of a hotel."
+      },
+      "Location": {
+        "properties": {
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          }
+        },
+        "type": "object",
+        "title": "Location",
+        "description": "Geographic location."
+      },
+      "Message": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "Message",
+        "description": "Simple message model."
+      },
+      "NumericCategorySummaryType": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value",
+            "description": "The total count for the category in NumericCategoryCode."
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "The representation of a numeric category such as Guests : Number of guests, RoomsOcc : Rooms occupied."
+          }
+        },
+        "type": "object",
+        "title": "NumericCategorySummaryType",
+        "description": "This element has count data for each count category.\n\nSuch as number of guests, rooms occupied, etc."
+      },
+      "Occupancy": {
+        "properties": {
+          "minOccupancy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minoccupancy"
+          },
+          "maxOccupancy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxoccupancy"
+          },
+          "maxAdultOccupancy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxadultoccupancy"
+          },
+          "maxChildOccupancy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxchildoccupancy"
+          }
+        },
+        "type": "object",
+        "title": "Occupancy",
+        "description": "Details on the occupancy of the room type."
+      },
+      "Offer": {
+        "properties": {
+          "bookingCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bookingcode"
+          },
+          "offerName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offername"
+          },
+          "availabilityStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Availabilitystatus"
+          },
+          "roomType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtype"
+          },
+          "ratePlanCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancode"
+          },
+          "rateChangeDuringStay": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ratechangeduringstay"
+          },
+          "rateInformation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferRateInformation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "packages": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RatePackage"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Packages"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferTotalTypeWithTaxes"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "blockInformation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BlockInformation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "Offer",
+        "description": "Offer details."
+      },
+      "OfferCancelPenalty": {
+        "properties": {
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "amountPercent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountpercent"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          },
+          "penaltyDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Penaltydescription"
+          }
+        },
+        "type": "object",
+        "title": "OfferCancelPenalty",
+        "description": "Cancellation penalty details."
+      },
+      "OfferDepositPolicy": {
+        "properties": {
+          "depositRequired": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositrequired"
+          },
+          "amountPercent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountpercent"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "depositDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositdescription"
+          }
+        },
+        "type": "object",
+        "title": "OfferDepositPolicy",
+        "description": "Deposit policy details."
+      },
+      "OfferDetailsPropertyInfo": {
+        "properties": {
+          "hotelCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelcode"
+          },
+          "hotelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelname"
+          },
+          "chainCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chaincode"
+          },
+          "isAlternate": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Isalternate"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Address"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "propertyAmenities": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertyOffersHotelAmenity"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Propertyamenities"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AlternatePropertyDistance"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "generalInformation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GeneralInformation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "communications": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Communications"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "transportations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Transportation"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transportations"
+          },
+          "direction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Direction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "OfferDetailsPropertyInfo",
+        "description": "Detailed property info for an offer."
+      },
+      "OfferDetailsRatePlan": {
+        "properties": {
+          "ratePlanCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancode"
+          },
+          "ratePlanName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplanname"
+          },
+          "ratePlanType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplantype"
+          },
+          "accessCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accesscode"
+          },
+          "identificationRequired": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Identificationrequired"
+          },
+          "accountId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accountid"
+          },
+          "ratePlanLevel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplanlevel"
+          },
+          "ratePlanCategory": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancategory"
+          },
+          "gdsDescription": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Description"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "commissionable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commissionable"
+          },
+          "commissionDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commissiondescription"
+          },
+          "commission": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferRatePlanCommission"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "packages": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RatePackage"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Packages"
+          },
+          "mealPlan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferMealPlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "promotionCodes": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PromotionCodeItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Promotioncodes"
+          }
+        },
+        "type": "object",
+        "title": "OfferDetailsRatePlan",
+        "description": "Detailed rate plan for an offer."
+      },
+      "OfferDetailsResponse": {
+        "properties": {
+          "propertyInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferDetailsPropertyInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "availability": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HotelAvailabilityStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "roomType": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferDetailsRoomType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ratePlan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferDetailsRatePlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "offer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Offer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "OfferDetailsResponse",
+        "description": "Response for a single offer detail."
+      },
+      "OfferDetailsRoomType": {
+        "properties": {
+          "roomTypeCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtypecode"
+          },
+          "roomTypeName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtypename"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "availabilityStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Availabilitystatus"
+          }
+        },
+        "type": "object",
+        "title": "OfferDetailsRoomType",
+        "description": "Detailed room type for an offer."
+      },
+      "OfferMealPlan": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "OfferMealPlan",
+        "description": "Meal plan details."
+      },
+      "OfferMinMaxTotalType": {
+        "properties": {
+          "amountBeforeTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountbeforetax"
+          },
+          "amountAfterTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountaftertax"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          },
+          "rateMode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferRateMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "isCommissionable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iscommissionable"
+          },
+          "hasRateChange": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasratechange"
+          }
+        },
+        "type": "object",
+        "title": "OfferMinMaxTotalType",
+        "description": "Rate range information."
+      },
+      "OfferOverallRateInformation": {
+        "properties": {
+          "rateModeAmount": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferTotalType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rateMode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferRateMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "OfferOverallRateInformation",
+        "description": "Rate plan information of the offer."
+      },
+      "OfferPointOfInterest": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          }
+        },
+        "type": "object",
+        "title": "OfferPointOfInterest",
+        "description": "Point of interest information."
+      },
+      "OfferRateInformation": {
+        "properties": {
+          "rate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferOverallRateInformation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cancellationPolicies": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/OfferCancelPenalty"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancellationpolicies"
+          },
+          "guaranteeRequirement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guaranteerequirement"
+          },
+          "depositPolicies": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/OfferDepositPolicy"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositpolicies"
+          }
+        },
+        "type": "object",
+        "title": "OfferRateInformation",
+        "description": "Details on the rate plan of the offer."
+      },
+      "OfferRateMode": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "title": "OfferRateMode",
+        "description": "Rate mode details."
+      },
+      "OfferRatePlanCommission": {
+        "properties": {
+          "percent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Percent"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          }
+        },
+        "type": "object",
+        "title": "OfferRatePlanCommission",
+        "description": "Commission info for a rate plan."
+      },
+      "OfferTotalType": {
+        "properties": {
+          "amountBeforeTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountbeforetax"
+          },
+          "amountAfterTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountaftertax"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          }
+        },
+        "type": "object",
+        "title": "OfferTotalType",
+        "description": "The daily rate of the offer."
+      },
+      "OfferTotalTypeWithTaxes": {
+        "properties": {
+          "amountBeforeTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountbeforetax"
+          },
+          "amountAfterTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountaftertax"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          }
+        },
+        "type": "object",
+        "title": "OfferTotalTypeWithTaxes",
+        "description": "Total cost including taxes."
+      },
+      "PersonName": {
+        "properties": {
+          "givenName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Givenname"
+          },
+          "surname": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Surname"
+          },
+          "nameType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nametype",
+            "default": "Primary"
+          }
+        },
+        "type": "object",
+        "title": "PersonName",
+        "description": "Person name definition."
+      },
+      "Profile-Input": {
+        "properties": {
+          "customer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Customer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "profileType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profiletype",
+            "default": "Guest"
+          }
+        },
+        "type": "object",
+        "title": "Profile",
+        "description": "Guest profile definition."
+      },
+      "Profile-Output": {
+        "properties": {
+          "customer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Customer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "profileType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profiletype",
+            "default": "Guest"
+          }
+        },
+        "type": "object",
+        "title": "Profile",
+        "description": "Guest profile definition."
+      },
+      "ProfileInfo-Input": {
+        "properties": {
+          "profileIdList": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/UniqueID"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profileidlist"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Profile-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ProfileInfo",
+        "description": "Profile info containing profile details."
+      },
+      "ProfileInfo-Output": {
+        "properties": {
+          "profileIdList": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/UniqueID"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profileidlist"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Profile-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ProfileInfo",
+        "description": "Profile info containing profile details."
+      },
+      "PromotionCodeItem": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "title": "PromotionCodeItem",
+        "description": "Promotion code item."
+      },
+      "PropertyInfoResponse": {
+        "properties": {
+          "propertyInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContentPropertyInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "PropertyInfoResponse",
+        "description": "Response for property information."
+      },
+      "PropertyInfoSummaryResponse": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean",
+            "title": "Hasmore",
+            "default": true
+          },
+          "totalResults": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Totalresults"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit",
+            "default": 20
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count",
+            "default": 20
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset",
+            "default": 0
+          },
+          "hotels": {
+            "items": {
+              "$ref": "#/components/schemas/PropertySnippet"
+            },
+            "type": "array",
+            "title": "Hotels",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "PropertyInfoSummaryResponse",
+        "description": "Response for property info summary."
+      },
+      "PropertyOffersHotelAmenity": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "PropertyOffersHotelAmenity",
+        "description": "Hotel amenity information."
+      },
+      "PropertyOffersPropertyInfo": {
+        "properties": {
+          "hotelCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelcode"
+          },
+          "hotelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelname"
+          },
+          "chainCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chaincode"
+          },
+          "isAlternate": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Isalternate"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Address"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "propertyAmenities": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertyOffersHotelAmenity"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Propertyamenities"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AlternatePropertyDistance"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "PropertyOffersPropertyInfo",
+        "description": "Property info for offers, extends search info."
+      },
+      "PropertyOffersRatePlan": {
+        "properties": {
+          "ratePlanCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancode"
+          },
+          "ratePlanName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplanname"
+          },
+          "ratePlanType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplantype"
+          },
+          "accessCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accesscode"
+          },
+          "identificationRequired": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Identificationrequired"
+          },
+          "accountId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accountid"
+          },
+          "ratePlanLevel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplanlevel"
+          },
+          "ratePlanCategory": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancategory"
+          },
+          "gdsDescription": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Description"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "commissionable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commissionable"
+          },
+          "commissionDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commissiondescription"
+          },
+          "commission": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferRatePlanCommission"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "packages": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RatePackage"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Packages"
+          },
+          "mealPlan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferMealPlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "promotionCodes": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PromotionCodeItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Promotioncodes"
+          }
+        },
+        "type": "object",
+        "title": "PropertyOffersRatePlan",
+        "description": "Rate plan details for offers. Combines SearchRatePlan and more."
+      },
+      "PropertyOffersResponse": {
+        "properties": {
+          "roomStays": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertyOffersRoomStay"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomstays"
+          }
+        },
+        "type": "object",
+        "title": "PropertyOffersResponse",
+        "description": "Response for property offers search."
+      },
+      "PropertyOffersRoomStay": {
+        "properties": {
+          "propertyInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PropertyOffersPropertyInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "availability": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HotelAvailabilityStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "restrictions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Restriction"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Restrictions"
+          },
+          "roomTypes": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertyOffersRoomType"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtypes"
+          },
+          "ratePlans": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertyOffersRatePlan"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplans"
+          },
+          "offers": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Offer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offers"
+          }
+        },
+        "type": "object",
+        "title": "PropertyOffersRoomStay",
+        "description": "Room stay details for property offers."
+      },
+      "PropertyOffersRoomType": {
+        "properties": {
+          "roomTypeCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtypecode"
+          },
+          "roomTypeName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtypename"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "availabilityStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Availabilitystatus"
+          }
+        },
+        "type": "object",
+        "title": "PropertyOffersRoomType",
+        "description": "Room type details for offers."
+      },
+      "PropertySearchPropertyInfo": {
+        "properties": {
+          "hotelCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelcode"
+          },
+          "hotelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelname"
+          },
+          "chainCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chaincode"
+          },
+          "isAlternate": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Isalternate"
+          }
+        },
+        "type": "object",
+        "title": "PropertySearchPropertyInfo",
+        "description": "Property info for search results."
+      },
+      "PropertySearchRatePlan": {
+        "properties": {
+          "ratePlanCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancode"
+          },
+          "ratePlanName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplanname"
+          },
+          "ratePlanType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplantype"
+          },
+          "identificationRequired": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Identificationrequired"
+          },
+          "accountId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accountid"
+          },
+          "availabilityStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Availabilitystatus"
+          },
+          "additionalDetails": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AdditionalDetails"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "PropertySearchRatePlan",
+        "description": "Rate plan in search results."
+      },
+      "PropertySearchResponse": {
+        "properties": {
+          "roomStays": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertySearchRoomStay"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomstays"
+          }
+        },
+        "type": "object",
+        "title": "PropertySearchResponse",
+        "description": "Response for property search."
+      },
+      "PropertySearchRoomStay": {
+        "properties": {
+          "propertyInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PropertySearchPropertyInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "availability": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HotelAvailabilityStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ratePlans": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertySearchRatePlan"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplans"
+          },
+          "minRate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferMinMaxTotalType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxRate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferMinMaxTotalType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "PropertySearchRoomStay",
+        "description": "Room stay details for property search."
+      },
+      "PropertySnippet": {
+        "properties": {
+          "hotelId": {
+            "type": "string",
+            "title": "Hotelid"
+          },
+          "hotelCode": {
+            "type": "string",
+            "title": "Hotelcode"
+          },
+          "hotelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelname"
+          },
+          "hotelDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hoteldescription"
+          },
+          "address": {
+            "$ref": "#/components/schemas/operaclone2__web__api__content__schema__Address",
+            "default": {
+
+            }
+          },
+          "coordinates": {
+            "$ref": "#/components/schemas/Coordinates",
+            "default": {
+
+            }
+          },
+          "connectivity": {
+            "$ref": "#/components/schemas/Connectivity",
+            "default": {
+
+            }
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta",
+            "default": {
+
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "hotelId",
+          "hotelCode"
+        ],
+        "title": "PropertySnippet",
+        "description": "Snippet information for property summary."
+      },
+      "Rate": {
+        "properties": {
+          "base": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RateTotal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RateTotal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          }
+        },
+        "type": "object",
+        "title": "Rate",
+        "description": "Daily rate info."
+      },
+      "RatePackage": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "RatePackage",
+        "description": "Package associated with a rate."
+      },
+      "RateTotal": {
+        "properties": {
+          "amountBeforeTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountbeforetax"
+          },
+          "amountAfterTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amountaftertax"
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode"
+          }
+        },
+        "type": "object",
+        "title": "RateTotal",
+        "description": "Rate total definition."
+      },
+      "RatesByDate-Input": {
+        "properties": {
+          "day": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Rate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Day"
+          }
+        },
+        "type": "object",
+        "title": "RatesByDate",
+        "description": "Daily rates organized by date."
+      },
+      "RatesByDate-Output": {
+        "properties": {
+          "day": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Rate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Day"
+          }
+        },
+        "type": "object",
+        "title": "RatesByDate",
+        "description": "Daily rates organized by date."
+      },
+      "Reservation-Input": {
+        "properties": {
+          "reservationIdList": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/UniqueID"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationidlist"
+          },
+          "roomStay": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RoomStay-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reservationGuests": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ReservationGuest-Input"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationguests"
+          },
+          "hotelId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelid"
+          },
+          "reservationStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationstatus"
+          },
+          "createDateTime": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Createdatetime"
+          }
+        },
+        "type": "object",
+        "title": "Reservation",
+        "description": "Reservation model."
+      },
+      "Reservation-Output": {
+        "properties": {
+          "reservationIdList": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/UniqueID"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationidlist"
+          },
+          "roomStay": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RoomStay-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reservationGuests": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ReservationGuest-Output"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationguests"
+          },
+          "hotelId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelid"
+          },
+          "reservationStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationstatus"
+          },
+          "createDateTime": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Createdatetime"
+          }
+        },
+        "type": "object",
+        "title": "Reservation",
+        "description": "Reservation model."
+      },
+      "ReservationCancellationItem": {
+        "properties": {
+          "reservationIdList": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/UniqueID"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationidlist"
+          },
+          "hotelId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelid"
+          }
+        },
+        "type": "object",
+        "title": "ReservationCancellationItem",
+        "description": "Reservation item for cancellation."
+      },
+      "ReservationCollection-Input": {
+        "properties": {
+          "reservation": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Reservation-Input"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservation"
+          }
+        },
+        "type": "object",
+        "title": "ReservationCollection",
+        "description": "Collection wrapper for reservations."
+      },
+      "ReservationCollection-Output": {
+        "properties": {
+          "reservation": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Reservation-Output"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservation"
+          }
+        },
+        "type": "object",
+        "title": "ReservationCollection",
+        "description": "Collection wrapper for reservations."
+      },
+      "ReservationGuest-Input": {
+        "properties": {
+          "profileInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileInfo-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "primary": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "ReservationGuest",
+        "description": "Guest associated with a reservation."
+      },
+      "ReservationGuest-Output": {
+        "properties": {
+          "profileInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileInfo-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "primary": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "ReservationGuest",
+        "description": "Guest associated with a reservation."
+      },
+      "ReservationListResponse": {
+        "properties": {
+          "reservations": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReservationCollection-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ReservationListResponse",
+        "description": "Response containing a list of reservations."
+      },
+      "ReservationSummary": {
+        "properties": {
+          "reservationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservationid"
+          },
+          "confirmationNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confirmationnumber"
+          },
+          "guestName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guestname"
+          },
+          "arrivalDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrivaldate"
+          },
+          "departureDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Departuredate"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "title": "ReservationSummary",
+        "description": "Simplified reservation summary."
+      },
+      "ReservationSummaryResponse": {
+        "properties": {
+          "reservations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ReservationSummary"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reservations"
+          }
+        },
+        "type": "object",
+        "title": "ReservationSummaryResponse",
+        "description": "Response containing a list of reservation summaries."
+      },
+      "Restriction": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "Restriction",
+        "description": "Booking restriction."
+      },
+      "RevenueCategorySummaryType": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "The representation of a revenue category."
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount",
+            "description": "A monetary amount."
+          },
+          "currencyCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 3,
+                "minLength": 3
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currencycode",
+            "description": "Provides a currency code to reflect the currency in which an amount may be expressed."
+          }
+        },
+        "type": "object",
+        "title": "RevenueCategorySummaryType",
+        "description": "This element has revenue amount data for its revenue category.\n\nSuch as Room Revenue, Food and Beverage Revenue."
+      },
+      "RoomRate-Input": {
+        "properties": {
+          "total": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RateTotal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rates": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RatesByDate-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "roomType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtype"
+          },
+          "ratePlanCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancode"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "guestCounts": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GuestCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "RoomRate",
+        "description": "Room rate details."
+      },
+      "RoomRate-Output": {
+        "properties": {
+          "total": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RateTotal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rates": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RatesByDate-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "roomType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtype"
+          },
+          "ratePlanCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rateplancode"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "guestCounts": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GuestCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "RoomRate",
+        "description": "Room rate details."
+      },
+      "RoomStay-Input": {
+        "properties": {
+          "arrivalDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrivaldate"
+          },
+          "departureDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Departuredate"
+          },
+          "guarantee": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Guarantee"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "roomRates": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RoomRate-Input"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomrates"
+          },
+          "guestCounts": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GuestCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "RoomStay",
+        "description": "Room stay details."
+      },
+      "RoomStay-Output": {
+        "properties": {
+          "arrivalDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrivaldate"
+          },
+          "departureDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Departuredate"
+          },
+          "guarantee": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Guarantee"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "roomRates": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RoomRate-Output"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomrates"
+          },
+          "guestCounts": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GuestCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "RoomStay",
+        "description": "Room stay details."
+      },
+      "RoomTypesResponse": {
+        "properties": {
+          "roomTypes": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ContentRoomType"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomtypes"
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Count"
+          },
+          "hasMore": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasmore"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limit"
+          },
+          "offset": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offset"
+          },
+          "totalResults": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Totalresults"
+          }
+        },
+        "type": "object",
+        "title": "RoomTypesResponse",
+        "description": "Response for room types information."
+      },
+      "StatisticCodeType": {
+        "properties": {
+          "statisticDate": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/StatisticSetType"
+                },
+                "type": "array",
+                "maxItems": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Statisticdate",
+            "description": "Collection of statistic summary data."
+          },
+          "statCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Statcode",
+            "description": "Actual code used by the system to collect the statistics (e.g. CORP, RACK if category is Market Segment)."
+          },
+          "statCategoryCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Statcategorycode",
+            "description": "Category Code category of StatCode attribute (e.g. Market Segment)."
+          },
+          "statCodeClass": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Statcodeclass",
+            "description": "Class grouping of StatCode attribute."
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Statistic code description."
+          }
+        },
+        "type": "object",
+        "title": "StatisticCodeType",
+        "description": "Defines the codes and corresponding categories.\n\nData in the other elements has been gathered for these."
+      },
+      "StatisticSetType": {
+        "properties": {
+          "revenue": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RevenueCategorySummaryType"
+                },
+                "type": "array",
+                "maxItems": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revenue",
+            "description": "Collection of RevenueCategorySummary elements. Used if revenue values reported."
+          },
+          "inventory": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/NumericCategorySummaryType"
+                },
+                "type": "array",
+                "maxItems": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inventory",
+            "description": "Collection of CountCategorySummary elements. Used if count values reported."
+          },
+          "statisticDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Statisticdate",
+            "description": "Date of the statistic."
+          },
+          "weekendDate": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weekenddate",
+            "description": "Determines whether statistic date is a weekend date."
+          }
+        },
+        "type": "object",
+        "title": "StatisticSetType",
+        "description": "An instance of a statistic.\n\nIt is a set containing revenue category and number category summaries."
+      },
+      "StatisticType": {
+        "properties": {
+          "statistics": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/StatisticCodeType"
+                },
+                "type": "array",
+                "maxItems": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Statistics",
+            "description": "Statistic Codes."
+          },
+          "hotelName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hotelname",
+            "description": "A text field used to communicate the proper name of the hotel."
+          },
+          "reportCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reportcode",
+            "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement."
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue."
+          }
+        },
+        "type": "object",
+        "title": "StatisticType",
+        "description": "Defines all details needed to create a statistical report."
+      },
+      "Transportation": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "Transportation",
+        "description": "Transportation services."
+      },
+      "UniqueID": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "title": "UniqueID",
+        "description": "Unique ID definition."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "operaclone2__web__api__content__schema__Address": {
+        "properties": {
+          "lines": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lines"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "postalCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Postalcode"
+          },
+          "countryCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Countrycode"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          }
+        },
+        "type": "object",
+        "title": "Address",
+        "description": "Address information."
+      }
+    }
+  }
+}

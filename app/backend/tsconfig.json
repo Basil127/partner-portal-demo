@@ -1,0 +1,28 @@
+{
+	"compilerOptions": {
+		"target": "ES2024",
+		"lib": ["ES2024", "dom"],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"baseUrl": ".",
+		"paths": {
+			"@partner-portal/shared": ["../../packages/shared/src/index.ts"]
+		},
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"verbatimModuleSyntax": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"rootDir": "../..",
+		"incremental": true,
+		"types": ["node", "jest"]
+	},
+	"include": ["src/**/*", "tests/**/*"],
+	"exclude": ["node_modules", "dist"]
+}

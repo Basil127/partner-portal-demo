@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    width="25" 
+    height="24" 
+    viewBox="0 0 25 24" 
+    version="1.1"
+    fill="none"
+>
+<g id="surface1">
+<path 
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    stroke="currentColor"
+    stroke-width="30"
+    d="M 384 240 L 96 240 L 96 136 C 96.083333 113.916667 113.916667 96.083333 136 96 L 376 96 C 398.083333 96.083333 415.916667 113.916667 416 136 L 416 240 Z M 384 240 " 
+    transform="matrix(0.046875,0,0,0.046875,0,0)"
+/>
+<path 
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    stroke="currentColor"
+    stroke-width="30"   
+    d="M 48 416 L 48 304 C 48.083333 268.666667 76.666667 240.083333 112 240 L 400 240 C 435.333333 240.083333 463.916667 268.666667 464 304 L 464 416 " 
+    transform="matrix(0.046875,0,0,0.046875,0,0)"
+/>
+<path 
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    stroke="currentColor"
+    stroke-width="30"
+    d="M 48 416 L 48 408 C 48 394.75 58.75 384 72 384 L 440 384 C 453.25 384 464 394.75 464 408 L 464 416 " 
+    transform="matrix(0.046875,0,0,0.046875,0,0)"/>
+<path 
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    stroke="currentColor"
+    stroke-width="30"
+    d="M 112 240 L 112 224 C 112.083333 206.333333 126.333333 192.083333 144 192 L 224 192 C 241.666667 192.083333 255.916667 206.333333 256 224 L 256 240 " 
+    transform="matrix(0.046875,0,0,0.046875,0,0)"/>
+<path 
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    stroke="currentColor"
+    stroke-width="30"
+    d="M 256 240 L 256 224 C 256.083333 206.333333 270.333333 192.083333 288 192 L 368 192 C 385.666667 192.083333 399.916667 206.333333 400 224 L 400 240 " 
+    transform="matrix(0.046875,0,0,0.046875,0,0)"/>
+</g>
+</svg>

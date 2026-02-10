@@ -1,0 +1,20 @@
+import LineChartOne from '@/components/charts/line/LineChartOne';
+import ComponentCard from '@/components/common/ComponentCard';
+import { Metadata } from 'next';
+import React from 'react';
+
+export const metadata: Metadata = {
+	title: 'Next.js Line Chart | B2B Partner Portal',
+	description: 'This is the Line Chart page for B2B Partner Portal',
+};
+export default function LineChart() {
+	return (
+		<div>
+			<div className="space-y-6">
+				<ComponentCard title="Line Chart 1">
+					<LineChartOne />
+				</ComponentCard>
+			</div>
+		</div>
+	);
+}
