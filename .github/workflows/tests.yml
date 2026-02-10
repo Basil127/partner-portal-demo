@@ -1,0 +1,87 @@
+name: Testing operaclone2
+
+on: 
+  push:
+    paths:
+      - 'app/mock-api/**'
+      - '.github/workflows/tests.yml'
+  pull_request:
+    paths:
+      - 'app/mock-api/**'
+      - '.github/workflows/tests.yml'
+
+defaults:
+  run:
+    working-directory: app/mock-api
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "app/mock-api/uv.lock"
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Run lint
+        run: uv run ruff check .
+
+      - name: Run format check
+        run: uv run ruff format --check .
+
+      - name: Run type check
+        run: uv run mypy .
+
+  pytest:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:18.1-bookworm
+        env:
+          POSTGRES_USER: OperaClone2
+          POSTGRES_PASSWORD: OperaClone2
+          POSTGRES_DB: OperaClone2
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      OPERACLONE2_DB_HOST: localhost
+      OPERACLONE2_DB_PORT: 5432
+      OPERACLONE2_DB_USER: OperaClone2
+      OPERACLONE2_DB_PASS: OperaClone2
+      OPERACLONE2_DB_BASE: OperaClone2
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "app/mock-api/uv.lock"
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Run tests
+        run: uv run pytest -vv
+

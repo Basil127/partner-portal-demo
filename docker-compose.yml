@@ -1,0 +1,100 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./app/frontend/Dockerfile
+    image: ohm-demo-frontend:${VERSION:-latest}
+    restart: always
+    env_file:
+      - path: development.env
+        required: false
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://backend:3001
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+  
+  backend:
+    build:
+      context: .
+      dockerfile: ./app/backend/Dockerfile
+    image: ohm-demo-backend:${VERSION:-latest}
+    restart: always
+    env_file:
+      - path: development.env
+        required: false
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - HOST=0.0.0.0
+      - DB_TYPE=sqlite
+      - DB_PATH=/app/app/backend/data/dev.db
+      - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
+    ports:
+      - "3001:3001"
+    volumes:
+      - backend-data:/app/app/backend/data
+    depends_on:
+      - mock-api
+  
+  mock-api: &mock-api
+    build:
+      context: .
+      dockerfile: ./app/mock-api/Dockerfile
+    image: ohm-demo-mock-api:${VERSION:-latest}
+    restart: always
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      db:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    environment:
+      OPERACLONE2_HOST: 0.0.0.0
+      OPERACLONE2_DB_HOST: OperaClone2-db
+      OPERACLONE2_DB_PORT: 5432
+      OPERACLONE2_DB_USER: OperaClone2
+      OPERACLONE2_DB_PASS: OperaClone2
+      OPERACLONE2_DB_BASE: OperaClone2
+    ports:
+      - "8000:8000"
+
+  db:
+    image: postgres:18.1-bookworm
+    hostname: OperaClone2-db
+    environment:
+      POSTGRES_PASSWORD: "OperaClone2"
+      POSTGRES_USER: "OperaClone2"
+      POSTGRES_DB: "OperaClone2"
+    ports:
+      - "5432:5432"
+    volumes:
+      - OperaClone2-db-data:/var/lib/postgresql
+    restart: always
+    healthcheck:
+      test: pg_isready -U OperaClone2
+      interval: 2s
+      timeout: 3s
+      retries: 40
+
+  migrator:
+    <<: *mock-api
+    restart: "no"
+    ports: []
+    command: alembic upgrade head
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+
+volumes:
+  OperaClone2-db-data:
+    name: OperaClone2-db-data
+  backend-data:
+    name: backend-data

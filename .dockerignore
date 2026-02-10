@@ -1,0 +1,78 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+!README.md
+LICENSE
+THIRD_PARTY_NOTICE
+
+# Test
+test-results
+coverage
+*.test.ts
+*.test.tsx
+*.test.js
+*.spec.ts
+*.spec.tsx
+*.spec.js
+tests
+__tests__
+__mocks__
+
+# Build outputs (we rebuild in Docker)
+node_modules
+.next
+dist
+build
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+!.env.example
+development.env
+test.env
+
+# Python
+__pycache__
+*.py[cod]
+*.so
+.Python
+.venv
+venv/
+ENV/
+*.egg-info
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data/*.db
+
+# Misc
+.cache
+tmp
+temp

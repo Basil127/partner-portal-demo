@@ -191,11 +191,13 @@ export function transformFormToApiRequest(formData: ReservationFormData): Create
 			givenName: formData.primaryGuest.givenName,
 			surname: formData.primaryGuest.surname,
 			middleName: formData.primaryGuest.middleName,
+			isChild: false as const,
 		},
 		...formData.additionalGuests.map((guest) => ({
 			givenName: guest.givenName,
 			surname: guest.surname,
 			middleName: guest.middleName,
+			isChild: false as const,
 		})),
 	];
 
@@ -206,7 +208,7 @@ export function transformFormToApiRequest(formData: ReservationFormData): Create
 					roomStay: {
 						arrivalDate: formData.arrivalDate,
 						departureDate: formData.departureDate,
-						roomType: formData.roomType,
+						roomType: formData.roomType ?? '',
 						ratePlanCode: formData.ratePlanCode,
 						guestCounts: {
 							adults: formData.adults,
@@ -216,10 +218,10 @@ export function transformFormToApiRequest(formData: ReservationFormData): Create
 							? {
 									guaranteeCode: formData.guaranteeCode,
 									paymentCard: {
-										cardType: formData.paymentCard.cardType,
-										cardNumber: formData.paymentCard.cardNumber,
-										expireDate: formData.paymentCard.expireDate,
-										cardHolderName: formData.paymentCard.cardHolderName,
+										cardType: formData.paymentCard.cardType ?? '',
+										cardNumber: formData.paymentCard.cardNumber ?? '',
+										expireDate: formData.paymentCard.expireDate ?? '',
+										cardHolderName: formData.paymentCard.cardHolderName ?? '',
 									},
 								}
 							: undefined,

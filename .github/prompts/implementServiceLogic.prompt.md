@@ -4,6 +4,7 @@ description: Implement domain service logic including specialized calculations, 
 argument-hint: Specify the service goal, primary data points (e.g., room types, products), and any specific calculation rules (e.g., duration-based pricing).
 ---
 Use the schema or guidlines given by user on what needs to be implemented, if a schema is given follow it exactly do not modify it.
+You will only work on app/mock-api folder and the fastapi file.
 Implementing the domain service logic for the specified functionality. Ensure the implementation adheres to the project's architectural and quality standards:
 
 1. **Domain Logic Separation**: Implement all business logic within the service layer, keeping it decoupled from web handlers and DAOs.

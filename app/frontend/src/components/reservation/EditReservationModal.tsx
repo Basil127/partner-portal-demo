@@ -185,7 +185,7 @@ export default function EditReservationModal({
 
 	// Mutation for updating reservation
 	const updateMutation = useMutation({
-		mutationFn: async (payload: PutApiHotelsByHotelIdReservationsByReservationIdData) => {
+		mutationFn: async (payload: Pick<PutApiHotelsByHotelIdReservationsByReservationIdData, 'body'>) => {
 			const confirmationId =
 				reservation.reservationIdList?.find((id: any) => id.type === 'CONFIRMATION')?.id ||
 				reservation.reservationIdList?.[0]?.id;
@@ -232,7 +232,7 @@ export default function EditReservationModal({
 		// Build update payload - Strict adherence to generated types
 		// Note: Middle name, phone number, and address are omitted as they are not present in the
 		// PutApiHotelsByHotelIdReservationsByReservationIdData type definition.
-		const payload: PutApiHotelsByHotelIdReservationsByReservationIdData = {
+		const payload: Pick<PutApiHotelsByHotelIdReservationsByReservationIdData, 'body'> = {
 			body: {
 				reservations: {
 					reservation: [
