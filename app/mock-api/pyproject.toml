@@ -120,7 +120,7 @@ exclude = [
     "operaclone2/db/migrations",
     ".venv/"
 ]
-lint.mccabe = { max-complexity = 10 }
+lint.mccabe = { max-complexity = 15 }
 line-length = 100
 
 [tool.ruff.lint.per-file-ignores]

@@ -88,7 +88,7 @@ async def seed_hotel() -> None:
     logger.info("Seed hotel completed successfully.")
 
 
-async def seed_room() -> None:  # noqa: C901
+async def seed_room() -> None:
     """Seed room type data into the database."""
     engine = create_async_engine(str(settings.db_url), echo=True)
     session_factory = async_sessionmaker(engine, expire_on_commit=False)

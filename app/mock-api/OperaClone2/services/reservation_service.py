@@ -1,5 +1,4 @@
 from datetime import date, datetime
-from types import SimpleNamespace
 from typing import Any
 from uuid import uuid4
 
@@ -182,6 +181,14 @@ class ReservationService:
                 first_name = person_names[0].givenName or ""
                 last_name = person_names[0].surname or ""
 
+        # Extract number of adults and children from room stay
+        num_adults = 1
+        num_children = 0
+        if res_data.roomStay and res_data.roomStay.guestCounts:
+            guest_counts = res_data.roomStay.guestCounts
+            num_adults = guest_counts.adults if guest_counts.adults is not None else 1
+            num_children = guest_counts.children if guest_counts.children is not None else 0
+
         conf_num = str(uuid4().int)[:8]
         res_id = str(uuid4().int)[:6]
 
@@ -196,6 +203,8 @@ class ReservationService:
             departure_date=departure_date,
             guest_first_name=first_name,
             guest_last_name=last_name,
+            number_of_adults=num_adults,
+            number_of_children=num_children,
             room_stay=res_data.roomStay.model_dump(mode="json") if res_data.roomStay else {},
             reservation_guests=[g.model_dump(mode="json") for g in res_data.reservationGuests]
             if res_data.reservationGuests
@@ -208,35 +217,63 @@ class ReservationService:
         )
 
     async def update_reservation(
-        self, hotel_id: str, reservation_id: str, request: Any
+        self, hotel_id: str, reservation_id: str, request: CreateReservationRequest
     ) -> ReservationListResponse:
         """Update an existing reservation."""
-        # Simplification: we only update the status or some basic fields for now
-        # In a real app, we'd merge the incoming reservation data
+        # Get reservation list from the ReservationCollection
+        if not request.reservations or not request.reservations.reservation:
+            return ReservationListResponse(reservations=ReservationCollection(reservation=[]))
+
+        res_data = request.reservations.reservation[0]
+
+        # Extract guest names for the top-level columns
+        guest = res_data.reservationGuests[0] if res_data.reservationGuests else None
+        first_name = ""
+        last_name = ""
+        if (
+            guest
+            and guest.profileInfo
+            and guest.profileInfo.profile
+            and guest.profileInfo.profile.customer
+            and guest.profileInfo.profile.customer.personName
+        ):
+            person_names = guest.profileInfo.profile.customer.personName
+            if person_names:
+                first_name = person_names[0].givenName or ""
+                last_name = person_names[0].surname or ""
+
+        # Extract number of adults and children from room stay
+        num_adults = 1
+        num_children = 0
+        if res_data.roomStay and res_data.roomStay.guestCounts:
+            guest_counts = res_data.roomStay.guestCounts
+            num_adults = guest_counts.adults if guest_counts.adults is not None else 1
+            num_children = guest_counts.children if guest_counts.children is not None else 0
+
+        arrival_date = res_data.roomStay.arrivalDate if res_data.roomStay else date.today()
+        departure_date = res_data.roomStay.departureDate if res_data.roomStay else date.today()
+        status = res_data.reservationStatus if res_data.reservationStatus else "Reserved"
+
+        # Update the reservation with all fields
         updated_model = await self.reservation_dao.update_reservation(
             reservation_id=reservation_id,
-            # For now, just a dummy update to show it works
-            reservation_status="Updated",
+            hotel_id=hotel_id,
+            arrival_date=arrival_date,
+            departure_date=departure_date,
+            guest_first_name=first_name,
+            guest_last_name=last_name,
+            number_of_adults=num_adults,
+            number_of_children=num_children,
+            room_stay=res_data.roomStay.model_dump(mode="json") if res_data.roomStay else {},
+            reservation_guests=[g.model_dump(mode="json") for g in res_data.reservationGuests]
+            if res_data.reservationGuests
+            else [],
+            reservation_status=status,
         )
 
         if not updated_model:
-            # If not found in DB, return a mock "Updated" reservation
-            mock_res = SimpleNamespace(
-                reservation_id=reservation_id,
-                confirmation_number="CONF-UPDATED",
-                hotel_id=hotel_id,
-                reservation_status="Updated",
-                arrival_date=date(2026, 1, 22),
-                departure_date=date(2026, 1, 23),
-                guest_first_name="Jennifer",
-                guest_last_name="Clarke",
-                room_stay={"arrivalDate": date(2026, 1, 22), "departureDate": date(2026, 1, 23)},
-                reservation_guests=[],
-                create_date_time=datetime.now(),
-            )
-            return ReservationListResponse(
-                reservations=ReservationCollection(reservation=[self._map_to_schema(mock_res)])
-            )
+            # If not found in DB, return empty response
+            return ReservationListResponse(reservations=ReservationCollection(reservation=[]))
 
         return ReservationListResponse(
             reservations=ReservationCollection(reservation=[self._map_to_schema(updated_model)])

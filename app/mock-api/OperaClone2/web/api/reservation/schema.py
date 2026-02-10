@@ -17,6 +17,9 @@ class PersonName(BaseModel):
 
     givenName: str | None = None
     surname: str | None = None
+    namePrefix: str | None = None
+    middleName: str | None = None
+    nameSuffix: str | None = None
     nameType: str | None = "Primary"
 
 
@@ -26,10 +29,23 @@ class Customer(BaseModel):
     personName: list[PersonName] | None = None
 
 
+class Address(BaseModel):
+    """Address information."""
+
+    addressLine: list[str] | None = None
+    city: str | None = None
+    postalCode: str | None = None
+    countryCode: str | None = None
+    state: str | None = None
+
+
 class Profile(BaseModel):
     """Guest profile definition."""
 
     customer: Customer | None = None
+    email: str | None = None
+    phoneNumber: str | None = None
+    address: Address | None = None
     profileType: str | None = "Guest"
 
 

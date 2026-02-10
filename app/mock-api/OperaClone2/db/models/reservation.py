@@ -25,6 +25,10 @@ class ReservationModel(Base):
     guest_first_name: Mapped[str | None] = mapped_column(String(100))
     guest_last_name: Mapped[str | None] = mapped_column(String(100), index=True)
 
+    # Number of guests
+    number_of_adults: Mapped[int | None] = mapped_column(default=1)
+    number_of_children: Mapped[int | None] = mapped_column(default=0)
+
     # Store complex structures as JSON
     room_stay: Mapped[dict[str, Any]] = mapped_column(JSON)
     reservation_guests: Mapped[list[dict[str, Any]]] = mapped_column(JSON)
