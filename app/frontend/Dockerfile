@@ -1,8 +1,8 @@
-FROM node:22-alpine AS base
+FROM node:22-slim AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+# libc6-compat is not needed for slim (glibc) as it is the standard
 WORKDIR /app
 
 # Copy package files from root and workspaces to install dependencies
@@ -12,8 +12,8 @@ COPY app/frontend/package.json ./app/frontend/
 COPY app/backend/package.json ./app/backend/
 COPY packages/shared/package.json ./packages/shared/
 
-# Install dependencies based on the lockfile
-RUN npm ci
+# Install dependencies based on the lockfile with cache mount
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -26,7 +26,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build --workspace=app/frontend
 
 # Production image, copy all the files and run next
-FROM base AS runner
+FROM base AS prod
 WORKDIR /app
 
 ENV NODE_ENV production

@@ -12,6 +12,7 @@ services:
     build:
       context: .
       dockerfile: ./app/frontend/Dockerfile
+      target: prod
     image: ohm-demo-frontend:${VERSION:-latest}
     restart: always
     env_file:
@@ -30,6 +31,7 @@ services:
     build:
       context: .
       dockerfile: ./app/backend/Dockerfile
+      target: prod
     image: ohm-demo-backend:${VERSION:-latest}
     restart: always
     env_file:
@@ -53,6 +55,7 @@ services:
     build:
       context: .
       dockerfile: ./app/mock-api/Dockerfile
+      target: prod
     image: ohm-demo-mock-api:${VERSION:-latest}
     restart: always
     env_file:
@@ -74,7 +77,7 @@ services:
       - "8000:8000"
 
   db:
-    image: postgres:18.1-bookworm
+    image: postgres:18.1-alpine
     hostname: OperaClone2-db
     environment:
       POSTGRES_PASSWORD: "OperaClone2"
