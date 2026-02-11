@@ -1,5 +1,14 @@
 services:
   frontend:
+    develop:
+      watch:
+        - action: sync
+          path: ./web
+          target: /src/web
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
     build:
       context: .
       dockerfile: ./app/frontend/Dockerfile
