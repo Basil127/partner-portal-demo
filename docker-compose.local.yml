@@ -1,17 +1,26 @@
 services:
   frontend:
     restart: unless-stopped
+    develop:
+      watch:
+        - action: sync
+          path: ./web
+          target: /src/web
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
     build:
       context: .
       dockerfile: ./app/frontend/Dockerfile
       target: prod
     image: ohm-demo-frontend:${VERSION:-latest}
     env_file:
-      - path: .env
+      - path: development.env
         required: false
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - NEXT_PUBLIC_API_URL=http://backend:3001
       - PORT=3000
     ports:
       - "3000:3000"
@@ -34,7 +43,7 @@ services:
       - HOST=0.0.0.0
       - DB_TYPE=sqlite
       - DB_PATH=/app/app/backend/data/dev.db
-      - EXTERNAL_CLIENT_BASE_URL=http://localhost:8000
+      - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
     ports:
       - "3001:3001"
     volumes:
@@ -93,6 +102,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
 
 
 volumes:
