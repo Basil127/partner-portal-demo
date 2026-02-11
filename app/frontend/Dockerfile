@@ -1,77 +1,53 @@
-# Stage 1: Install dependencies
-FROM node:22-alpine AS deps
+FROM node:22-alpine AS base
 
-# Install build dependencies
+# Install dependencies only when needed
+FROM base AS deps
 RUN apk add --no-cache libc6-compat
-
 WORKDIR /app
 
-# Copy workspace configuration
-COPY package*.json ./
-COPY app/frontend/package*.json ./app/frontend/
-COPY app/backend/package*.json ./app/backend/
-COPY packages/shared/package*.json ./packages/shared/
+# Copy package files from root and workspaces to install dependencies
+COPY package.json package-lock.json ./
+# We need to copy the package.json of all workspaces to satisfy npm ci
+COPY app/frontend/package.json ./app/frontend/
+COPY app/backend/package.json ./app/backend/
+COPY packages/shared/package.json ./packages/shared/
 
-# Install dependencies (include backend workspace so @partner-portal/backend resolves)
-RUN npm ci --workspace=app/frontend --workspace=app/backend --workspace=packages/shared
+# Install dependencies based on the lockfile
+RUN npm ci
 
-# Stage 2: Build the application
-FROM node:22-alpine AS builder
-
+# Rebuild the source code only when needed
+FROM base AS builder
 WORKDIR /app
-
-# Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/app/frontend/node_modules ./app/frontend/node_modules
+COPY . .
 
-# Copy source code
-COPY package*.json ./
-COPY tsconfig.json ./
-COPY app/frontend ./app/frontend
-COPY app/backend ./app/backend
-COPY packages/shared ./packages/shared
+# Build the frontend
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm run build --workspace=app/frontend
 
-# Remove config files that cause build issues
-RUN rm -f app/frontend/openapi-ts.config.ts
-RUN rm -f app/backend/openapi-ts.config.ts
-
-# Build shared package first (if needed)
-WORKDIR /app/packages/shared
-RUN npm run build 2>/dev/null || true
-
-# Build Next.js application
-WORKDIR /app/app/frontend
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
-
-# Stage 3: Production image
-FROM node:22-alpine AS runner
-
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Copy necessary files from builder
-COPY --from=builder /app/app/frontend/next.config.mjs ./
-COPY --from=builder /app/app/frontend/package*.json ./
-
-# Copy public assets
-COPY --from=builder --chown=nextjs:nodejs /app/app/frontend/public ./public
-
-# Copy built application
+# Copy the standalone build
+# Next.js standalone output puts dependencies and the server.js in .next/standalone
+# In a monorepo, the structure inside standalone mirrors the project structure:
+# .next/standalone/app/frontend/server.js
 COPY --from=builder --chown=nextjs:nodejs /app/app/frontend/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/app/frontend/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/app/frontend/.next/static ./app/frontend/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/app/frontend/public ./app/frontend/public
 
 USER nextjs
 
 EXPOSE 3000
 
-ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
 
-CMD ["npm", "start"]
+CMD ["node", "app/frontend/server.js"]

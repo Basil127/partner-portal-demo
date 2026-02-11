@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
+from operaclone2 import seed
 from operaclone2.settings import settings
 
 
@@ -43,6 +44,10 @@ async def lifespan_setup(
     app.middleware_stack = None
     _setup_db(app)
     app.middleware_stack = app.build_middleware_stack()
+
+    # Seed data
+    await seed.seed_hotel(app.state.db_session_factory)
+    await seed.seed_room(app.state.db_session_factory)
 
     yield
     await app.state.db_engine.dispose()
