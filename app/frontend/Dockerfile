@@ -20,9 +20,11 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+COPY openapi ./openapi
 
 # Build the frontend
 ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm run generate:client --workspace=app/frontend
 RUN npm run build --workspace=app/frontend
 
 # Production image, copy all the files and run next

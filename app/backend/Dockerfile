@@ -11,8 +11,8 @@ COPY package*.json ./
 COPY app/backend/package*.json ./app/backend/
 COPY packages/shared/package*.json ./packages/shared/
 
-# Install dependencies for backend and shared packages
-RUN npm ci --workspace=app/backend --workspace=packages/shared
+# Install dependencies (install all to ensure root devDeps like openapi-ts are available)
+RUN npm ci
 
 # Stage 2: Build the application
 FROM node:22-slim AS builder
@@ -27,10 +27,15 @@ COPY package*.json ./
 COPY tsconfig.json ./
 COPY app/backend ./app/backend
 COPY packages/shared ./packages/shared
+COPY openapi ./openapi
 
 # Build shared package first
 WORKDIR /app/packages/shared
 RUN npm run build
+
+# Generate client (run from root to access binaries correctly)
+WORKDIR /app
+RUN npm run generate:client --workspace=app/backend
 
 # Build backend
 WORKDIR /app/app/backend
