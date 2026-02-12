@@ -1,9 +1,15 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables based on NODE_ENV
 const envFile = process.env.NODE_ENV === 'test' ? 'test.env' : 'development.env';
-dotenv.config({ path: path.resolve(process.cwd(), '../../', envFile) });
+// Locate the root directory (5 levels up from src/infrastructure/config)
+const rootDir = path.resolve(__dirname, '../../../../../');
+dotenv.config({ path: path.resolve(rootDir, envFile) });
 
 export const config = {
 	nodeEnv: process.env.NODE_ENV || 'development',
@@ -26,7 +32,7 @@ export const config = {
 	},
 	logLevel: process.env.LOG_LEVEL || 'info',
 	corsOrigins: process.env.CORS_ORIGINS
-		? process.env.CORS_ORIGINS.split(',')
+		? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
 		: true,
 	externalClient: {
 		baseUrl: process.env.EXTERNAL_CLIENT_BASE_URL || 'http://localhost:8000',
