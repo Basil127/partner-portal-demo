@@ -33,9 +33,9 @@ services:
       - PORT=${PORT:-3001}
       - HOST=${HOST:-0.0.0.0}
       - DB_TYPE=${DB_TYPE:-postgres}
-      - DB_HOST=${DB_HOST:-db}
+      - DB_HOST=${DB_HOST:-OperaClone2-db}
       - DB_PORT=${DB_PORT:-5432}
-      - DB_NAME=${DB_NAME:-OperaClone2-db}
+      - DB_NAME=${DB_NAME:-OperaClone2}
       - DB_USER=${DB_USER:-OperaClone2}
       - DB_PASSWORD=${DB_PASSWORD:-OperaClone2}
       - JWT_SECRET=${JWT_SECRET}
