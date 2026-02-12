@@ -22,6 +22,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run generate:client --workspace=app/frontend
 
 # Build the frontend
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 RUN npm run build:frontend
 
 # Production image, copy all the files and run next

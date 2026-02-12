@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: ./app/frontend/Dockerfile
       target: prod
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
     image: ohm-demo-frontend:${VERSION:-latest}
     env_file:
       - path: .env
