@@ -70,4 +70,4 @@ ENV NODE_ENV=production
 ENV PORT=3001
 ENV HOST=0.0.0.0
 
-CMD ["node", "app/backend/dist/index.js"]
+CMD ["node", "app/backend/dist/app/backend/src/index.js"]

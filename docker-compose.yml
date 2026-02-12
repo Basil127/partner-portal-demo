@@ -34,7 +34,7 @@ services:
       - HOST=0.0.0.0
       - DB_TYPE=sqlite
       - DB_PATH=/app/app/backend/data/dev.db
-      - EXTERNAL_CLIENT_BASE_URL=http://localhost:8000
+      - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
     ports:
       - "3001:3001"
     volumes:
