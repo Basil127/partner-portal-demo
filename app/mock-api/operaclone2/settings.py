@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     db_base: str = "OperaClone2"
     db_echo: bool = False
 
+	# CORS
+	cors_origins: str = "*"
     @property
     def db_url(self) -> URL:
         """

@@ -1,10 +1,12 @@
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import UJSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from operaclone2.log import configure_logging
+from operaclone2.settings import settings
 from operaclone2.web.api.router import api_router
 from operaclone2.web.lifespan import lifespan_setup
 
@@ -27,6 +29,20 @@ def get_app() -> FastAPI:
         redoc_url=None,
         openapi_url="/api/openapi.json",
         default_response_class=UJSONResponse,
+    )
+
+    # CORS
+    origins = (
+        [o.strip() for o in settings.cors_origins.split(",")]
+        if settings.cors_origins != "*"
+        else ["*"]
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     # Main router for the API.

@@ -35,12 +35,14 @@ services:
       - DB_TYPE=sqlite
       - DB_PATH=/app/app/backend/data/dev.db
       - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
     ports:
       - "3001:3001"
     volumes:
       - backend-data:/app/app/backend/data
     depends_on:
       - mock-api
+      - db
   
   mock-api: &mock-api
     restart: unless-stopped
@@ -64,6 +66,7 @@ services:
       OPERACLONE2_DB_USER: OperaClone2
       OPERACLONE2_DB_PASS: OperaClone2
       OPERACLONE2_DB_BASE: OperaClone2
+      OPERACLONE2_CORS_ORIGINS: ${CORS_ORIGINS:-*}
     ports:
       - "8000:8000"
 

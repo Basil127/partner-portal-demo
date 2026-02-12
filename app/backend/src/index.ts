@@ -32,7 +32,7 @@ async function start() {
 
 	// Register plugins
 	await fastify.register(cors, {
-		origin: true,
+		origin: config.corsOrigins,
 	});
 
 	await fastify.register(helmet);

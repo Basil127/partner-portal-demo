@@ -25,6 +25,9 @@ export const config = {
 		secret: process.env.SESSION_SECRET || 'default-session-secret',
 	},
 	logLevel: process.env.LOG_LEVEL || 'info',
+	corsOrigins: process.env.CORS_ORIGINS
+		? process.env.CORS_ORIGINS.split(',')
+		: true,
 	externalClient: {
 		baseUrl: process.env.EXTERNAL_CLIENT_BASE_URL || 'http://localhost:8000',
 		channelCode: process.env.EXTERNAL_CLIENT_CHANNEL_CODE || '',
