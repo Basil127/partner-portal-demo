@@ -26,15 +26,21 @@ services:
       target: prod
     image: ohm-demo-backend:${VERSION:-latest}
     env_file:
-      - path: development.env
+      - path: .env
         required: false
     environment:
-      - NODE_ENV=production
-      - PORT=3001
-      - HOST=0.0.0.0
-      - DB_TYPE=sqlite
-      - DB_PATH=/app/app/backend/data/dev.db
-      - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3001}
+      - HOST=${HOST:-0.0.0.0}
+      - DB_TYPE=${DB_TYPE:-postgres}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-OperaClone2-db}
+      - DB_USER=${DB_USER:-OperaClone2}
+      - DB_PASSWORD=${DB_PASSWORD:-OperaClone2}
+      - JWT_SECRET=${JWT_SECRET}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - EXTERNAL_CLIENT_BASE_URL=${EXTERNAL_CLIENT_BASE_URL:-http://mock-api:8000}
       - CORS_ORIGINS=${CORS_ORIGINS:-*}
     ports:
       - "3001:3001"
