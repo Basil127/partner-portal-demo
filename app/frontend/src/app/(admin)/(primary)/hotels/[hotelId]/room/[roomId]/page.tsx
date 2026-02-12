@@ -8,7 +8,7 @@ import RoomDescription from '@/components/rooms/RoomDescription';
 import AmenitiesList from '@/components/common/AmenitiesList';
 import { useRoomDetails } from '@/hooks/useRoomDetails';
 import Badge from '@/components/ui/badge/Badge';
-import type { ContentRoomType } from '@partner-portal/backend/api-types';
+import type { ContentRoomType } from '@/types/room';
 import PricingSidebar from '@/components/rooms/PricingSidebar';
 import RoomStats from '@/components/rooms/RoomStats';
 

@@ -4,7 +4,7 @@ import {
 	getApiContentHotelsByHotelCodeRoomTypes,
 } from '@/lib/api-client';
 import { HotelInfo } from '@/components/hotels/types';
-import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
+import type { ContentRoomType as RoomType } from '@/types/room';
 
 export const useHotelDetails = (hotelId: string) => {
 	const [hotelInfo, setHotelInfo] = useState<HotelInfo | null>(null);

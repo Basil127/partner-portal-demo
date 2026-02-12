@@ -17,10 +17,12 @@ RUN --mount=type=cache,target=/root/.npm npm ci
 COPY . .
 COPY openapi ./openapi
 
-# Build the frontend
+# Generate API client and build
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run generate:client --workspace=app/frontend
-RUN npm run build --workspace=app/frontend
+
+# Build the frontend
+RUN npm run build:frontend
 
 # Production image, copy all the files and run next
 FROM base AS prod

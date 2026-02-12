@@ -1,7 +1,7 @@
 import React from 'react';
 import ComponentCard from '../common/ComponentCard';
 import { useBooking } from '@/context/BookingContext';
-import { ContentRoomType } from '../../../../backend/src/infrastructure/adapters/http/external-client/types.gen';
+import type { ContentRoomType } from '@/types/room';
 import Button from '../ui/button/Button';
 import Link from 'next/link';
 

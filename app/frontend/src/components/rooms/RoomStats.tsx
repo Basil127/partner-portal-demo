@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContentRoomType } from '../../../../backend/src/infrastructure/adapters/http/external-client/types.gen';
+import type { ContentRoomType } from '@/types/room';
 
 interface RoomStatsProps {
 	room: ContentRoomType;

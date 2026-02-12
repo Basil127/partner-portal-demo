@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
+import type { ContentRoomType as RoomType } from '@/types/room';
 
 interface RoomDescriptionProps {
 	room: RoomType;

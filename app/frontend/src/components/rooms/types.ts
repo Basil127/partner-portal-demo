@@ -1,5 +1,4 @@
-// Import from backend OpenAPI generated types
-import type { ContentRoomType } from '@partner-portal/backend/api-types';
+import type { ContentRoomType } from '@/types/room';
 import { HotelInfo } from '../hotels/types';
 
 export interface RoomDetailsProps {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { ContentRoomType as RoomType } from '@partner-portal/backend/api-types';
+import type { ContentRoomType as RoomType } from '@/types/room';
 import ComponentCard from '@/components/common/ComponentCard';
 import RoomCard from './RoomCard';
 import { ListIcon } from '@/icons/index';
