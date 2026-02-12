@@ -1,38 +1,33 @@
 FROM node:22-slim AS base
 
-# Install dependencies only when needed
-FROM base AS deps
-# libc6-compat is not needed for slim (glibc) as it is the standard
+# Build stage: install deps + build in one stage to avoid symlink issues
+FROM base AS builder
 WORKDIR /app
 
-# Copy package files from root and workspaces to install dependencies
+# Copy package files first for layer caching
 COPY package.json package-lock.json ./
-# We need to copy the package.json of all workspaces to satisfy npm ci
 COPY app/frontend/package.json ./app/frontend/
 COPY app/backend/package.json ./app/backend/
 COPY packages/shared/package.json ./packages/shared/
 
-# Install dependencies based on the lockfile with cache mount
+# Install dependencies directly in builder (avoids broken .bin symlinks from cross-stage COPY)
 RUN --mount=type=cache,target=/root/.npm npm ci
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy source code and openapi specs
 COPY . .
 COPY openapi ./openapi
 
 # Build the frontend
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run generate:client --workspace=app/frontend
-RUN npm run build:frontend
+RUN npm run build --workspace=app/frontend
 
 # Production image, copy all the files and run next
 FROM base AS prod
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -49,7 +44,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "app/frontend/server.js"]
