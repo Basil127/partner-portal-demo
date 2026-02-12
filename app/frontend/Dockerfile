@@ -25,7 +25,7 @@ COPY openapi ./openapi
 # Build the frontend
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run generate:client --workspace=app/frontend
-RUN npm run build --workspace=app/frontend
+RUN npm run build:frontend
 
 # Production image, copy all the files and run next
 FROM base AS prod
