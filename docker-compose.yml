@@ -80,7 +80,7 @@ services:
 
   db:
     restart: unless-stopped
-    image: postgres:18.1-alpine
+    image: postgres:18.1-bookworm
     hostname: OperaClone2-db
     environment:
       POSTGRES_PASSWORD: "OperaClone2"
