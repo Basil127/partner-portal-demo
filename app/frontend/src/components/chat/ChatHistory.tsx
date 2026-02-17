@@ -2,7 +2,10 @@
 
 import { MessageSquare, Trash2, Clock } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import type { Chat, ChatHistoryResponse } from '@/lib/chat/types';
+import type { GetApiChatsResponse } from '@/lib/api-client';
+
+type ChatItem = NonNullable<NonNullable<GetApiChatsResponse>['chats']>[number];
+type ChatHistoryData = NonNullable<GetApiChatsResponse>;
 
 interface ChatHistoryProps {
 	currentChatId: string | null;
@@ -12,15 +15,15 @@ interface ChatHistoryProps {
 }
 
 export function ChatHistory({ currentChatId, onSelectChat, onDeleteChat, refreshTrigger }: ChatHistoryProps) {
-	const [chats, setChats] = useState<Chat[]>([]);
+	const [chats, setChats] = useState<ChatItem[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchChats = useCallback(async () => {
 		try {
 			const res = await fetch('/api/chat/history?limit=50&offset=0');
 			if (res.ok) {
-				const data: ChatHistoryResponse = await res.json();
-				setChats(data.chats);
+				const data: ChatHistoryData = await res.json();
+				setChats(data.chats ?? []);
 			}
 		} catch (error) {
 			console.error('Failed to fetch chat history:', error);
@@ -86,7 +89,7 @@ export function ChatHistory({ currentChatId, onSelectChat, onDeleteChat, refresh
 			{chats.map((chat) => (
 				<button
 					key={chat.id}
-					onClick={() => onSelectChat(chat.id)}
+					onClick={() => onSelectChat(chat.id ?? '')}
 					className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
 						currentChatId === chat.id
 							? 'bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300'
@@ -100,11 +103,11 @@ export function ChatHistory({ currentChatId, onSelectChat, onDeleteChat, refresh
 						<p className="truncate text-sm font-medium">{chat.title}</p>
 						<p className="flex items-center gap-1 text-xs opacity-60">
 							<Clock className="size-3" />
-							{formatDate(chat.updatedAt)}
+							{formatDate(chat.updatedAt ?? '')}
 						</p>
 					</div>
 					<div
-						onClick={(e) => handleDelete(e, chat.id)}
+						onClick={(e) => handleDelete(e, chat.id ?? '')}
 						className="shrink-0 rounded p-1 opacity-0 transition-opacity hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 dark:hover:bg-red-900/30"
 						title="Delete chat"
 						data-testid={`delete-chat-${chat.id}`}

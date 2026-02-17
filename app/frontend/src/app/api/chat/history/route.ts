@@ -1,4 +1,5 @@
-import { chatApi } from '@/lib/chat/api';
+import { getApiChats, deleteApiChatsById } from '@/lib/api-client';
+import { serverClient } from '@/lib/chat/server-client';
 
 export async function GET(request: Request) {
 	try {
@@ -6,8 +7,11 @@ export async function GET(request: Request) {
 		const limit = parseInt(searchParams.get('limit') || '50', 10);
 		const offset = parseInt(searchParams.get('offset') || '0', 10);
 
-		const result = await chatApi.listChats(limit, offset);
-		return Response.json(result);
+		const { data } = await getApiChats({
+			query: { limit, offset },
+			client: serverClient,
+		});
+		return Response.json(data);
 	} catch (error) {
 		console.error('Chat history API error:', error);
 		return new Response(JSON.stringify({ error: 'Internal server error' }), {
@@ -29,7 +33,10 @@ export async function DELETE(request: Request) {
 			});
 		}
 
-		await chatApi.deleteChat(id);
+		await deleteApiChatsById({
+			path: { id },
+			client: serverClient,
+		});
 		return new Response(null, { status: 204 });
 	} catch (error) {
 		console.error('Chat delete API error:', error);

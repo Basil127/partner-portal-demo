@@ -6,7 +6,7 @@ import type { UIMessage } from 'ai';
 import { Chat, ChatHistory } from '@/components/chat';
 import { Modal } from '@/components/ui/modal';
 import { useModal } from '@/hooks/useModal';
-import type { ChatWithMessages } from '@/lib/chat/types';
+import { getApiChatsById } from '@/lib/api-client';
 
 export default function ChatByIdPage() {
 	const params = useParams();
@@ -21,21 +21,21 @@ export default function ChatByIdPage() {
 	useEffect(() => {
 		async function loadChat() {
 			try {
-				const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-				const res = await fetch(`${BACKEND_URL}/api/chats/${chatId}`);
-				if (!res.ok) {
+				const { data, error } = await getApiChatsById({
+					path: { id: chatId },
+				});
+				if (error || !data) {
 					setNotFound(true);
 					return;
 				}
-				const data: ChatWithMessages = await res.json();
-				const uiMessages: UIMessage[] = data.messages.map((m) => ({
-					id: m.id,
-					role: m.role as UIMessage['role'],
-					parts: [{ type: 'text' as const, text: m.content }],
+				const uiMessages: UIMessage[] = (data.messages ?? []).map((m) => ({
+					id: m.id ?? '',
+					role: (m.role ?? 'user') as UIMessage['role'],
+					parts: [{ type: 'text' as const, text: m.content ?? '' }],
 				}));
 				setInitialMessages(uiMessages);
-			} catch (error) {
-				console.error('Failed to load chat:', error);
+			} catch (err) {
+				console.error('Failed to load chat:', err);
 				setNotFound(true);
 			} finally {
 				setIsLoading(false);
@@ -120,7 +120,7 @@ export default function ChatByIdPage() {
 				</div>
 			</div>
 
-		<Modal isOpen={historyOpen} onClose={closeHistory} className="max-w-md p-6">
+		<Modal isOpen={historyOpen} onClose={closeHistory} className="max-w-md p-6 top-[-50vh]">
 			<div data-testid="history-modal">
 				<h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Chat History</h3>
 					<div className="max-h-[60vh] overflow-y-auto">

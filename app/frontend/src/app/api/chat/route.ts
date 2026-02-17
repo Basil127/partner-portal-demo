@@ -1,6 +1,7 @@
 import { streamText, generateText, convertToModelMessages, type UIMessage } from 'ai';
 import { getModel } from '@/lib/ai/providers';
-import { chatApi } from '@/lib/chat/api';
+import { getApiChatsById, postApiChats, postApiChatsByIdMessages, patchApiChatsById } from '@/lib/api-client';
+import { serverClient } from '@/lib/chat/server-client';
 
 export const maxDuration = 60;
 
@@ -35,25 +36,42 @@ export async function POST(request: Request) {
 				.join('\n') || '';
 
 		// Check if chat exists, if not create it
-		const existingChat = await chatApi.getChat(id);
+		const { data: existingChat } = await getApiChatsById({
+			path: { id },
+			client: serverClient,
+		});
 		if (!existingChat) {
-			await chatApi.createChat({ id, title: 'New chat' });
+			await postApiChats({
+				body: { id, title: 'New chat' },
+				client: serverClient,
+			});
 		}
 
 		// Save user message to backend if the last message is from user
+		// Guard against duplicates by checking if this message ID already exists
 		if (lastMessage?.role === 'user' && lastMessageText) {
-			await chatApi.addMessage(id, {
-				id: lastMessage.id,
-				role: 'user',
-				content: lastMessageText,
-			});
+			const existingMessageIds = existingChat?.messages?.map((m) => m.id) ?? [];
+			if (!existingMessageIds.includes(lastMessage.id)) {
+				await postApiChatsByIdMessages({
+					path: { id },
+					body: {
+						id: lastMessage.id,
+						role: 'user',
+						content: lastMessageText,
+					},
+					client: serverClient,
+				});
+			}
 		}
 
 		const modelMessages = await convertToModelMessages(messages);
 
 		// Generate title asynchronously for first user message
-		const chatData = await chatApi.getChat(id);
-		if (chatData?.messages?.length <= 1) {
+		const { data: chatData } = await getApiChatsById({
+			path: { id },
+			client: serverClient,
+		});
+		if ((chatData?.messages?.length ?? 0) <= 1) {
 			generateTitle(id, lastMessageText);
 		}
 
@@ -82,9 +100,13 @@ async function saveAssistantResponse(chatId: string, result: ReturnType<typeof s
 	try {
 		const text = await result.text;
 		if (text) {
-			await chatApi.addMessage(chatId, {
-				role: 'assistant',
-				content: text,
+			await postApiChatsByIdMessages({
+				path: { id: chatId },
+				body: {
+					role: 'assistant',
+					content: text,
+				},
+				client: serverClient,
 			});
 		}
 	} catch (error) {
@@ -102,7 +124,11 @@ async function generateTitle(chatId: string, userMessage: string) {
 		});
 
 		if (title) {
-			await chatApi.updateChatTitle(chatId, title.trim());
+			await patchApiChatsById({
+				path: { id: chatId },
+				body: { title: title.trim() },
+				client: serverClient,
+			});
 		}
 	} catch (error) {
 		console.error('Failed to generate chat title:', error);
