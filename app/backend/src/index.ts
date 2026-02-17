@@ -5,6 +5,7 @@ import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { config } from './infrastructure/config/config.js';
 import { setupRoutes } from './infrastructure/adapters/http/routes.js';
+import { setupMcpRoutes } from './infrastructure/adapters/mcp/mcp-routes.js';
 import { createDatabaseAdapter } from './infrastructure/adapters/database.js';
 import { initializeDatabase } from './infrastructure/config/database-init.js';
 
@@ -73,6 +74,9 @@ async function start() {
 
 	// Setup routes
 	setupRoutes(fastify);
+
+	// Setup MCP server routes
+	await setupMcpRoutes(fastify);
 
 	// Health check
 	fastify.get('/health', {

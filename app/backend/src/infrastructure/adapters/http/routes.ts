@@ -1,15 +1,18 @@
 import type { FastifyInstance } from 'fastify';
 import { BookingController } from '../../controllers/booking-controller.js';
+import { ChatController } from '../../controllers/chat-controller.js';
 import { HotelShopController } from '../../controllers/hotel-shop/hotel-shop-controller.js';
 import { HotelContentController } from '../../controllers/hotel-content/hotel-content-controller.js';
 import { HotelReservationsController } from '../../controllers/hotel-reservations/hotel-reservations-controller.js';
 import { HotelInventoryController } from '../../controllers/hotel-inventory/hotel-inventory-controller.js';
 import { BookingService } from '../../../application/services/booking-service.js';
+import { ChatService } from '../../../application/services/chat-service.js';
 import { HotelShopService } from '../../../application/services/hotel-shop/hotel-shop-service.js';
 import { HotelContentService } from '../../../application/services/hotel-content/hotel-content-service.js';
 import { HotelReservationsService } from '../../../application/services/hotel-reservations/hotel-reservations-service.js';
 import { HotelInventoryService } from '../../../application/services/hotel-inventory/hotel-inventory-service.js';
 import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
+import { ChatRepositoryImpl } from '../../repositories/chat-repository-impl.js';
 import { HotelShopRepositoryImpl } from '../../repositories/hotel-shop/hotel-shop-repository-impl.js';
 import { HotelContentRepositoryImpl } from '../../repositories/hotel-content/hotel-content-repository-impl.js';
 import { HotelReservationsRepositoryImpl } from '../../repositories/hotel-reservations/hotel-reservations-repository-impl.js';
@@ -22,6 +25,9 @@ export function setupRoutes(fastify: FastifyInstance) {
 	const bookingRepository = new BookingRepositoryImpl(dbAdapter);
 	const bookingService = new BookingService(bookingRepository);
 	const bookingController = new BookingController(bookingService);
+	const chatRepository = new ChatRepositoryImpl(dbAdapter);
+	const chatService = new ChatService(chatRepository);
+	const chatController = new ChatController(chatService);
 	const hotelShopRepository = new HotelShopRepositoryImpl();
 	const hotelShopService = new HotelShopService(hotelShopRepository);
 	const hotelShopController = new HotelShopController(hotelShopService);
@@ -1742,5 +1748,226 @@ export function setupRoutes(fastify: FastifyInstance) {
 			},
 		},
 		handler: hotelInventoryController.getInventoryStatistics.bind(hotelInventoryController),
+	});
+
+	// ==================== Chat routes ====================
+
+	fastify.post('/api/chats', {
+		schema: {
+			description: 'Create a new chat',
+			tags: ['Chat'],
+			body: {
+				type: 'object',
+				properties: {
+					id: { type: 'string', description: 'Optional chat ID' },
+					title: { type: 'string', description: 'Chat title', default: 'New chat' },
+				},
+			},
+			response: {
+				201: {
+					type: 'object',
+					properties: {
+						id: { type: 'string' },
+						title: { type: 'string' },
+						createdAt: { type: 'string' },
+						updatedAt: { type: 'string' },
+					},
+				},
+				400: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+						details: { type: 'array' },
+					},
+				},
+			},
+		},
+		handler: chatController.createChat.bind(chatController),
+	});
+
+	fastify.get('/api/chats', {
+		schema: {
+			description: 'List all chats with pagination',
+			tags: ['Chat'],
+			querystring: {
+				type: 'object',
+				properties: {
+					limit: { type: 'integer', minimum: 1, maximum: 100, default: 50 },
+					offset: { type: 'integer', minimum: 0, default: 0 },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						chats: {
+							type: 'array',
+							items: {
+								type: 'object',
+								properties: {
+									id: { type: 'string' },
+									title: { type: 'string' },
+									createdAt: { type: 'string' },
+									updatedAt: { type: 'string' },
+								},
+							},
+						},
+						total: { type: 'integer' },
+					},
+				},
+			},
+		},
+		handler: chatController.listChats.bind(chatController),
+	});
+
+	fastify.get('/api/chats/:id', {
+		schema: {
+			description: 'Get a chat by ID with its messages',
+			tags: ['Chat'],
+			params: {
+				type: 'object',
+				properties: {
+					id: { type: 'string' },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						chat: {
+							type: 'object',
+							properties: {
+								id: { type: 'string' },
+								title: { type: 'string' },
+								createdAt: { type: 'string' },
+								updatedAt: { type: 'string' },
+							},
+						},
+						messages: {
+							type: 'array',
+							items: {
+								type: 'object',
+								properties: {
+									id: { type: 'string' },
+									chatId: { type: 'string' },
+									role: { type: 'string' },
+									content: { type: 'string' },
+									createdAt: { type: 'string' },
+								},
+							},
+						},
+					},
+				},
+				404: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+					},
+				},
+			},
+		},
+		handler: chatController.getChat.bind(chatController),
+	});
+
+	fastify.delete('/api/chats/:id', {
+		schema: {
+			description: 'Delete a chat and all its messages',
+			tags: ['Chat'],
+			params: {
+				type: 'object',
+				properties: {
+					id: { type: 'string' },
+				},
+			},
+			response: {
+				204: { type: 'null' },
+				404: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+					},
+				},
+			},
+		},
+		handler: chatController.deleteChat.bind(chatController),
+	});
+
+	fastify.post('/api/chats/:id/messages', {
+		schema: {
+			description: 'Add a message to a chat',
+			tags: ['Chat'],
+			params: {
+				type: 'object',
+				properties: {
+					id: { type: 'string' },
+				},
+			},
+			body: {
+				type: 'object',
+				required: ['role', 'content'],
+				properties: {
+					id: { type: 'string', description: 'Optional message ID' },
+					role: { type: 'string', enum: ['user', 'assistant', 'system'] },
+					content: { type: 'string', minLength: 1 },
+				},
+			},
+			response: {
+				201: {
+					type: 'object',
+					properties: {
+						id: { type: 'string' },
+						chatId: { type: 'string' },
+						role: { type: 'string' },
+						content: { type: 'string' },
+						createdAt: { type: 'string' },
+					},
+				},
+				404: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+					},
+				},
+			},
+		},
+		handler: chatController.addMessage.bind(chatController),
+	});
+
+	fastify.patch('/api/chats/:id', {
+		schema: {
+			description: 'Update a chat title',
+			tags: ['Chat'],
+			params: {
+				type: 'object',
+				properties: {
+					id: { type: 'string' },
+				},
+			},
+			body: {
+				type: 'object',
+				required: ['title'],
+				properties: {
+					title: { type: 'string', minLength: 1 },
+				},
+			},
+			response: {
+				200: {
+					type: 'object',
+					properties: {
+						id: { type: 'string' },
+						title: { type: 'string' },
+						createdAt: { type: 'string' },
+						updatedAt: { type: 'string' },
+					},
+				},
+				404: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' },
+					},
+				},
+			},
+		},
+		handler: chatController.updateChatTitle.bind(chatController),
 	});
 }
