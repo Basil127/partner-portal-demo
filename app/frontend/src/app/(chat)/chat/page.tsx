@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Chat, ChatHistory } from '@/components/chat';
-import { useModal } from '@/hooks/useModal';
+import { useChatContext } from '@/context/ChatContext';
 
 function generateUUID(): string {
 	return crypto.randomUUID();
@@ -13,12 +13,16 @@ export default function ChatPage() {
 	const router = useRouter();
 	const [chatId, setChatId] = useState(() => generateUUID());
 	const [refreshTrigger, setRefreshTrigger] = useState(0);
-	const { isOpen: historyOpen, openModal: openHistory, closeModal: closeHistory } = useModal();
+	const { isHistoryOpen, closeHistory, setNewChatHandler } = useChatContext();
 
 	const handleNewChat = useCallback(() => {
 		setChatId(generateUUID());
 		closeHistory();
 	}, [closeHistory]);
+
+	useEffect(() => {
+		setNewChatHandler(handleNewChat);
+	}, [handleNewChat, setNewChatHandler]);
 
 	const handleSelectChat = useCallback(
 		(id: string) => {
@@ -43,21 +47,20 @@ export default function ChatPage() {
 
 	return (
 		<>
-			<div className="h-[calc(100vh-130px)]">
-				<div className="flex h-full overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
-					<div className="flex-1">
+			<div className="h-[calc(100vh-90px)]">
+				{/* <div className="flex h-full overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3"> */}
+					<div className="flex-1 h-full">
 						<Chat
 							id={chatId}
 							onNewChat={handleNewChat}
 							onMessageSent={handleMessageSent}
-							onOpenHistory={openHistory}
 						/>
 					</div>
-				</div>
+				{/* </div> */}
 			</div>
 
 			<ChatHistory
-				isOpen={historyOpen}
+				isOpen={isHistoryOpen}
 				onClose={closeHistory}
 				currentChatId={chatId}
 				onSelectChat={handleSelectChat}

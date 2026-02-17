@@ -57,7 +57,7 @@ export function ChatInput({ input, setInput, onSubmit, status, stop }: ChatInput
 	};
 
 	return (
-		<div className="mx-auto w-full max-w-4xl px-4 pb-4" data-testid="chat-input">
+		<div className="mx-auto w-full max-w-4xl px-2" data-testid="chat-input">
 			<div className="flex items-end gap-2 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
 				<textarea
 					ref={textareaRef}
@@ -74,9 +74,9 @@ export function ChatInput({ input, setInput, onSubmit, status, stop }: ChatInput
 					disabled={!isStreaming && !input.trim()}
 					className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors ${
 						isStreaming
-							? 'bg-red-500 text-white hover:bg-red-600'
+							? 'bg-red-400 text-white hover:bg-red-600'
 							: input.trim()
-								? 'bg-brand-600 text-white hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-600'
+								? 'bg-brand-600 text-white hover:bg-brand-700 dark:bg-brand-300 dark:hover:bg-brand-400'
 								: 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
 					}`}
 					type="button"

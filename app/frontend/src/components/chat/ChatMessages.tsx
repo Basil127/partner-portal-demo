@@ -19,7 +19,7 @@ export function ChatMessages({ messages, status }: ChatMessagesProps) {
 	return (
 		<div className="relative flex-1">
 			<div className="absolute inset-0 overflow-y-auto" ref={containerRef}>
-				<div className="mx-auto flex min-w-0 max-w-4xl flex-col gap-4 px-4 py-4 md:gap-6">
+				<div className="mx-auto flex min-w-0 max-w-4xl flex-col gap-4 px-4 md:gap-6">
 					{messages.length === 0 && <ChatGreeting />}
 
 					{messages.map((message, index) => (

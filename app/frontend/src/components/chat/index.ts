@@ -1,6 +1,6 @@
 export { Chat } from './Chat';
 export { ChatGreeting } from './ChatGreeting';
-export { ChatHeader } from './ChatHeader';
+// export { ChatHeader } from './ChatHeader';
 export { ChatHistoryList } from './ChatHistoryList';
 export { ChatHistory } from './ChatHistory';
 export { ChatInput } from './ChatInput';

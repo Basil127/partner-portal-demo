@@ -37,7 +37,7 @@ export function PreviewMessage({ message, isLoading }: PreviewMessageProps) {
 					<div
 						className={`rounded-2xl px-4 py-2.5 text-sm ${
 							message.role === 'user'
-								? 'bg-brand-600 text-white dark:bg-brand-500'
+								? 'bg-brand-600 text-white dark:bg-brand-300'
 								: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
 						}`}
 					>

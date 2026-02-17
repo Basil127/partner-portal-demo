@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import type { UIMessage } from 'ai';
 import { Chat, ChatHistory } from '@/components/chat';
 import { Modal } from '@/components/ui/modal';
-import { useModal } from '@/hooks/useModal';
+import { useChatContext } from '@/context/ChatContext';
 import { getApiChatsById } from '@/lib/api-client';
 
 export default function ChatByIdPage() {
@@ -16,7 +16,7 @@ export default function ChatByIdPage() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [notFound, setNotFound] = useState(false);
 	const [refreshTrigger, setRefreshTrigger] = useState(0);
-	const { isOpen: historyOpen, openModal: openHistory, closeModal: closeHistory } = useModal();
+	const { isHistoryOpen, closeHistory, setNewChatHandler } = useChatContext();
 
 	useEffect(() => {
 		async function loadChat() {
@@ -49,6 +49,10 @@ export default function ChatByIdPage() {
 		closeHistory();
 		router.push('/chat');
 	}, [router, closeHistory]);
+
+	useEffect(() => {
+		setNewChatHandler(handleNewChat);
+	}, [handleNewChat, setNewChatHandler]);
 
 	const handleSelectChat = useCallback(
 		(id: string) => {
@@ -106,21 +110,20 @@ export default function ChatByIdPage() {
 
 	return (
 		<>
-			<div className="h-[calc(100vh-130px)]">
-				<div className="flex h-full overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
-					<div className="flex-1">
+			<div className="h-[calc(100vh-120px)]">
+				{/* <div className="flex h-full overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3"> */}
+					<div className="flex-1 h-full">
 						<Chat
 							id={chatId}
 							initialMessages={initialMessages}
 							onNewChat={handleNewChat}
 							onMessageSent={handleMessageSent}
-							onOpenHistory={openHistory}
 						/>
 					</div>
-				</div>
+				{/* </div> */}
 			</div>
 			<ChatHistory
-				isOpen={historyOpen}
+				isOpen={isHistoryOpen}
 				onClose={closeHistory}
 				currentChatId={chatId}
 				onSelectChat={handleSelectChat}
