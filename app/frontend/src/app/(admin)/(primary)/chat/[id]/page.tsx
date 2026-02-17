@@ -119,20 +119,14 @@ export default function ChatByIdPage() {
 					</div>
 				</div>
 			</div>
-
-		<Modal isOpen={historyOpen} onClose={closeHistory} className="max-w-md p-6 top-[-50vh]">
-			<div data-testid="history-modal">
-				<h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Chat History</h3>
-					<div className="max-h-[60vh] overflow-y-auto">
-						<ChatHistory
-							currentChatId={chatId}
-							onSelectChat={handleSelectChat}
-							onDeleteChat={handleDeleteChat}
-							refreshTrigger={refreshTrigger}
-						/>
-					</div>
-				</div>
-			</Modal>
+			<ChatHistory
+				isOpen={historyOpen}
+				onClose={closeHistory}
+				currentChatId={chatId}
+				onSelectChat={handleSelectChat}
+				onDeleteChat={handleDeleteChat}
+				refreshTrigger={refreshTrigger}
+			/>
 		</>
 	);
 }

@@ -44,7 +44,7 @@ export function PreviewMessage({ message, isLoading }: PreviewMessageProps) {
 						{message.role === 'user' ? (
 							<p className="whitespace-pre-wrap">{textContent}</p>
 						) : (
-							<div className="prose prose-sm dark:prose-invert max-w-none">
+							<div className="prose prose-sm dark:prose-invert max-w-prose">
 								<ChatMarkdown content={textContent} />
 							</div>
 						)}
