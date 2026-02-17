@@ -1,6 +1,11 @@
 import { streamText, generateText, convertToModelMessages, type UIMessage } from 'ai';
 import { getModel } from '@/lib/ai/providers';
-import { getApiChatsById, postApiChats, postApiChatsByIdMessages, patchApiChatsById } from '@/lib/api-client';
+import {
+	getApiChatsById,
+	postApiChats,
+	postApiChatsByIdMessages,
+	patchApiChatsById,
+} from '@/lib/api-client';
 import { serverClient } from '@/lib/chat/server-client';
 
 export const maxDuration = 60;

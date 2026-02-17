@@ -49,13 +49,9 @@ export default function ChatPage() {
 		<>
 			<div className="h-[calc(100vh-90px)]">
 				{/* <div className="flex h-full overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3"> */}
-					<div className="flex-1 h-full">
-						<Chat
-							id={chatId}
-							onNewChat={handleNewChat}
-							onMessageSent={handleMessageSent}
-						/>
-					</div>
+				<div className="flex-1 h-full">
+					<Chat id={chatId} onNewChat={handleNewChat} onMessageSent={handleMessageSent} />
+				</div>
 				{/* </div> */}
 			</div>
 

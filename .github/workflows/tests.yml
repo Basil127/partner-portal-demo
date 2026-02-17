@@ -1,6 +1,6 @@
 name: Testing operaclone2
 
-on: 
+on:
   push:
     paths:
       - 'app/mock-api/**'
@@ -20,12 +20,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-          cache-dependency-glob: "app/mock-api/uv.lock"
+          cache-dependency-glob: 'app/mock-api/uv.lock'
 
       - name: Set up Python
         run: uv python install 3.13
@@ -74,7 +74,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-          cache-dependency-glob: "app/mock-api/uv.lock"
+          cache-dependency-glob: 'app/mock-api/uv.lock'
 
       - name: Set up Python
         run: uv python install 3.13
@@ -84,4 +84,3 @@ jobs:
 
       - name: Run tests
         run: uv run pytest -vv
-

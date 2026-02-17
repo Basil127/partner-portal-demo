@@ -14,7 +14,12 @@ interface ChatHistoryProps {
 	refreshTrigger: number;
 }
 
-export function ChatHistoryList({ currentChatId, onSelectChat, onDeleteChat, refreshTrigger }: ChatHistoryProps) {
+export function ChatHistoryList({
+	currentChatId,
+	onSelectChat,
+	onDeleteChat,
+	refreshTrigger,
+}: ChatHistoryProps) {
 	const [chats, setChats] = useState<ChatItem[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 

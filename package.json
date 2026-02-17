@@ -20,10 +20,10 @@
 		"test": "npm run test --workspace=app/backend",
 		"test:unit": "npm run test --workspace=app/backend",
 		"pre-commit": "npm run lint && npm run typecheck && npm run format",
-		"lint": "eslint .",
+		"lint": "concurrently \"eslint app/backend --ext .ts\" \"eslint app/frontend --ext .ts,.tsx\" \"eslint packages/shared --ext .ts\"",
 		"lint:fix": "eslint . --fix",
-		"format": "prettier --write .",
-		"format:check": "prettier --check .",
+		"format": "prettier --write app/frontend app/backend packages/shared",
+		"format:check": "prettier --check app/frontend app/backend packages/shared",
 		"typecheck": "tsc -p app/backend/tsconfig.json --noEmit && tsc -p app/frontend/tsconfig.json --noEmit && tsc -p packages/shared/tsconfig.json --noEmit",
 		"openapi:generate": "npm run generate:openapi --workspace=app/backend && npm run generate:client --workspace=app/backend && npm run generate:client --workspace=app/frontend"
 	},

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+// import type { ScrollBehavior }
 
 export function useScrollToBottom() {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -21,6 +22,7 @@ export function useScrollToBottom() {
 		return scrollTop + clientHeight >= scrollHeight - 100;
 	}, []);
 
+	// eslint-disable-next-line
 	const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
 		if (!containerRef.current) {
 			return;

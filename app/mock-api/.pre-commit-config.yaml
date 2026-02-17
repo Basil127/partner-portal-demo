@@ -17,7 +17,7 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-        args: ["check", "operaclone2", "tests", "--fix"]
+        args: ['check', 'operaclone2', 'tests', '--fix']
 
       - id: mypy
         name: Validate types with MyPy
@@ -26,5 +26,5 @@ repos:
         types: [python]
         pass_filenames: false
         args:
-          - "operaclone2"
-          - "tests"
+          - 'operaclone2'
+          - 'tests'

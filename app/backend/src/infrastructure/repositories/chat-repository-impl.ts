@@ -30,10 +30,10 @@ export class ChatRepositoryImpl implements ChatRepository {
 	}
 
 	async findAllChats(limit = 50, offset = 0): Promise<Chat[]> {
-		const rows = await this.db.query('SELECT * FROM chats ORDER BY updated_at DESC LIMIT ? OFFSET ?', [
-			limit,
-			offset,
-		]);
+		const rows = await this.db.query(
+			'SELECT * FROM chats ORDER BY updated_at DESC LIMIT ? OFFSET ?',
+			[limit, offset],
+		);
 		return rows.map((row) => this.mapToChat(row as Record<string, unknown>));
 	}
 
@@ -75,7 +75,10 @@ export class ChatRepositoryImpl implements ChatRepository {
 		);
 
 		// Update the chat's updated_at timestamp
-		await this.db.execute('UPDATE chats SET updated_at = ? WHERE id = ?', [now.toISOString(), data.chatId]);
+		await this.db.execute('UPDATE chats SET updated_at = ? WHERE id = ?', [
+			now.toISOString(),
+			data.chatId,
+		]);
 
 		const messages = await this.db.query('SELECT * FROM messages WHERE id = ?', [id]);
 		if (messages.length === 0) {
@@ -85,9 +88,10 @@ export class ChatRepositoryImpl implements ChatRepository {
 	}
 
 	async findMessagesByChatId(chatId: string): Promise<Message[]> {
-		const rows = await this.db.query('SELECT * FROM messages WHERE chat_id = ? ORDER BY created_at ASC', [
-			chatId,
-		]);
+		const rows = await this.db.query(
+			'SELECT * FROM messages WHERE chat_id = ? ORDER BY created_at ASC',
+			[chatId],
+		);
 		return rows.map((row) => this.mapToMessage(row as Record<string, unknown>));
 	}
 

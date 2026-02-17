@@ -4,8 +4,6 @@ import NotificationDropdown from '@/components/header/NotificationDropdown';
 import UserDropdown from '@/components/header/UserDropdown';
 import { useSidebar } from '@/context/SidebarContext';
 import { useChatContext } from '@/context/ChatContext';
-import Image from 'next/image';
-import Link from 'next/link';
 import React, { useState } from 'react';
 import Button from '@/components/ui/button/Button';
 
@@ -73,16 +71,15 @@ const AppChatHeader: React.FC = () => {
 							)}
 						</button>
 
-						
 						<div className="hidden lg:block">
 							<h1 className="text-lg font-semibold">{pageTitle}</h1>
 						</div>
-					<div className="flex flex-row gap-2 ml-auto lg:ml-6">
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={toggleHistory}
-							className="flex items-center gap-2"
+						<div className="flex flex-row gap-2 ml-auto lg:ml-6">
+							<Button
+								variant="outline"
+								size="sm"
+								onClick={toggleHistory}
+								className="flex items-center gap-2"
 							>
 								<svg
 									width="16"
@@ -102,29 +99,29 @@ const AppChatHeader: React.FC = () => {
 								<span className="hidden sm:inline">History</span>
 							</Button>
 							<Button
-							variant="primary"
-							size="sm"
-							onClick={onNewChat}
-							className="flex items-center gap-2 dark:bg-brand-300 dark:hover:bg-brand-400"
-						>
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 16 16"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
+								variant="primary"
+								size="sm"
+								onClick={onNewChat}
+								className="flex items-center gap-2 dark:bg-brand-300 dark:hover:bg-brand-400"
 							>
-								<path
-									fillRule="evenodd"
-									clipRule="evenodd"
-									d="M8 2.75C8.41421 2.75 8.75 3.08579 8.75 3.5V7.25H12.5C12.9142 7.25 13.25 7.58579 13.25 8C13.25 8.41421 12.9142 8.75 12.5 8.75H8.75V12.5C8.75 12.9142 8.41421 13.25 8 13.25C7.58579 13.25 7.25 12.9142 7.25 12.5V8.75H3.5C3.08579 8.75 2.75 8.41421 2.75 8C2.75 7.58579 3.08579 7.25 3.5 7.25H7.25V3.5C7.25 3.08579 7.58579 2.75 8 2.75Z"
-									fill="currentColor"
-								/>
-							</svg>
-							<span className="hidden sm:inline">New Chat</span>
-					</Button>
-				</div>
-			</div>
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 16 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										fillRule="evenodd"
+										clipRule="evenodd"
+										d="M8 2.75C8.41421 2.75 8.75 3.08579 8.75 3.5V7.25H12.5C12.9142 7.25 13.25 7.58579 13.25 8C13.25 8.41421 12.9142 8.75 12.5 8.75H8.75V12.5C8.75 12.9142 8.41421 13.25 8 13.25C7.58579 13.25 7.25 12.9142 7.25 12.5V8.75H3.5C3.08579 8.75 2.75 8.41421 2.75 8C2.75 7.58579 3.08579 7.25 3.5 7.25H7.25V3.5C7.25 3.08579 7.58579 2.75 8 2.75Z"
+										fill="currentColor"
+									/>
+								</svg>
+								<span className="hidden sm:inline">New Chat</span>
+							</Button>
+						</div>
+					</div>
 					<button
 						onClick={toggleApplicationMenu}
 						className="flex items-center justify-center w-7 h-7 text-gray-700 rounded-lg z-50 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"

@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -316,10 +316,10 @@
 	}
 	body {
 		@apply relative font-normal font-outfit z-1 bg-gray-50;
-    @apply bg-background text-foreground;
+		@apply bg-background text-foreground;
 	}
-  * {
-    @apply border-border outline-ring/50;
+	* {
+		@apply border-border outline-ring/50;
 	}
 }
 

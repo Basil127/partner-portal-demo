@@ -11,7 +11,7 @@ interface ChatHistoryProps {
 }
 
 export function ChatHistory(props: ChatHistoryProps) {
-    return (
+	return (
 		<Modal isOpen={props.isOpen} onClose={props.onClose} className="max-w-md p-6 top-[-50vh]">
 			<div data-testid="history-modal">
 				<h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Chat History</h3>
@@ -25,5 +25,5 @@ export function ChatHistory(props: ChatHistoryProps) {
 				</div>
 			</div>
 		</Modal>
-	)
+	);
 }

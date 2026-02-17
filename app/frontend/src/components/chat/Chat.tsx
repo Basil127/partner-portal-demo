@@ -10,11 +10,11 @@ import { ChatMessages } from './ChatMessages';
 interface ChatProps {
 	id: string;
 	initialMessages?: UIMessage[];
-	onNewChat: () => void;
+	onNewChat?: () => void;
 	onMessageSent?: () => void;
 }
 
-export function Chat({ id, initialMessages = [], onNewChat, onMessageSent }: ChatProps) {
+export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 	const [input, setInput] = useState('');
 
 	const transport = useMemo(
@@ -41,11 +41,17 @@ export function Chat({ id, initialMessages = [], onNewChat, onMessageSent }: Cha
 
 	return (
 		<>
-		<div className="flex h-full flex-col" data-testid="chat-container">
-			{/* <ChatHeader onNewChat={onNewChat} onOpenHistory={onOpenHistory} /> */}
-			<ChatMessages messages={messages} status={status} />
-			<ChatInput input={input} setInput={setInput} onSubmit={submitMessage} status={status} stop={stop} />
-		</div>
+			<div className="flex h-full flex-col" data-testid="chat-container">
+				{/* <ChatHeader onNewChat={onNewChat} onOpenHistory={onOpenHistory} /> */}
+				<ChatMessages messages={messages} status={status} />
+				<ChatInput
+					input={input}
+					setInput={setInput}
+					onSubmit={submitMessage}
+					status={status}
+					stop={stop}
+				/>
+			</div>
 		</>
 	);
 }

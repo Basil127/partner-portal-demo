@@ -11,10 +11,11 @@ interface PreviewMessageProps {
 }
 
 export function PreviewMessage({ message, isLoading }: PreviewMessageProps) {
-	const textContent = message.parts
-		?.filter((p) => p.type === 'text')
-		.map((p) => p.text)
-		.join('\n') || '';
+	const textContent =
+		message.parts
+			?.filter((p) => p.type === 'text')
+			.map((p) => p.text)
+			.join('\n') || '';
 
 	return (
 		<div className="group w-full" data-role={message.role} data-testid={`message-${message.role}`}>

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import type { UIMessage } from 'ai';
 import { Chat, ChatHistory } from '@/components/chat';
-import { Modal } from '@/components/ui/modal';
 import { useChatContext } from '@/context/ChatContext';
 import { getApiChatsById } from '@/lib/api-client';
 
@@ -92,7 +91,9 @@ export default function ChatByIdPage() {
 		return (
 			<div className="flex h-[calc(100vh-130px)] items-center justify-center rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
 				<div className="text-center">
-					<h3 className="mb-2 text-lg font-semibold text-gray-800 dark:text-white">Chat not found</h3>
+					<h3 className="mb-2 text-lg font-semibold text-gray-800 dark:text-white">
+						Chat not found
+					</h3>
 					<p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
 						This chat may have been deleted.
 					</p>
@@ -112,14 +113,14 @@ export default function ChatByIdPage() {
 		<>
 			<div className="h-[calc(100vh-120px)]">
 				{/* <div className="flex h-full overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3"> */}
-					<div className="flex-1 h-full">
-						<Chat
-							id={chatId}
-							initialMessages={initialMessages}
-							onNewChat={handleNewChat}
-							onMessageSent={handleMessageSent}
-						/>
-					</div>
+				<div className="flex-1 h-full">
+					<Chat
+						id={chatId}
+						initialMessages={initialMessages}
+						onNewChat={handleNewChat}
+						onMessageSent={handleMessageSent}
+					/>
+				</div>
 				{/* </div> */}
 			</div>
 			<ChatHistory

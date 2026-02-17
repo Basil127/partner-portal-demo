@@ -12,7 +12,7 @@ interface ChatMessagesProps {
 }
 
 export function ChatMessages({ messages, status }: ChatMessagesProps) {
-	const { containerRef, endRef, isAtBottom, scrollToBottom, hasSentMessage } = useChatMessages({
+	const { containerRef, endRef, isAtBottom, scrollToBottom } = useChatMessages({
 		status,
 	});
 

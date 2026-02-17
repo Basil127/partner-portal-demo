@@ -11,10 +11,11 @@ interface MessageActionsProps {
 export function MessageActions({ message }: MessageActionsProps) {
 	const [copied, setCopied] = useState(false);
 
-	const textContent = message.parts
-		?.filter((p) => p.type === 'text')
-		.map((p) => p.text)
-		.join('\n') || '';
+	const textContent =
+		message.parts
+			?.filter((p) => p.type === 'text')
+			.map((p) => p.text)
+			.join('\n') || '';
 
 	const handleCopy = async () => {
 		if (!textContent) return;

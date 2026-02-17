@@ -25,7 +25,9 @@ export function createMcpServer() {
 				timezone: z
 					.string()
 					.optional()
-					.describe('IANA timezone identifier (e.g. "Europe/London", "America/New_York"). Defaults to UTC.'),
+					.describe(
+						'IANA timezone identifier (e.g. "Europe/London", "America/New_York"). Defaults to UTC.',
+					),
 			},
 		},
 		async ({ timezone }) => {
