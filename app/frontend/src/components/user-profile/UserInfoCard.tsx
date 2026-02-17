@@ -25,14 +25,14 @@ export default function UserInfoCard() {
 							<p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
 								First Name
 							</p>
-							<p className="text-sm font-medium text-gray-800 dark:text-white/90">Musharof</p>
+							<p className="text-sm font-medium text-gray-800 dark:text-white/90">B2B</p>
 						</div>
 
 						<div>
 							<p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
 								Last Name
 							</p>
-							<p className="text-sm font-medium text-gray-800 dark:text-white/90">Chowdhury</p>
+							<p className="text-sm font-medium text-gray-800 dark:text-white/90">Partner</p>
 						</div>
 
 						<div>
@@ -126,17 +126,17 @@ export default function UserInfoCard() {
 								<div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
 									<div className="col-span-2 lg:col-span-1">
 										<Label>First Name</Label>
-										<Input type="text" defaultValue="Musharof" />
+										<Input type="text" defaultValue="B2B" />
 									</div>
 
 									<div className="col-span-2 lg:col-span-1">
 										<Label>Last Name</Label>
-										<Input type="text" defaultValue="Chowdhury" />
+										<Input type="text" defaultValue="Partner" />
 									</div>
 
 									<div className="col-span-2 lg:col-span-1">
 										<Label>Email Address</Label>
-										<Input type="text" defaultValue="randomuser@pimjo.com" />
+										<Input type="text" defaultValue="user@b2bpartner.com" />
 									</div>
 
 									<div className="col-span-2 lg:col-span-1">
