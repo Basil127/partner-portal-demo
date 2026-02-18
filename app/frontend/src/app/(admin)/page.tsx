@@ -17,11 +17,11 @@ export default function Ecommerce() {
 			<div className="col-span-12">
 				<HotelSelector />
 			</div>
-			<div className="col-span-12 space-y-6 xl:col-span-7">
-				<DashboardMetrics />
+			<div className="col-span-12 space-y-6 lg:col-span-6 xl:col-span-7">
+				<DashboardMetrics/>
 				<MonthlyBookingsChart />
 			</div>
-			<div className="col-span-12 xl:col-span-5">
+			<div className="col-span-12 lg:col-span-6 xl:col-span-5">
 				<BookingsSummary />
 			</div>
 			<div className="col-span-12">
