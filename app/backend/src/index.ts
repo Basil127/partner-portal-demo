@@ -6,8 +6,10 @@ import swaggerUi from '@fastify/swagger-ui';
 import { config } from './infrastructure/config/config.js';
 import { setupRoutes } from './infrastructure/adapters/http/routes.js';
 import { setupMcpRoutes } from './infrastructure/adapters/mcp/mcp-routes.js';
+import { setupAiRoutes } from './infrastructure/adapters/ai/ai-routes.js';
 import { createDatabaseAdapter } from './infrastructure/adapters/database.js';
 import { initializeDatabase } from './infrastructure/config/database-init.js';
+import { createServiceContainer } from './infrastructure/service-container.js';
 
 async function start() {
 	const fastify = Fastify({
@@ -30,6 +32,9 @@ async function start() {
 	// Initialize database
 	const dbAdapter = createDatabaseAdapter();
 	await initializeDatabase(dbAdapter);
+
+	// Create shared service container
+	const services = createServiceContainer(dbAdapter);
 
 	// Register plugins
 	await fastify.register(cors, {
@@ -73,10 +78,13 @@ async function start() {
 	});
 
 	// Setup routes
-	setupRoutes(fastify);
+	setupRoutes(fastify, services);
 
 	// Setup MCP server routes
-	await setupMcpRoutes(fastify);
+	await setupMcpRoutes(fastify, services);
+
+	// Setup AI chat routes
+	await setupAiRoutes(fastify, services);
 
 	// Health check
 	fastify.get('/health', {

@@ -2,8 +2,9 @@ import type { FastifyInstance } from 'fastify';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createMcpServer } from './mcp-server.js';
 import { randomUUID } from 'node:crypto';
+import type { ServiceContainer } from '../../service-container.js';
 
-export async function setupMcpRoutes(fastify: FastifyInstance) {
+export async function setupMcpRoutes(fastify: FastifyInstance, services: ServiceContainer) {
 	// Map of active transports by session ID
 	const transports = new Map<string, StreamableHTTPServerTransport>();
 
@@ -19,7 +20,9 @@ export async function setupMcpRoutes(fastify: FastifyInstance) {
 		}
 
 		// New session — create a fresh McpServer + transport pair
-		const mcpServer = createMcpServer();
+		const mcpServer = createMcpServer({
+			hotelContentService: services.hotelContentService,
+		});
 		const transport = new StreamableHTTPServerTransport({
 			sessionIdGenerator: () => randomUUID(),
 			onsessioninitialized: (newSessionId) => {

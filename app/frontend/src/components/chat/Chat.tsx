@@ -17,9 +17,11 @@ interface ChatProps {
 export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 	const [input, setInput] = useState('');
 
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 	const transport = useMemo(
-		() => new DefaultChatTransport({ api: '/api/chat', body: { id } }),
-		[id],
+		() => new DefaultChatTransport({ api: `${apiUrl}/api/ai/chat`, body: { id } }),
+		[id, apiUrl],
 	);
 
 	const { messages, sendMessage, status, stop } = useChat({

@@ -5,41 +5,16 @@ import { HotelShopController } from '../../controllers/hotel-shop/hotel-shop-con
 import { HotelContentController } from '../../controllers/hotel-content/hotel-content-controller.js';
 import { HotelReservationsController } from '../../controllers/hotel-reservations/hotel-reservations-controller.js';
 import { HotelInventoryController } from '../../controllers/hotel-inventory/hotel-inventory-controller.js';
-import { BookingService } from '../../../application/services/booking-service.js';
-import { ChatService } from '../../../application/services/chat-service.js';
-import { HotelShopService } from '../../../application/services/hotel-shop/hotel-shop-service.js';
-import { HotelContentService } from '../../../application/services/hotel-content/hotel-content-service.js';
-import { HotelReservationsService } from '../../../application/services/hotel-reservations/hotel-reservations-service.js';
-import { HotelInventoryService } from '../../../application/services/hotel-inventory/hotel-inventory-service.js';
-import { BookingRepositoryImpl } from '../../repositories/booking-repository-impl.js';
-import { ChatRepositoryImpl } from '../../repositories/chat-repository-impl.js';
-import { HotelShopRepositoryImpl } from '../../repositories/hotel-shop/hotel-shop-repository-impl.js';
-import { HotelContentRepositoryImpl } from '../../repositories/hotel-content/hotel-content-repository-impl.js';
-import { HotelReservationsRepositoryImpl } from '../../repositories/hotel-reservations/hotel-reservations-repository-impl.js';
-import { HotelInventoryRepositoryImpl } from '../../repositories/hotel-inventory/hotel-inventory-repository-impl.js';
-import { createDatabaseAdapter } from '../database.js';
+import type { ServiceContainer } from '../../service-container.js';
 
-export function setupRoutes(fastify: FastifyInstance) {
-	// Initialize dependencies
-	const dbAdapter = createDatabaseAdapter();
-	const bookingRepository = new BookingRepositoryImpl(dbAdapter);
-	const bookingService = new BookingService(bookingRepository);
-	const bookingController = new BookingController(bookingService);
-	const chatRepository = new ChatRepositoryImpl(dbAdapter);
-	const chatService = new ChatService(chatRepository);
-	const chatController = new ChatController(chatService);
-	const hotelShopRepository = new HotelShopRepositoryImpl();
-	const hotelShopService = new HotelShopService(hotelShopRepository);
-	const hotelShopController = new HotelShopController(hotelShopService);
-	const hotelContentRepository = new HotelContentRepositoryImpl();
-	const hotelContentService = new HotelContentService(hotelContentRepository);
-	const hotelContentController = new HotelContentController(hotelContentService);
-	const hotelReservationsRepository = new HotelReservationsRepositoryImpl();
-	const hotelReservationsService = new HotelReservationsService(hotelReservationsRepository);
-	const hotelReservationsController = new HotelReservationsController(hotelReservationsService);
-	const hotelInventoryRepository = new HotelInventoryRepositoryImpl();
-	const hotelInventoryService = new HotelInventoryService(hotelInventoryRepository);
-	const hotelInventoryController = new HotelInventoryController(hotelInventoryService);
+export function setupRoutes(fastify: FastifyInstance, services: ServiceContainer) {
+	// Initialize controllers from shared service container
+	const bookingController = new BookingController(services.bookingService);
+	const chatController = new ChatController(services.chatService);
+	const hotelShopController = new HotelShopController(services.hotelShopService);
+	const hotelContentController = new HotelContentController(services.hotelContentService);
+	const hotelReservationsController = new HotelReservationsController(services.hotelReservationsService);
+	const hotelInventoryController = new HotelInventoryController(services.hotelInventoryService);
 
 	// Booking routes
 	fastify.get('/api/bookings', {

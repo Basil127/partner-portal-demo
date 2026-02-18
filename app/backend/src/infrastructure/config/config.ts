@@ -41,4 +41,8 @@ export const config = {
 		originatingApplication: process.env.EXTERNAL_CLIENT_ORIGINATING_APP || undefined,
 		externalSystem: process.env.EXTERNAL_CLIENT_EXTERNAL_SYSTEM || undefined,
 	},
+	ai: {
+		openrouterApiKey: process.env.OPENROUTER_API_KEY || '',
+		openrouterModel: process.env.OPENROUTER_MODEL || 'openai/gpt-oss-120b:free',
+	},
 };

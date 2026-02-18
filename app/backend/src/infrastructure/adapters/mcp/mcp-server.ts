@@ -1,7 +1,8 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { createToolDefinitions, type ToolDependencies } from '../tools/tool-definitions.js';
 
-export function createMcpServer() {
+export function createMcpServer(deps: ToolDependencies) {
 	const server = new McpServer(
 		{
 			name: 'partner-portal-mcp',
@@ -14,7 +15,7 @@ export function createMcpServer() {
 		},
 	);
 
-	// Register the get_time tool
+	// Register the get_time tool (MCP-only, not relevant for AI SDK)
 	server.registerTool(
 		'get_time',
 		{
@@ -80,6 +81,45 @@ export function createMcpServer() {
 			};
 		},
 	);
+
+	// Register shared tools from tool-definitions (single source of truth)
+	const toolDefs = createToolDefinitions(deps);
+	for (const def of toolDefs) {
+		// MCP inputSchema expects a flat record of Zod fields, extract from ZodObject shape
+		const shape = def.inputSchema.shape as Record<string, z.ZodTypeAny>;
+
+		server.registerTool(
+			def.name,
+			{
+				title: def.title,
+				description: def.description,
+				inputSchema: shape,
+			},
+			async (input) => {
+				try {
+					const result = await def.execute(input);
+					return {
+						content: [
+							{
+								type: 'text' as const,
+								text: JSON.stringify(result, null, 2),
+							},
+						],
+					};
+				} catch (error) {
+					return {
+						content: [
+							{
+								type: 'text' as const,
+								text: `Error in ${def.name}: ${error instanceof Error ? error.message : String(error)}`,
+							},
+						],
+						isError: true,
+					};
+				}
+			},
+		);
+	}
 
 	return server;
 }
