@@ -1,4 +1,5 @@
 import enum
+import os
 from pathlib import Path
 from tempfile import gettempdir
 
@@ -27,24 +28,24 @@ class Settings(BaseSettings):
     with environment variables.
     """
 
-    host: str = "127.0.0.1"
-    port: int = 8000
+    host: str = os.getenv("OPERACLONE2_HOST", "127.0.0.1")
+    port: int = int(os.getenv("OPERACLONE2_PORT", 8000))
     # quantity of workers for uvicorn
-    workers_count: int = 1
+    workers_count: int = int(os.getenv("OPERACLONE2_WORKERS_COUNT", 1))
     # Enable uvicorn reloading
-    reload: bool = True
+    reload: bool = bool(os.getenv("OPERACLONE2_RELOAD", True))
 
     # Current environment
-    environment: str = "dev"
+    environment: str = os.getenv("OPERACLONE2_ENVIRONMENT", "dev")
 
-    log_level: LogLevel = LogLevel.DEBUG
+    log_level: LogLevel = LogLevel(os.getenv("OPERACLONE2_LOG_LEVEL", "DEBUG"))
     # Variables for the database
-    db_host: str = "localhost"
-    db_port: int = 5432
-    db_user: str = "OperaClone2"
-    db_pass: str = "OperaClone2"  # noqa: S105
-    db_base: str = "OperaClone2"
-    db_echo: bool = False
+    db_host: str = os.getenv("OPERACLONE2_DB_HOST", "localhost")
+    db_port: int = int(os.getenv("OPERACLONE2_DB_PORT", 5432))
+    db_user: str = os.getenv("OPERACLONE2_DB_USER", "OperaClone2")
+    db_pass: str = os.getenv("OPERACLONE2_DB_PASS", "OperaClone2")  # noqa: S105
+    db_base: str = os.getenv("OPERACLONE2_DB_BASE", "OperaClone2")
+    db_echo: bool = bool(os.getenv("OPERACLONE2_DB_ECHO", False))
 
     # CORS
     cors_origins: str = "*"

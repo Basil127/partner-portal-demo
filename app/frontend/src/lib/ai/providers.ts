@@ -14,5 +14,5 @@ const openrouter = createOpenAI({
 });
 
 export function getModel(modelId?: string) {
-	return openrouter.chat(modelId || process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash');
+	return openrouter.chat(modelId || process.env.OPENROUTER_MODEL || 'openai/gpt-oss-120b:free');
 }
