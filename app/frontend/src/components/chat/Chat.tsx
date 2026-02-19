@@ -2,7 +2,7 @@
 
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, type UIMessage } from 'ai';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 // import { ChatHeader } from './ChatHeader';
 import { ChatInput } from './ChatInput';
 import { ChatMessages } from './ChatMessages';
@@ -13,6 +13,8 @@ interface ChatProps {
 	onNewChat?: () => void;
 	onMessageSent?: () => void;
 }
+
+const SESSION_KEY = (id: string) => `chat-messages-${id}`;
 
 export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 	const [input, setInput] = useState('');
@@ -33,6 +35,17 @@ export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 		},
 	});
 
+	// Persist full messages (including tool parts) to sessionStorage
+	useEffect(() => {
+		if (messages.length > 0) {
+			try {
+				sessionStorage.setItem(SESSION_KEY(id), JSON.stringify(messages));
+			} catch {
+				// ignore storage errors
+			}
+		}
+	}, [id, messages]);
+
 	const submitMessage = useCallback(() => {
 		const text = input.trim();
 		if (!text) return;
@@ -45,7 +58,7 @@ export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 		<>
 			<div className="flex h-full flex-col" data-testid="chat-container">
 				{/* <ChatHeader onNewChat={onNewChat} onOpenHistory={onOpenHistory} /> */}
-				<ChatMessages messages={messages} status={status} />
+				<ChatMessages messages={messages} status={status} sendMessage={sendMessage} />
 				<ChatInput
 					input={input}
 					setInput={setInput}

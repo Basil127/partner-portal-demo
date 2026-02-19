@@ -20,6 +20,17 @@ export default function ChatByIdPage() {
 	useEffect(() => {
 		async function loadChat() {
 			try {
+				// First try to restore full messages (with tool parts) from sessionStorage
+				const stored = sessionStorage.getItem(`chat-messages-${chatId}`);
+				if (stored) {
+					const parsed = JSON.parse(stored) as UIMessage[];
+					if (parsed.length > 0) {
+						setInitialMessages(parsed);
+						setIsLoading(false);
+						return;
+					}
+				}
+
 				const { data, error } = await getApiChatsById({
 					path: { id: chatId },
 				});

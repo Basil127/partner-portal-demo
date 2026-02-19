@@ -69,9 +69,9 @@ export class ChatRepositoryImpl implements ChatRepository {
 		const now = new Date();
 
 		await this.db.execute(
-			`INSERT INTO messages (id, chat_id, role, content, created_at)
-       VALUES (?, ?, ?, ?, ?)`,
-			[id, data.chatId, data.role, data.content, now.toISOString()],
+			`INSERT INTO messages (id, chat_id, role, content, parts, created_at)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+			[id, data.chatId, data.role, data.content, data.parts ?? null, now.toISOString()],
 		);
 
 		// Update the chat's updated_at timestamp
@@ -115,6 +115,7 @@ export class ChatRepositoryImpl implements ChatRepository {
 			chatId: row.chat_id as string,
 			role: row.role as MessageRole,
 			content: row.content as string,
+			parts: row.parts as string | undefined,
 			createdAt: new Date(row.created_at as string),
 		};
 	}

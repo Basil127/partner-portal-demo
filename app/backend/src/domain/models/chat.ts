@@ -18,6 +18,7 @@ export interface Message {
 	chatId: string;
 	role: MessageRole;
 	content: string;
+	parts?: string; // JSON-serialised UIMessage parts (for tool calls/results)
 	createdAt: Date;
 }
 
@@ -31,4 +32,5 @@ export interface CreateMessageData {
 	chatId: string;
 	role: MessageRoleValue;
 	content: string;
+	parts?: string; // JSON-serialised UIMessage parts
 }

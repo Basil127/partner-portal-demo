@@ -22,6 +22,8 @@ export async function setupMcpRoutes(fastify: FastifyInstance, services: Service
 		// New session — create a fresh McpServer + transport pair
 		const mcpServer = createMcpServer({
 			hotelContentService: services.hotelContentService,
+			hotelReservationsService: services.hotelReservationsService,
+			hotelShopService: services.hotelShopService,
 		});
 		const transport = new StreamableHTTPServerTransport({
 			sessionIdGenerator: () => randomUUID(),

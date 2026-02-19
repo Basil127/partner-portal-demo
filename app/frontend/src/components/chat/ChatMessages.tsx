@@ -9,9 +9,10 @@ import { PreviewMessage, ThinkingMessage } from './ChatMessage';
 interface ChatMessagesProps {
 	messages: UIMessage[];
 	status: string;
+	sendMessage?: (msg: { text: string }) => void;
 }
 
-export function ChatMessages({ messages, status }: ChatMessagesProps) {
+export function ChatMessages({ messages, status, sendMessage }: ChatMessagesProps) {
 	const { containerRef, endRef, isAtBottom, scrollToBottom } = useChatMessages({
 		status,
 	});
@@ -27,6 +28,7 @@ export function ChatMessages({ messages, status }: ChatMessagesProps) {
 							key={message.id}
 							message={message}
 							isLoading={status === 'streaming' && messages.length - 1 === index}
+							sendMessage={sendMessage}
 						/>
 					))}
 

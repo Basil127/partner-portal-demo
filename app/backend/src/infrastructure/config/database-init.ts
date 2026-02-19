@@ -35,10 +35,18 @@ export async function initializeDatabase(db: DatabaseAdapter): Promise<void> {
         chat_id TEXT NOT NULL,
         role TEXT NOT NULL,
         content TEXT NOT NULL,
+        parts TEXT,
         created_at TEXT NOT NULL,
         FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
       )
     `);
+
+		// Migrate existing messages table: add parts column if missing
+		try {
+			await db.execute(`ALTER TABLE messages ADD COLUMN parts TEXT`);
+		} catch {
+			// Column already exists — ignore
+		}
 
 		logger.info('Database initialized successfully');
 	} catch (error) {
