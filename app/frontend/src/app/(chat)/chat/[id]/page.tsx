@@ -7,6 +7,36 @@ import { Chat, ChatHistory } from '@/components/chat';
 import { useChatContext } from '@/context/ChatContext';
 import { getApiChatsById } from '@/lib/api-client';
 
+/**
+ * Resolve corrupted session-storage message arrays:
+ * 1. Deduplicate by message ID — keep the last copy (most parts / most complete).
+ * 2. Clamp any tool parts that are still "in-flight" (input-streaming / call)
+ *    to an error state so they don't render as permanently-pending cards.
+ */
+function sanitizeStoredMessages(messages: UIMessage[]): UIMessage[] {
+	// Keep last occurrence of each ID
+	const seen = new Map<string, UIMessage>();
+	for (const msg of messages) {
+		seen.set(msg.id, msg);
+	}
+	const deduped = Array.from(seen.values());
+
+	// Fix stale tool parts
+	return deduped.map((msg) => {
+		if (!msg.parts) return msg;
+		const fixedParts = msg.parts.map((part: any) => {
+			if (!part.type?.startsWith('tool-')) return part;
+			const s = part.state;
+			// These states mean the stream was cut off — treat as error
+			if (s === 'call' || s === 'input-streaming') {
+				return { ...part, state: 'output-error', isError: true };
+			}
+			return part;
+		});
+		return { ...msg, parts: fixedParts };
+	});
+}
+
 export default function ChatByIdPage() {
 	const params = useParams();
 	const router = useRouter();
@@ -25,7 +55,10 @@ export default function ChatByIdPage() {
 				if (stored) {
 					const parsed = JSON.parse(stored) as UIMessage[];
 					if (parsed.length > 0) {
-						setInitialMessages(parsed);
+						// Deduplicate by ID (keep last occurrence — most up-to-date parts)
+						// and fix any stale pending tool parts that can never be resolved.
+						const deduped = sanitizeStoredMessages(parsed);
+						setInitialMessages(deduped);
 						setIsLoading(false);
 						return;
 					}

@@ -7,16 +7,20 @@ import EditBookingModal from './EditBookingModal';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+interface BookingGuest {
+	firstName: string;
+	lastName: string;
+	email?: string;
+	phone?: string;
+}
+
 interface BookingInput {
 	// create_reservation fields
 	hotelId?: string;
 	numberOfAdults?: number;
 	numberOfChildren?: number;
 	guaranteeType?: string;
-	guestFirstName?: string;
-	guestLastName?: string;
-	guestEmail?: string;
-	guestPhone?: string;
+	guests?: BookingGuest[];
 	// get_room_pricing fields (overlap with create_reservation)
 	hotelCode?: string;
 	adults?: number;
@@ -76,6 +80,7 @@ export interface BookingCardProps {
 	state: 'call' | 'result' | 'partial-call';
 	args?: BookingInput;
 	result?: ReservationResult | PricingResult | unknown;
+	isError?: boolean;
 	sendMessage?: (msg: { text: string }) => void;
 }
 
@@ -213,10 +218,8 @@ function PricingCard({ result, args, sendMessage }: { result: PricingResult; arg
 // ─── Booking progress card (while gathering info / calling tool) ───────────────
 
 function BookingProgressCard({ args }: { args?: Partial<BookingInput> }) {
-	const fields: Array<{ key: keyof BookingInput; label: string }> = [
+	const stayFields: Array<{ key: keyof BookingInput; label: string }> = [
 		{ key: 'hotelId', label: 'Hotel' },
-		{ key: 'guestFirstName', label: 'First Name' },
-		{ key: 'guestLastName', label: 'Last Name' },
 		{ key: 'arrivalDate', label: 'Check-in' },
 		{ key: 'departureDate', label: 'Check-out' },
 		{ key: 'roomType', label: 'Room Type' },
@@ -224,7 +227,10 @@ function BookingProgressCard({ args }: { args?: Partial<BookingInput> }) {
 		{ key: 'numberOfAdults', label: 'Adults' },
 	];
 
-	const filled = fields.filter((f) => args?.[f.key] != null);
+	const filledStay = stayFields.filter((f) => args?.[f.key] != null);
+	const guests = args?.guests ?? [];
+	const totalFields = stayFields.length + 1; // +1 for at least one guest
+	const filledCount = filledStay.length + (guests.length > 0 ? 1 : 0);
 
 	return (
 		<div className="w-full rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-900/20 p-4 shadow-sm">
@@ -234,8 +240,8 @@ function BookingProgressCard({ args }: { args?: Partial<BookingInput> }) {
 					Creating Reservation…
 				</span>
 			</div>
-			<div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-				{fields.map(({ key, label }) => {
+			<div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+				{stayFields.map(({ key, label }) => {
 					const val = args?.[key];
 					return (
 						<div key={key}>
@@ -249,11 +255,51 @@ function BookingProgressCard({ args }: { args?: Partial<BookingInput> }) {
 					);
 				})}
 			</div>
-			{filled.length < fields.length && (
+			{/* Guests */}
+			<div className="mt-3">
+				<p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Guests</p>
+				{guests.length === 0 ? (
+					<p className="text-sm font-medium text-gray-300 dark:text-gray-600 italic">Pending…</p>
+				) : (
+					<div className="flex flex-col gap-1">
+						{guests.map((g, i) => (
+							<p key={i} className="text-sm font-medium text-gray-900 dark:text-white">
+								{g.firstName} {g.lastName}
+								{i === 0 && <span className="ml-1.5 text-xs text-brand-600 dark:text-brand-400">(primary)</span>}
+								{g.email && <span className="text-xs text-gray-500 dark:text-gray-400 ml-1.5">· {g.email}</span>}
+							</p>
+						))}
+					</div>
+				)}
+			</div>
+			{filledCount < totalFields && (
 				<p className="mt-3 text-xs text-brand-700 dark:text-brand-300">
-					{filled.length}/{fields.length} details collected
+					{filledCount}/{totalFields} details collected
 				</p>
 			)}
+		</div>
+	);
+}
+
+// ─── Failed booking card ───────────────────────────────────────────────
+
+function BookingFailedCard({ result }: { result?: unknown }) {
+	// Extract a human-readable error message from the tool result
+	const rawResult = result as any;
+	const detail =
+		typeof rawResult === 'string'
+			? rawResult
+			: rawResult?.detail ||
+			  rawResult?.error ||
+			  rawResult?.message ||
+			  'Reservation could not be created. Please check the details and try again.';
+
+	return (
+		<div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 my-2 shadow-sm max-w-md">
+			<div className="flex items-center gap-2 mb-2">
+				<span className="text-red-600 dark:text-red-400 font-bold text-sm">❌ Booking Failed</span>
+			</div>
+			<p className="text-sm text-red-700 dark:text-red-300">{detail}</p>
 		</div>
 	);
 }
@@ -417,7 +463,7 @@ function BookingConfirmedCard({ result }: { result: ReservationResult }) {
 
 // ─── Main export ─────────────────────────────────────────────────────────────
 
-export function BookingCard({ toolName, state, args, result, sendMessage }: BookingCardProps) {
+export function BookingCard({ toolName, state, args, result, isError, sendMessage }: BookingCardProps) {
 	// Pricing tool card
 	if (toolName === 'get_room_pricing') {
 		if (state === 'call' || state === 'partial-call') {
@@ -437,6 +483,15 @@ export function BookingCard({ toolName, state, args, result, sendMessage }: Book
 	if (toolName === 'create_reservation') {
 		if (state === 'call' || state === 'partial-call') {
 			return <BookingProgressCard args={args} />;
+		}
+		// Show failure card if SDK flagged an error OR if the result contains an error payload
+		const resultAny = result as any;
+		const hasErrorPayload =
+			resultAny?.detail ||
+			resultAny?.error ||
+			(typeof resultAny === 'string' && resultAny.length > 0 && !resultAny.startsWith('{'));
+		if (isError || hasErrorPayload) {
+			return <BookingFailedCard result={result} />;
 		}
 		return <BookingConfirmedCard result={result as ReservationResult} />;
 	}

@@ -83,7 +83,8 @@ export default function ReservationsPage() {
 				id: 'guests',
 				header: () => <div className="text-center">Guests</div>,
 				cell: ({ row }) => {
-					const guestCount = row.original.reservationGuests?.length || 0;
+					const gc = row.original.roomStay?.guestCounts;
+					const guestCount = (gc?.adults ?? 0) + (gc?.children ?? 0);
 					return <span className="font-medium">{guestCount}</span>;
 				},
 			},

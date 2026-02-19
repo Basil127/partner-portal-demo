@@ -18,3 +18,6 @@ This ensures a clear separation of concerns and makes it easier to maintain and 
 This is a demo application for a hotel management system. 
 This will be used by booking agents partnered with the hotel to manage their bookings, inventory, and other hotel operations.
 The application includes a dashboard for agents to view key metrics, manage their bookings, and interact with an AI assistant to help with various tasks.
+
+## Running Application
+Use npm run dev from the root of the repository to start the application in development mode. This will start all services (frontend, backend, mock API) (database should already be running on users pc).

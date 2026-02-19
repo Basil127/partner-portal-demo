@@ -1,11 +1,9 @@
-import { createOpenAI } from '@ai-sdk/openai';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { config } from '../../config/config.js';
 
 // OpenRouter provider — use .chat() for Chat Completions API
-const openrouter = createOpenAI({
-	baseURL: 'https://openrouter.ai/api/v1',
-	apiKey: config.ai.openrouterApiKey,
-	name: 'openrouter',
+const openrouter = createOpenRouter({
+	apiKey: config.ai.openrouterApiKey
 });
 
 export function getModel(modelId?: string) {

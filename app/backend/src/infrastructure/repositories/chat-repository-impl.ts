@@ -97,7 +97,8 @@ export class ChatRepositoryImpl implements ChatRepository {
 
 	async countChats(): Promise<number> {
 		const rows = await this.db.query('SELECT COUNT(*) as count FROM chats');
-		return (rows[0] as Record<string, unknown>).count as number;
+		// pg driver returns bigint as string; Number() normalises for both drivers
+		return Number((rows[0] as Record<string, unknown>).count);
 	}
 
 	private mapToChat(row: Record<string, unknown>): Chat {

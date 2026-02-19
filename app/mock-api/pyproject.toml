@@ -1,7 +1,7 @@
 [project]
 name = "operaclone2"
 version = "0.1.0"
-requires-python = ">=3.12,<4.0"
+requires-python = ">=3.12,<3.14"
 description = ""
 authors = []
 maintainers = []

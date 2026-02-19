@@ -68,7 +68,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 				connectionStatus: z
 					.string()
 					.optional()
-					.describe('Filter by connection status (e.g. "active", "inactive")'),
+					.describe('Filter by connection status (e.g. "active", "inactive"), default to inactive'),
 			}),
 			execute: async (input) => {
 				return hotelContentService.getPropertiesSummary(
@@ -81,7 +81,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			name: 'get_hotel_info',
 			title: 'Get Hotel Info',
 			description:
-				'Returns detailed information about a specific hotel/property by its hotel code. Use this when the user asks about a specific hotel.',
+				'Returns detailed information about a specific hotel/property by its hotel code. Use this after listing hotels to get more details about a selected hotel.',
 			inputSchema: z.object({
 				hotelCode: z
 					.string()
@@ -95,7 +95,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			name: 'get_hotel_room_types',
 			title: 'Get Hotel Room Types',
 			description:
-				'Returns room types available at a specific hotel. Use this when the user asks about rooms or room types at a hotel. Supports pagination and filtering by room type.',
+				'Returns room types available at a specific hotel. Use this after listing hotels to get more details about available rooms. Supports pagination and filtering by room type.',
 			inputSchema: z.object({
 				hotelCode: z
 					.string()
@@ -129,7 +129,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			name: 'get_room_pricing',
 			title: 'Get Room Pricing',
 			description:
-				'Returns pricing and rate information for a specific hotel room type and rate plan. Use this to show the user the price BEFORE creating a booking. Always fetch pricing before calling create_reservation so the user knows the cost.',
+				'Returns pricing and rate information for a specific hotel room type. Use this to show the user the price BEFORE creating a booking. Always fetch pricing before calling create_reservation so the user knows the cost.',
 			inputSchema: z.object({
 				hotelCode: z
 					.string()
@@ -158,7 +158,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 				ratePlanCode: z
 					.string()
 					.optional()
-					.describe('Rate plan code to get pricing for'),
+					.describe('Rate plan code to get pricing for. Do not use unless the user explicitly asks for a specific rate plan.'),
 			}),
 			execute: async (input) => {
 				return hotelShopService.getPropertyOffer(
@@ -196,39 +196,31 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 				ratePlanCode: z
 					.string()
 					.describe('Rate plan code (e.g. "BAR", "RACK", "CORP")'),
-				guestFirstName: z
-					.string()
-					.describe('Primary guest first name'),
-				guestLastName: z
-					.string()
-					.describe('Primary guest last name'),
-				guestEmail: z
-					.string()
-					.optional()
-					.describe('Primary guest email address'),
-				guestPhone: z
-					.string()
-					.optional()
-					.describe('Primary guest phone number'),
-				numberOfAdults: z
-					.number()
-					.int()
+				guests: z
+					.array(
+						z.object({
+							firstName: z.string().describe('Guest first name'),
+							lastName: z.string().describe('Guest last name'),
+                            adult: z.boolean().describe('Is this guest an adult?'),
+						}),
+					)
 					.min(1)
-					.describe('Number of adult guests'),
-				numberOfChildren: z
-					.number()
-					.int()
-					.min(0)
-					.optional()
-					.describe('Number of child guests'),
+					.describe('List of guests. The first entry is treated as the primary guest.'),
+                email: z
+                    .string()
+                    .describe('Guest email address'),
+				phone: z
+                    .string()
+                    .describe('Guest phone number'),
 				guaranteeType: z
 					.string()
 					.optional()
-					.describe('Guarantee type (e.g. "CC" for credit card, "COMPANY", "PREPAY"). Defaults to CC.'),
+					.describe('Guarantee type (e.g. "CC" for credit card, "COMPANY", "PREPAY"). Defaults to CC. Do not ask for this and do not use unless the user explicitly specifies a guarantee type.'),
 			}),
 			execute: async (input) => {
 				// Build as 'any' first since the mock API accepts a broader shape than
 				// the strict shared types (e.g. guestCounts as object, guaranteeCode field name)
+                const numberOfChildren = input.guests.filter((g: { adult: boolean; }) => !g.adult).length;
 				const request: any = {
 					reservations: {
 						reservation: [
@@ -240,32 +232,30 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 									roomType: input.roomType,
 									ratePlanCode: input.ratePlanCode,
 									guestCounts: {
-										adults: input.numberOfAdults,
-										children: input.numberOfChildren ?? 0,
+										adults: input.guests.length - numberOfChildren,
+										children: numberOfChildren,
 									},
 									guarantee: {
 										guaranteeCode: input.guaranteeType ?? 'CC',
 									},
 								},
-								reservationGuests: [
-									{
-										primary: true,
-										profileInfo: {
-											profile: {
-												customer: {
-													personName: [
-														{
-															givenName: input.guestFirstName,
-															surname: input.guestLastName,
-														},
-													],
-												},
-												email: input.guestEmail,
-												phoneNumber: input.guestPhone,
+								reservationGuests: input.guests.map((guest: { firstName: string; lastName: string; email?: string; phone?: string }, idx: number) => ({
+									primary: idx === 0,
+									profileInfo: {
+										profile: {
+											customer: {
+												personName: [
+													{
+														givenName: guest.firstName,
+														surname: guest.lastName,
+													},
+												],
 											},
+											email: input.email,
+											phoneNumber: input.phone,
 										},
 									},
-								],
+								})),
 							},
 						],
 					},

@@ -45,13 +45,23 @@ class PostgresAdapter implements DatabaseAdapter {
 		logger.info('PostgreSQL database connected');
 	}
 
+	/**
+	 * Converts SQLite-style `?` positional placeholders to PostgreSQL-style
+	 * `$1`, `$2`, ... placeholders so that shared SQL strings work with both
+	 * drivers without modification at the call site.
+	 */
+	private convertPlaceholders(sql: string): string {
+		let index = 0;
+		return sql.replace(/\?/g, () => `$${++index}`);
+	}
+
 	async query(sql: string, params: unknown[] = []): Promise<unknown[]> {
-		const result = await this.pool.query(sql, params);
+		const result = await this.pool.query(this.convertPlaceholders(sql), params);
 		return result.rows;
 	}
 
 	async execute(sql: string, params: unknown[] = []): Promise<void> {
-		await this.pool.query(sql, params);
+		await this.pool.query(this.convertPlaceholders(sql), params);
 	}
 
 	async close(): Promise<void> {

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import date, datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UniqueID(BaseModel):
@@ -73,8 +73,8 @@ class Guarantee(BaseModel):
 class GuestCounts(BaseModel):
     """Guest counts."""
 
-    adults: int | None = 1
-    children: int | None = 0
+    adults: int = Field(default=1, ge=1, description="Number of adults (must be at least 1)")
+    children: int = Field(default=0, ge=0, description="Number of children (must be 0 or more)")
 
 
 class RateTotal(BaseModel):
@@ -117,9 +117,12 @@ class RoomStay(BaseModel):
 
     arrivalDate: date | None = None
     departureDate: date | None = None
+    roomType: str | None = None
+    ratePlanCode: str | None = None
     guarantee: Guarantee | None = None
     roomRates: list[RoomRate] | None = None
     guestCounts: GuestCounts | None = None
+    total: "RateTotal | None" = None
 
 
 class Reservation(BaseModel):

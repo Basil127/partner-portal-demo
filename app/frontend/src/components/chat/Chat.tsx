@@ -35,8 +35,11 @@ export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 		},
 	});
 
-	// Persist full messages (including tool parts) to sessionStorage
+	// Persist full messages (including tool parts) to sessionStorage.
+	// Only save when the stream is finished to avoid persisting intermediate
+	// duplicate-ID states that the AI SDK emits during multi-step streaming.
 	useEffect(() => {
+		if (status !== 'ready') return;
 		if (messages.length > 0) {
 			try {
 				sessionStorage.setItem(SESSION_KEY(id), JSON.stringify(messages));
@@ -44,7 +47,7 @@ export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 				// ignore storage errors
 			}
 		}
-	}, [id, messages]);
+	}, [id, messages, status]);
 
 	const submitMessage = useCallback(() => {
 		const text = input.trim();

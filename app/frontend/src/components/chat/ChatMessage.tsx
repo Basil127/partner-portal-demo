@@ -23,12 +23,17 @@ function ToolPart({ part, sendMessage }: { part: any; sendMessage?: (msg: { text
 	// AI SDK v6 uses `input`/`output`; v5 uses `args`/`result`
 	const args = part.input ?? part.args;
 	const result = part.output ?? part.result;
+	const isError: boolean = part.isError ?? false;
 
 	// Map AI SDK v6 states to our card states
 	const cardState: 'call' | 'result' | 'partial-call' =
 		state === 'output-available' ? 'result' :
+		state === 'output-error' ? 'result' :
 		state === 'input-streaming' ? 'partial-call' :
 		'call';
+
+	// Treat output-error as an error result even if isError flag not set
+	const effectiveIsError = isError || state === 'output-error';
 
 	// Booking / pricing — dedicated full-width card
 	if (BOOKING_TOOL_NAMES.has(toolName)) {
@@ -38,6 +43,7 @@ function ToolPart({ part, sendMessage }: { part: any; sendMessage?: (msg: { text
 				state={cardState}
 				args={args}
 				result={result}
+				isError={effectiveIsError}
 				sendMessage={sendMessage}
 			/>
 		);
@@ -92,10 +98,15 @@ export function PreviewMessage({ message, isLoading, sendMessage }: PreviewMessa
 
 	return (
 		<div className="group w-full" data-role={message.role} data-testid={`message-${message.role}`}>
-			{/* Booking tool cards — full width, outside any bubble */}
+			{/* Booking tool cards — aligned with assistant messages */}
 			{bookingToolParts.map(({ index, part }) => (
-				<div key={index} className="w-full mb-3">
-					<ToolPart part={part} sendMessage={sendMessage} />
+				<div key={index} className="flex w-full items-start gap-3 justify-start mb-3">
+					<div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-50 ring-1 ring-brand-200 dark:bg-brand-900/30 dark:ring-brand-700">
+						<Bot className="size-4 text-brand-600 dark:text-brand-400" />
+					</div>
+					<div className="max-w-[80%] min-w-0 flex-1">
+						<ToolPart part={part} sendMessage={sendMessage} />
+					</div>
 				</div>
 			))}
 

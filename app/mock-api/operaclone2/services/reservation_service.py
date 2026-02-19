@@ -2,8 +2,9 @@ from datetime import date, datetime
 from typing import Any
 from uuid import uuid4
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 
+from operaclone2.db.dao.hotel_dao import HotelDAO
 from operaclone2.db.dao.reservation_dao import ReservationDAO
 from operaclone2.web.api.reservation.schema import (
     CancelReservationDetails,
@@ -12,6 +13,7 @@ from operaclone2.web.api.reservation.schema import (
     CreateReservationRequest,
     Customer,
     DistributionReservationSummaryType,
+    GuestCounts,
     PersonName,
     Profile,
     ProfileInfo,
@@ -29,15 +31,20 @@ from operaclone2.web.api.reservation.schema import (
 class ReservationService:
     """Service for reservation domain logic."""
 
-    def __init__(self, reservation_dao: ReservationDAO = Depends()) -> None:
+    def __init__(
+        self,
+        reservation_dao: ReservationDAO = Depends(),
+        hotel_dao: HotelDAO = Depends(),
+    ) -> None:
         self.reservation_dao = reservation_dao
+        self.hotel_dao = hotel_dao
 
     def _map_to_schema(self, model: Any) -> Reservation:
         """Helper to map DAO model or mock object to Pydantic schema."""
         return Reservation(
             reservationIdList=[
                 UniqueID(id=model.reservation_id, type="Reservation"),
-                UniqueID(id=model.confirmation_number, type="Confirmation"),
+                UniqueID(id=model.confirmation_number, type="CONFIRMATION"),
             ],
             roomStay=RoomStay(**model.room_stay)
             if isinstance(model.room_stay, dict)
@@ -86,6 +93,7 @@ class ReservationService:
                 roomStay=RoomStay(
                     arrivalDate=date(2026, 1, 22),
                     departureDate=date(2026, 1, 23),
+                    guestCounts=GuestCounts(adults=2, children=0),
                 ),
                 reservationGuests=[
                     ReservationGuest(
@@ -161,9 +169,44 @@ class ReservationService:
         """Create a new reservation."""
         # Get reservation list from the ReservationCollection
         if not request.reservations or not request.reservations.reservation:
-            return ReservationListResponse(reservations=ReservationCollection(reservation=[]))
+            raise HTTPException(
+                status_code=400,
+                detail="Request must include at least one reservation in 'reservations.reservation'.",
+            )
 
         res_data = request.reservations.reservation[0]
+
+        # Validate that the hotel exists
+        hotel = await self.hotel_dao.get_hotel_by_code(hotel_id)
+        if not hotel:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Hotel '{hotel_id}' not found. Use the list_hotels tool to find valid hotel codes.",
+            )
+
+        # Validate room type if provided
+        if res_data.roomStay and res_data.roomStay.roomType:
+            room_types, _ = await self.hotel_dao.get_room_types_by_hotel(
+                hotel_code=hotel_id,
+                limit=1,
+                offset=0,
+                room_type_filter=res_data.roomStay.roomType,
+            )
+            if not room_types:
+                raise HTTPException(
+                    status_code=422,
+                    detail=(
+                        f"Room type '{res_data.roomStay.roomType}' is not available at hotel '{hotel_id}'. "
+                        "Use the get_hotel_room_types tool to see valid room types for this hotel."
+                    ),
+                )
+
+        # Ensure valid hotel_id is used:
+        if res_data.hotelId and res_data.hotelId != hotel_id:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Hotel ID in path ({hotel_id}) does not match hotel ID in body ({res_data.hotelId}).",
+            )
 
         # Extract guest names for the top-level columns
         guest = res_data.reservationGuests[0] if res_data.reservationGuests else None
