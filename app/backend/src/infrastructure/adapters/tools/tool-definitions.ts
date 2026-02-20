@@ -53,12 +53,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			description:
 				'Returns a list of hotels/properties with summary information. Use this to find available hotels, see hotel names, codes, and connection status. Supports pagination and filtering by connection status.',
 			inputSchema: z.object({
-				limit: z
-					.number()
-					.int()
-					.min(1)
-					.optional()
-					.describe('Maximum number of hotels to return'),
+				limit: z.number().int().min(1).optional().describe('Maximum number of hotels to return'),
 				offset: z
 					.number()
 					.int()
@@ -83,9 +78,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			description:
 				'Returns detailed information about a specific hotel/property by its hotel code. Use this after listing hotels to get more details about a selected hotel.',
 			inputSchema: z.object({
-				hotelCode: z
-					.string()
-					.describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
+				hotelCode: z.string().describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
 			}),
 			execute: async (input) => {
 				return hotelContentService.getPropertyInfo(input.hotelCode, DEFAULT_HEADERS);
@@ -97,13 +90,8 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			description:
 				'Returns room types available at a specific hotel. Use this after listing hotels to get more details about available rooms. Supports pagination and filtering by room type.',
 			inputSchema: z.object({
-				hotelCode: z
-					.string()
-					.describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
-				roomType: z
-					.string()
-					.optional()
-					.describe('Filter by specific room type code'),
+				hotelCode: z.string().describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
+				roomType: z.string().optional().describe('Filter by specific room type code'),
 				limit: z
 					.number()
 					.int()
@@ -131,34 +119,18 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			description:
 				'Returns pricing and rate information for a specific hotel room type. Use this to show the user the price BEFORE creating a booking. Always fetch pricing before calling create_reservation so the user knows the cost.',
 			inputSchema: z.object({
-				hotelCode: z
-					.string()
-					.describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
-				arrivalDate: z
-					.string()
-					.describe('Check-in date in YYYY-MM-DD format'),
-				departureDate: z
-					.string()
-					.describe('Check-out date in YYYY-MM-DD format'),
-				adults: z
-					.number()
-					.int()
-					.min(1)
-					.describe('Number of adult guests'),
-				children: z
-					.number()
-					.int()
-					.min(0)
-					.optional()
-					.describe('Number of child guests'),
-				roomType: z
-					.string()
-					.optional()
-					.describe('Room type code to get pricing for'),
+				hotelCode: z.string().describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
+				arrivalDate: z.string().describe('Check-in date in YYYY-MM-DD format'),
+				departureDate: z.string().describe('Check-out date in YYYY-MM-DD format'),
+				adults: z.number().int().min(1).describe('Number of adult guests'),
+				children: z.number().int().min(0).optional().describe('Number of child guests'),
+				roomType: z.string().optional().describe('Room type code to get pricing for'),
 				ratePlanCode: z
 					.string()
 					.optional()
-					.describe('Rate plan code to get pricing for. Do not use unless the user explicitly asks for a specific rate plan.'),
+					.describe(
+						'Rate plan code to get pricing for. Do not use unless the user explicitly asks for a specific rate plan.',
+					),
 			}),
 			execute: async (input) => {
 				return hotelShopService.getPropertyOffer(
@@ -183,44 +155,36 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			inputSchema: z.object({
 				hotelId: z
 					.string()
-					.describe('The hotel code/ID where the reservation will be made (e.g. "HOTEL1", "LONPK")'),
-				arrivalDate: z
-					.string()
-					.describe('Check-in date in YYYY-MM-DD format'),
-				departureDate: z
-					.string()
-					.describe('Check-out date in YYYY-MM-DD format'),
-				roomType: z
-					.string()
-					.describe('Room type code (e.g. "KING", "DOUBLE", "SUITE")'),
-				ratePlanCode: z
-					.string()
-					.describe('Rate plan code (e.g. "BAR", "RACK", "CORP")'),
+					.describe(
+						'The hotel code/ID where the reservation will be made (e.g. "HOTEL1", "LONPK")',
+					),
+				arrivalDate: z.string().describe('Check-in date in YYYY-MM-DD format'),
+				departureDate: z.string().describe('Check-out date in YYYY-MM-DD format'),
+				roomType: z.string().describe('Room type code (e.g. "KING", "DOUBLE", "SUITE")'),
+				ratePlanCode: z.string().describe('Rate plan code (e.g. "BAR", "RACK", "CORP")'),
 				guests: z
 					.array(
 						z.object({
 							firstName: z.string().describe('Guest first name'),
 							lastName: z.string().describe('Guest last name'),
-                            adult: z.boolean().describe('Is this guest an adult?'),
+							adult: z.boolean().describe('Is this guest an adult?'),
 						}),
 					)
 					.min(1)
 					.describe('List of guests. The first entry is treated as the primary guest.'),
-                email: z
-                    .string()
-                    .describe('Guest email address'),
-				phone: z
-                    .string()
-                    .describe('Guest phone number'),
+				email: z.string().describe('Guest email address'),
+				phone: z.string().describe('Guest phone number'),
 				guaranteeType: z
 					.string()
 					.optional()
-					.describe('Guarantee type (e.g. "CC" for credit card, "COMPANY", "PREPAY"). Defaults to CC. Do not ask for this and do not use unless the user explicitly specifies a guarantee type.'),
+					.describe(
+						'Guarantee type (e.g. "CC" for credit card, "COMPANY", "PREPAY"). Defaults to CC. Do not ask for this and do not use unless the user explicitly specifies a guarantee type.',
+					),
 			}),
 			execute: async (input) => {
 				// Build as 'any' first since the mock API accepts a broader shape than
 				// the strict shared types (e.g. guestCounts as object, guaranteeCode field name)
-                const numberOfChildren = input.guests.filter((g: { adult: boolean; }) => !g.adult).length;
+				const numberOfChildren = input.guests.filter((g: { adult: boolean }) => !g.adult).length;
 				const request: any = {
 					reservations: {
 						reservation: [
@@ -239,23 +203,28 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 										guaranteeCode: input.guaranteeType ?? 'CC',
 									},
 								},
-								reservationGuests: input.guests.map((guest: { firstName: string; lastName: string; email?: string; phone?: string }, idx: number) => ({
-									primary: idx === 0,
-									profileInfo: {
-										profile: {
-											customer: {
-												personName: [
-													{
-														givenName: guest.firstName,
-														surname: guest.lastName,
-													},
-												],
+								reservationGuests: input.guests.map(
+									(
+										guest: { firstName: string; lastName: string; email?: string; phone?: string },
+										idx: number,
+									) => ({
+										primary: idx === 0,
+										profileInfo: {
+											profile: {
+												customer: {
+													personName: [
+														{
+															givenName: guest.firstName,
+															surname: guest.lastName,
+														},
+													],
+												},
+												email: input.email,
+												phoneNumber: input.phone,
 											},
-											email: input.email,
-											phoneNumber: input.phone,
 										},
-									},
-								})),
+									}),
+								),
 							},
 						],
 					},
@@ -274,25 +243,11 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			description:
 				'Searches for existing hotel reservations by guest name, confirmation number, or date range. Use this to look up existing reservations.',
 			inputSchema: z.object({
-				hotelId: z
-					.string()
-					.describe('The hotel code/ID to search reservations in'),
-				surname: z
-					.string()
-					.optional()
-					.describe('Guest last name to search for'),
-				givenName: z
-					.string()
-					.optional()
-					.describe('Guest first name to search for'),
-				arrivalDate: z
-					.string()
-					.optional()
-					.describe('Filter by arrival date (YYYY-MM-DD)'),
-				departureDate: z
-					.string()
-					.optional()
-					.describe('Filter by departure date (YYYY-MM-DD)'),
+				hotelId: z.string().describe('The hotel code/ID to search reservations in'),
+				surname: z.string().optional().describe('Guest last name to search for'),
+				givenName: z.string().optional().describe('Guest first name to search for'),
+				arrivalDate: z.string().optional().describe('Filter by arrival date (YYYY-MM-DD)'),
+				departureDate: z.string().optional().describe('Filter by departure date (YYYY-MM-DD)'),
 			}),
 			execute: async (input) => {
 				return hotelReservationsService.getHotelReservations(

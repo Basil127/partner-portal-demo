@@ -8,7 +8,8 @@ import HotelSelector from '@/components/hotel/HotelSelector';
 
 export const metadata: Metadata = {
 	title: 'Dashboard | B2B Partner portal',
-	description: 'This is the Home for B2B Partner portal containing a dashboard of reservation metrics',
+	description:
+		'This is the Home for B2B Partner portal containing a dashboard of reservation metrics',
 };
 
 export default function Ecommerce() {
@@ -18,7 +19,7 @@ export default function Ecommerce() {
 				<HotelSelector />
 			</div>
 			<div className="col-span-12 space-y-6 lg:col-span-6 xl:col-span-7">
-				<DashboardMetrics/>
+				<DashboardMetrics />
 				<MonthlyBookingsChart />
 			</div>
 			<div className="col-span-12 lg:col-span-6 xl:col-span-5">

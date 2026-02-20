@@ -39,11 +39,6 @@ const navItems: NavItem[] = [
 		path: '/hotels',
 	},
 	{
-		icon: <BedIcon />,
-		name: 'Rooms',
-		path: '/rooms',
-	},
-	{
 		icon: <CalenderIcon />,
 		name: 'Reservations',
 		path: '/reservations',

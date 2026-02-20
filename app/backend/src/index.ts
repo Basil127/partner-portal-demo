@@ -7,7 +7,7 @@ import { config } from './infrastructure/config/config.js';
 import { setupRoutes } from './infrastructure/adapters/http/routes.js';
 import { setupMcpRoutes } from './infrastructure/adapters/mcp/mcp-routes.js';
 import { setupAiRoutes } from './infrastructure/adapters/ai/ai-routes.js';
-import { createDatabaseAdapter } from './infrastructure/adapters/database.js';
+import { createDatabaseAdapter, ensureDatabaseExists } from './infrastructure/adapters/database.js';
 import { initializeDatabase } from './infrastructure/config/database-init.js';
 import { createServiceContainer } from './infrastructure/service-container.js';
 
@@ -28,6 +28,9 @@ async function start() {
 					: undefined,
 		},
 	});
+
+	// Ensure the target database exists (creates it if not, no-op for SQLite)
+	await ensureDatabaseExists();
 
 	// Initialize database
 	const dbAdapter = createDatabaseAdapter();

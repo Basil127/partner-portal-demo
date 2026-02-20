@@ -16,7 +16,13 @@ interface PreviewMessageProps {
 const BOOKING_TOOL_NAMES = new Set(['create_reservation', 'get_room_pricing']);
 
 /** Renders a tool invocation: either a booking card or a generic badge. */
-function ToolPart({ part, sendMessage }: { part: any; sendMessage?: (msg: { text: string }) => void }) {
+function ToolPart({
+	part,
+	sendMessage,
+}: {
+	part: any;
+	sendMessage?: (msg: { text: string }) => void;
+}) {
 	// AI SDK v6: tool parts have type "tool-{toolName}", with `input`/`output` fields
 	const toolName: string = part.toolName ?? part.type?.replace(/^tool-/, '') ?? '';
 	const state: string = part.state ?? 'call';
@@ -27,10 +33,13 @@ function ToolPart({ part, sendMessage }: { part: any; sendMessage?: (msg: { text
 
 	// Map AI SDK v6 states to our card states
 	const cardState: 'call' | 'result' | 'partial-call' =
-		state === 'output-available' ? 'result' :
-		state === 'output-error' ? 'result' :
-		state === 'input-streaming' ? 'partial-call' :
-		'call';
+		state === 'output-available'
+			? 'result'
+			: state === 'output-error'
+				? 'result'
+				: state === 'input-streaming'
+					? 'partial-call'
+					: 'call';
 
 	// Treat output-error as an error result even if isError flag not set
 	const effectiveIsError = isError || state === 'output-error';
@@ -155,15 +164,14 @@ export function PreviewMessage({ message, isLoading, sendMessage }: PreviewMessa
 								}
 								return null;
 							})}
-							{fallbackContent && (
-								message.role === 'user' ? (
+							{fallbackContent &&
+								(message.role === 'user' ? (
 									<p className="whitespace-pre-wrap">{fallbackContent}</p>
 								) : (
 									<div className="prose prose-sm dark:prose-invert max-w-prose">
 										<ChatMarkdown content={fallbackContent} />
 									</div>
-								)
-							)}
+								))}
 						</div>
 
 						{message.role === 'assistant' && !isLoading && <MessageActions message={message} />}

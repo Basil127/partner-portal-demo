@@ -9,14 +9,10 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
     image: ohm-demo-frontend:${VERSION:-latest}
     env_file:
-      - path: .env
-        required: false
+      - path: ./app/frontend/.env.production
+        required: true
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3001}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-google/gemini-2.5-flash}
       - PORT=3000
     ports:
       - "3000:3000"
@@ -31,22 +27,8 @@ services:
       target: prod
     image: ohm-demo-backend:${VERSION:-latest}
     env_file:
-      - path: .env
-        required: false
-    environment:
-      - NODE_ENV=${NODE_ENV:-production}
-      - PORT=${PORT:-3001}
-      - HOST=${HOST:-0.0.0.0}
-      - DB_TYPE=${DB_TYPE:-postgres}
-      - DB_HOST=${DB_HOST:-OperaClone2-db}
-      - DB_PORT=${DB_PORT:-5432}
-      - DB_NAME=${DB_NAME:-OperaClone2}
-      - DB_USER=${DB_USER:-OperaClone2}
-      - DB_PASSWORD=${DB_PASSWORD:-OperaClone2}
-      - JWT_SECRET=${JWT_SECRET}
-      - SESSION_SECRET=${SESSION_SECRET}
-      - EXTERNAL_CLIENT_BASE_URL=${EXTERNAL_CLIENT_BASE_URL:-http://mock-api:8000}
-      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - path: ./app/backend/.env.production
+        required: true
     ports:
       - "3001:3001"
     volumes:
@@ -63,21 +45,13 @@ services:
       target: prod
     image: ohm-demo-mock-api:${VERSION:-latest}
     env_file:
-      - path: .env
-        required: false
+      - path: ./app/mock-api/.env.production
+        required: true
     depends_on:
       db:
         condition: service_healthy
       migrator:
         condition: service_completed_successfully
-    environment:
-      OPERACLONE2_HOST: 0.0.0.0
-      OPERACLONE2_DB_HOST: OperaClone2-db
-      OPERACLONE2_DB_PORT: 5432
-      OPERACLONE2_DB_USER: OperaClone2
-      OPERACLONE2_DB_PASS: OperaClone2
-      OPERACLONE2_DB_BASE: OperaClone2
-      OPERACLONE2_CORS_ORIGINS: ${CORS_ORIGINS:-*}
     ports:
       - "8000:8000"
 
@@ -94,7 +68,7 @@ services:
     volumes:
       - OperaClone2-db-data:/var/lib/postgresql
     healthcheck:
-      test: pg_isready -U OperaClone2
+      test: ["CMD-SHELL", "pg_isready -U OperaClone2"]
       interval: 2s
       timeout: 3s
       retries: 40

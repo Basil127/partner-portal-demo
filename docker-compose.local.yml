@@ -14,13 +14,14 @@ services:
       context: .
       dockerfile: ./app/frontend/Dockerfile
       target: prod
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001
     image: ohm-demo-frontend:${VERSION:-latest}
     env_file:
-      - path: development.env
-        required: false
+      - path: ./app/frontend/.env.local
+        required: true
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://backend:3001
       - PORT=3000
     ports:
       - "3000:3000"
@@ -35,21 +36,22 @@ services:
       target: prod
     image: ohm-demo-backend:${VERSION:-latest}
     env_file:
-      - path: development.env
-        required: false
+      - path: ./app/backend/.env.local
+        required: true
     environment:
-      - NODE_ENV=production
-      - PORT=3001
-      - HOST=0.0.0.0
-      - DB_TYPE=sqlite
-      - DB_PATH=/app/app/backend/data/dev.db
+      # Override localhost values in .env.local with Docker service names
+      - DB_HOST=OperaClone2-db
       - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
+      - CORS_ORIGINS=http://localhost:3000
     ports:
       - "3001:3001"
     volumes:
       - backend-data:/app/app/backend/data
     depends_on:
-      - mock-api
+      mock-api:
+        condition: service_started
+      db:
+        condition: service_healthy
   
   mock-api: &mock-api
     restart: unless-stopped
@@ -59,26 +61,22 @@ services:
       target: prod
     image: ohm-demo-mock-api:${VERSION:-latest}
     env_file:
-      - path: .env
-        required: false
+      - path: ./app/mock-api/.env.local
+        required: true
     depends_on:
       db:
         condition: service_healthy
       migrator:
         condition: service_completed_successfully
     environment:
-      OPERACLONE2_HOST: 0.0.0.0
+      # Override localhost value in .env.local with Docker service name
       OPERACLONE2_DB_HOST: OperaClone2-db
-      OPERACLONE2_DB_PORT: 5432
-      OPERACLONE2_DB_USER: OperaClone2
-      OPERACLONE2_DB_PASS: OperaClone2
-      OPERACLONE2_DB_BASE: OperaClone2
     ports:
       - "8000:8000"
 
   db:
     restart: unless-stopped
-    image: postgres:18.1-alpine
+    image: postgres:18.1-bookworm
     hostname: OperaClone2-db
     environment:
       POSTGRES_PASSWORD: "OperaClone2"
@@ -89,7 +87,7 @@ services:
     volumes:
       - OperaClone2-db-data:/var/lib/postgresql
     healthcheck:
-      test: pg_isready -U OperaClone2
+      test: ["CMD-SHELL", "pg_isready -U OperaClone2"]
       interval: 2s
       timeout: 3s
       retries: 40

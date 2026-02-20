@@ -5,11 +5,20 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables based on NODE_ENV
-const envFile = process.env.NODE_ENV === 'test' ? 'test.env' : 'development.env';
-// Locate the root directory (5 levels up from src/infrastructure/config)
+// Locate app/backend/ (3 levels up: config -> infrastructure -> src -> app/backend)
+const backendDir = path.resolve(__dirname, '../../../');
+// Locate repo root (5 levels up)
 const rootDir = path.resolve(__dirname, '../../../../../');
-dotenv.config({ path: path.resolve(rootDir, envFile) });
+
+// Load environment variables:
+//  - test:        repo-root test.env  (jest uses this)
+//  - development: app/backend/.env.local
+//  - production:  no file — Docker injects vars via env_file in docker-compose
+if (process.env.NODE_ENV === 'test') {
+	dotenv.config({ path: path.resolve(rootDir, 'test.env') });
+} else if (process.env.NODE_ENV !== 'production') {
+	dotenv.config({ path: path.resolve(backendDir, '.env.local') });
+}
 
 export const config = {
 	nodeEnv: process.env.NODE_ENV || 'development',

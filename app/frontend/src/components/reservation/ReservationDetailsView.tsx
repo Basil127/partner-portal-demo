@@ -50,7 +50,7 @@ export const ReservationDetailsView: React.FC<ReservationDetailsViewProps> = ({
 						{(() => {
 							const gc = reservation.roomStay?.guestCounts;
 							const total = (gc?.adults ?? 0) + (gc?.children ?? 0);
-							return total > 0 ? total : (reservation.reservationGuests?.length || 0);
+							return total > 0 ? total : reservation.reservationGuests?.length || 0;
 						})()}
 					</p>
 				</div>

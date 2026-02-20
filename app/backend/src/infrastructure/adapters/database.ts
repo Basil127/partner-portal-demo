@@ -46,6 +46,42 @@ class PostgresAdapter implements DatabaseAdapter {
 	}
 
 	/**
+	 * Ensures the target database exists, creating it if necessary.
+	 * Connects to the always-available "postgres" maintenance database,
+	 * creates the target DB if missing, then returns so the normal Pool
+	 * can be constructed against the correct database.
+	 */
+	static async ensureDatabase(): Promise<void> {
+		const dbName = config.database.name;
+		if (!dbName) return;
+
+		const adminPool = new Pool({
+			host: config.database.host,
+			port: config.database.port,
+			database: 'postgres', // always exists
+			user: config.database.user,
+			password: config.database.password,
+		});
+
+		try {
+			const res = await adminPool.query(
+				`SELECT 1 FROM pg_database WHERE datname = $1`,
+				[dbName],
+			);
+			if (res.rowCount === 0) {
+				// CREATE DATABASE cannot run inside a transaction block
+				await adminPool.query(`CREATE DATABASE "${dbName}"`);
+				await adminPool.query(
+					`GRANT ALL PRIVILEGES ON DATABASE "${dbName}" TO "${config.database.user}"`,
+				);
+				logger.info(`Created database: ${dbName}`);
+			}
+		} finally {
+			await adminPool.end();
+		}
+	}
+
+	/**
 	 * Converts SQLite-style `?` positional placeholders to PostgreSQL-style
 	 * `$1`, `$2`, ... placeholders so that shared SQL strings work with both
 	 * drivers without modification at the call site.
@@ -74,5 +110,15 @@ export function createDatabaseAdapter(): DatabaseAdapter {
 		return new PostgresAdapter();
 	} else {
 		return new SqliteAdapter(config.database.path);
+	}
+}
+
+/**
+ * For Postgres, ensures the target database exists before the adapter
+ * pool tries to connect to it.  No-op for SQLite.
+ */
+export async function ensureDatabaseExists(): Promise<void> {
+	if (config.database.type === 'postgres') {
+		await PostgresAdapter.ensureDatabase();
 	}
 }

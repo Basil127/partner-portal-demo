@@ -58,8 +58,12 @@ export default function EditBookingModal({
 	const guestCounts = useMemo(() => {
 		let adults = 0;
 		let children = 0;
-		if (form.data.primaryGuest.isChild) children++; else adults++;
-		form.data.additionalGuests.forEach((g) => { if (g.isChild) children++; else adults++; });
+		if (form.data.primaryGuest.isChild) children++;
+		else adults++;
+		form.data.additionalGuests.forEach((g) => {
+			if (g.isChild) children++;
+			else adults++;
+		});
 		return { adults, children };
 	}, [form.data.primaryGuest, form.data.additionalGuests]);
 
@@ -111,7 +115,12 @@ export default function EditBookingModal({
 			const additionalGuestsData: PersonName[] = additionalGuests.map((g: any) => {
 				const p = (g?.profileInfo as any)?.profile;
 				const n = p?.customer?.personName?.[0];
-				return { givenName: n?.givenName || '', surname: n?.surname || '', middleName: '', isChild: false };
+				return {
+					givenName: n?.givenName || '',
+					surname: n?.surname || '',
+					middleName: '',
+					isChild: false,
+				};
 			});
 
 			form.initialize({
@@ -207,9 +216,7 @@ export default function EditBookingModal({
 									profileInfo: {
 										profile: {
 											customer: {
-												personName: [
-													{ givenName: guest.givenName, surname: guest.surname },
-												],
+												personName: [{ givenName: guest.givenName, surname: guest.surname }],
 											},
 										},
 									},
@@ -251,16 +258,15 @@ export default function EditBookingModal({
 					<>
 						<Button
 							variant="outline"
-							onClick={() => { setIsEditMode(false); setSubmitError(null); }}
+							onClick={() => {
+								setIsEditMode(false);
+								setSubmitError(null);
+							}}
 							disabled={updateMutation.isPending}
 						>
 							Discard
 						</Button>
-						<Button
-							variant="primary"
-							onClick={handleSave}
-							disabled={updateMutation.isPending}
-						>
+						<Button variant="primary" onClick={handleSave} disabled={updateMutation.isPending}>
 							{updateMutation.isPending ? 'Saving…' : 'Save Changes'}
 						</Button>
 					</>

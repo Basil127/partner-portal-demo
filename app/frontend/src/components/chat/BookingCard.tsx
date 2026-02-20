@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CheckCircle, Loader2, Calendar, Users, Hotel, CreditCard, Edit3, Tag } from 'lucide-react';
+import { CheckCircle, Loader2, Calendar, Users, Hotel, Edit3, Tag } from 'lucide-react';
 import Button from '@/components/ui/button/Button';
 import EditBookingModal from './EditBookingModal';
 
@@ -143,7 +143,15 @@ function StatusBadge({ status }: { status?: string }) {
 
 // ─── Pricing card ─────────────────────────────────────────────────────────────
 
-function PricingCard({ result, args, sendMessage }: { result: PricingResult; args?: BookingInput; sendMessage?: (msg: { text: string }) => void }) {
+function PricingCard({
+	result,
+	args,
+	sendMessage,
+}: {
+	result: PricingResult;
+	args?: BookingInput;
+	sendMessage?: (msg: { text: string }) => void;
+}) {
 	const offer = result?.offer;
 	const total = offer?.total;
 	const nights = calcNights(args?.arrivalDate, args?.departureDate);
@@ -152,25 +160,23 @@ function PricingCard({ result, args, sendMessage }: { result: PricingResult; arg
 		<div className="w-full rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 shadow-sm">
 			<div className="flex items-center gap-2 mb-3">
 				<Tag className="size-4 text-blue-600 dark:text-blue-400" />
-				<span className="font-semibold text-blue-900 dark:text-blue-100 text-sm">
-					Room Pricing
-				</span>
+				<span className="font-semibold text-blue-900 dark:text-blue-100 text-sm">Room Pricing</span>
 			</div>
 			<div className="space-y-2">
 				{args && (
 					<div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm mb-3">
-				<DetailRow label="Hotel" value={args.hotelCode ?? args.hotelId} />
-					<DetailRow label="Room Type" value={args.roomType} />
-					<DetailRow label="Check-in" value={formatDate(args.arrivalDate)} />
-					<DetailRow label="Check-out" value={formatDate(args.departureDate)} />
-					<DetailRow label="Nights" value={nights} />
-					<DetailRow
-						label="Guests"
-						value={(() => {
-							const numAdults = args.adults ?? args.numberOfAdults ?? 1;
-							const numChildren = args.children ?? args.numberOfChildren ?? 0;
-							return `${numAdults} adult${numAdults !== 1 ? 's' : ''}${numChildren ? `, ${numChildren} child${numChildren !== 1 ? 'ren' : ''}` : ''}`;
-						})()}
+						<DetailRow label="Hotel" value={args.hotelCode ?? args.hotelId} />
+						<DetailRow label="Room Type" value={args.roomType} />
+						<DetailRow label="Check-in" value={formatDate(args.arrivalDate)} />
+						<DetailRow label="Check-out" value={formatDate(args.departureDate)} />
+						<DetailRow label="Nights" value={nights} />
+						<DetailRow
+							label="Guests"
+							value={(() => {
+								const numAdults = args.adults ?? args.numberOfAdults ?? 1;
+								const numChildren = args.children ?? args.numberOfChildren ?? 0;
+								return `${numAdults} adult${numAdults !== 1 ? 's' : ''}${numChildren ? `, ${numChildren} child${numChildren !== 1 ? 'ren' : ''}` : ''}`;
+							})()}
 						/>
 					</div>
 				)}
@@ -265,8 +271,16 @@ function BookingProgressCard({ args }: { args?: Partial<BookingInput> }) {
 						{guests.map((g, i) => (
 							<p key={i} className="text-sm font-medium text-gray-900 dark:text-white">
 								{g.firstName} {g.lastName}
-								{i === 0 && <span className="ml-1.5 text-xs text-brand-600 dark:text-brand-400">(primary)</span>}
-								{g.email && <span className="text-xs text-gray-500 dark:text-gray-400 ml-1.5">· {g.email}</span>}
+								{i === 0 && (
+									<span className="ml-1.5 text-xs text-brand-600 dark:text-brand-400">
+										(primary)
+									</span>
+								)}
+								{g.email && (
+									<span className="text-xs text-gray-500 dark:text-gray-400 ml-1.5">
+										· {g.email}
+									</span>
+								)}
 							</p>
 						))}
 					</div>
@@ -290,9 +304,9 @@ function BookingFailedCard({ result }: { result?: unknown }) {
 		typeof rawResult === 'string'
 			? rawResult
 			: rawResult?.detail ||
-			  rawResult?.error ||
-			  rawResult?.message ||
-			  'Reservation could not be created. Please check the details and try again.';
+				rawResult?.error ||
+				rawResult?.message ||
+				'Reservation could not be created. Please check the details and try again.';
 
 	return (
 		<div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 my-2 shadow-sm max-w-md">
@@ -325,11 +339,11 @@ function BookingConfirmedCard({ result }: { result: ReservationResult }) {
 		reservation.reservationIdList?.[0]?.id ||
 		'—';
 	const nights = calcNights(reservation.roomStay?.arrivalDate, reservation.roomStay?.departureDate);
-	const primaryGuest = reservation.reservationGuests?.find((g) => g.primary) || reservation.reservationGuests?.[0];
+	const primaryGuest =
+		reservation.reservationGuests?.find((g) => g.primary) || reservation.reservationGuests?.[0];
 	const profile = primaryGuest?.profileInfo?.profile;
 	const personName = profile?.customer?.personName?.[0];
-	const guestName =
-		[personName?.givenName, personName?.surname].filter(Boolean).join(' ') || '—';
+	const guestName = [personName?.givenName, personName?.surname].filter(Boolean).join(' ') || '—';
 	const total = reservation.roomStay?.total;
 	const gc = reservation.roomStay?.guestCounts;
 
@@ -438,11 +452,7 @@ function BookingConfirmedCard({ result }: { result: ReservationResult }) {
 
 				{/* Edit button */}
 				<div className="flex justify-end">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => setEditOpen(true)}
-					>
+					<Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
 						<Edit3 className="size-3 mr-1.5" />
 						Edit Booking
 					</Button>
@@ -463,7 +473,14 @@ function BookingConfirmedCard({ result }: { result: ReservationResult }) {
 
 // ─── Main export ─────────────────────────────────────────────────────────────
 
-export function BookingCard({ toolName, state, args, result, isError, sendMessage }: BookingCardProps) {
+export function BookingCard({
+	toolName,
+	state,
+	args,
+	result,
+	isError,
+	sendMessage,
+}: BookingCardProps) {
 	// Pricing tool card
 	if (toolName === 'get_room_pricing') {
 		if (state === 'call' || state === 'partial-call') {

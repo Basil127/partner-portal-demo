@@ -49,7 +49,8 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 		if (!isInitialized || isLoading || hotels.length === 0) return;
 
 		const stored = localStorage.getItem(STORAGE_KEY);
-		const isStoredValid = stored && hotels.some((h) => h.hotelId === stored || h.hotelCode === stored);
+		const isStoredValid =
+			stored && hotels.some((h) => h.hotelId === stored || h.hotelCode === stored);
 
 		if (!isStoredValid && hotels[0]) {
 			const firstId = hotels[0].hotelId ?? hotels[0].hotelCode ?? null;
@@ -69,7 +70,9 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 		hotels.find((h) => h.hotelId === selectedHotelId || h.hotelCode === selectedHotelId) ?? null;
 
 	return (
-		<HotelContext.Provider value={{ selectedHotelId, setSelectedHotelId, hotels, selectedHotel, isLoading }}>
+		<HotelContext.Provider
+			value={{ selectedHotelId, setSelectedHotelId, hotels, selectedHotel, isLoading }}
+		>
 			{children}
 		</HotelContext.Provider>
 	);

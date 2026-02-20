@@ -13,7 +13,9 @@ export function setupRoutes(fastify: FastifyInstance, services: ServiceContainer
 	const chatController = new ChatController(services.chatService);
 	const hotelShopController = new HotelShopController(services.hotelShopService);
 	const hotelContentController = new HotelContentController(services.hotelContentService);
-	const hotelReservationsController = new HotelReservationsController(services.hotelReservationsService);
+	const hotelReservationsController = new HotelReservationsController(
+		services.hotelReservationsService,
+	);
 	const hotelInventoryController = new HotelInventoryController(services.hotelInventoryService);
 
 	// Booking routes

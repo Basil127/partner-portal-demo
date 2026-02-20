@@ -21,8 +21,8 @@ yarn-error.log*
 Thumbs.db
 
 # Documentation
-*.md
 !README.md
+!system.md
 LICENSE
 THIRD_PARTY_NOTICE
 
@@ -41,6 +41,7 @@ __mocks__
 
 # Build outputs (we rebuild in Docker)
 node_modules
+**/node_modules
 .next
 dist
 build

@@ -11,7 +11,11 @@ COPY app/backend/package.json ./app/backend/
 COPY packages/shared/package.json ./packages/shared/
 
 # Install dependencies directly in builder (avoids broken .bin symlinks from cross-stage COPY)
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN --mount=type=cache,target=/root/.npm npm install
+# Fix npm optional-dependency bug (https://github.co m/npm/cli/issues/4828):
+# lockfile generated on Windows omits resolved URLs for Linux native binaries.
+# Re-installing these packages forces npm to fetch the correct platform variants.
+RUN npm install --no-save --prefer-online lightningcss @tailwindcss/oxide unrs-resolver
 
 # Copy source code and openapi specs
 COPY . .
@@ -22,6 +26,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run generate:client --workspace=app/frontend
 
 # Build the frontend
+# NEXT_PUBLIC_API_URL is baked into the JS bundle at build time
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 RUN npm run build:frontend

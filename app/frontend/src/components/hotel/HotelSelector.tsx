@@ -12,7 +12,7 @@ export default function HotelSelector() {
 
 	const displayName = isLoading
 		? 'Loading hotels...'
-		: selectedHotel?.hotelName ?? selectedHotel?.hotelCode ?? 'Select Hotel';
+		: (selectedHotel?.hotelName ?? selectedHotel?.hotelCode ?? 'Select Hotel');
 
 	return (
 		<div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-4 dark:border-gray-800 dark:bg-white/[0.03]">

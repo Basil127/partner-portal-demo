@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 import { setupRoutes } from '../infrastructure/adapters/http/routes.js';
+import type { ServiceContainer } from '../infrastructure/service-container.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +25,8 @@ async function generateOpenApi(): Promise<void> {
 		},
 	});
 
-	// Register routes so swagger can detect them
-	setupRoutes(fastify);
+	// Register routes so swagger can detect them (services unused during schema generation)
+	setupRoutes(fastify, {} as ServiceContainer);
 
 	await fastify.ready();
 

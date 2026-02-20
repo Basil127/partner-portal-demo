@@ -11,9 +11,12 @@ import { getModel } from './providers.js';
 import type { ServiceContainer } from '../../service-container.js';
 import { createToolDefinitions } from '../tools/tool-definitions.js';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
-const systemPrompt = fs.readFileSync('src/infrastructure/adapters/ai/system.md', 'utf-8');
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const systemPrompt = fs.readFileSync(resolve(__dirname, 'system.md'), 'utf-8');
 
 export async function setupAiRoutes(fastify: FastifyInstance, services: ServiceContainer) {
 	const { chatService } = services;

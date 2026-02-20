@@ -9,10 +9,11 @@ WORKDIR /app
 # Copy workspace configuration
 COPY package*.json ./
 COPY app/backend/package*.json ./app/backend/
+COPY app/frontend/package*.json ./app/frontend/
 COPY packages/shared/package*.json ./packages/shared/
 
 # Install dependencies (install all to ensure root devDeps like openapi-ts are available)
-RUN npm ci
+RUN npm install
 
 # Stage 2: Build the application
 FROM node:22-slim AS builder
@@ -40,6 +41,10 @@ RUN npm run generate:client --workspace=app/backend
 # Build backend
 WORKDIR /app/app/backend
 RUN npm run build
+
+# Copy non-TS assets required at runtime into the dist tree
+RUN cp src/infrastructure/adapters/ai/system.md \
+    dist/app/backend/src/infrastructure/adapters/ai/system.md
 
 # Prune dev dependencies to reduce image size
 WORKDIR /app
