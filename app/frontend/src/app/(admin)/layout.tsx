@@ -9,8 +9,10 @@ import Backdrop from '@/layout/Backdrop';
 import React from 'react';
 import { client } from '@/lib/api-client/client.gen';
 
+// NEXT_PUBLIC_API_URL is intentionally empty in production — relative URLs
+// are proxied by Next.js rewrites to the backend (see next.config.mjs).
 client.setConfig({
-	baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+	baseUrl: process.env.NEXT_PUBLIC_API_URL ?? '',
 });
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

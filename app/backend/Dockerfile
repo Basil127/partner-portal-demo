@@ -48,7 +48,7 @@ RUN cp src/infrastructure/adapters/ai/system.md \
 
 # Prune dev dependencies to reduce image size
 WORKDIR /app
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 # Stage 3: Production image
 FROM node:22-slim AS prod

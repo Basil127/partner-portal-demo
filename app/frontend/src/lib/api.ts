@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+// Empty string = relative URL → proxied by Next.js rewrites to the backend.
+// In local dev without Docker, NEXT_PUBLIC_API_URL can be set to http://localhost:3001.
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 export interface Booking {
 	id: string;

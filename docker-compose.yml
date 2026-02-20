@@ -6,7 +6,10 @@ services:
       dockerfile: ./app/frontend/Dockerfile
       target: prod
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+        # Empty string causes the frontend to use relative URLs (/api/*),
+        # which the Next.js rewrite proxy forwards to the backend internally.
+        # Override only if you need the browser to call the backend directly.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-}
     image: ohm-demo-frontend:${VERSION:-latest}
     env_file:
       - path: ./app/frontend/.env.production
