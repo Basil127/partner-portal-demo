@@ -1,0 +1,76 @@
+# ---------------------------------------------------------------------------
+# Caddyfile — OHM Demo reverse proxy
+#
+# Environment variables (set in docker-compose or your shell):
+#
+#   DOMAIN          The public hostname Caddy will serve.
+#                   • Locally: leave unset → defaults to "localhost"
+#                     (Caddy provisions a cert from its internal CA)
+#                   • On your VPS: set to your real domain, e.g. "demo.example.com"
+#                     (Caddy auto-obtains a Let's Encrypt cert)
+#
+#   ACME_EMAIL      (Optional, production only) Email for Let's Encrypt
+#                   registration — recommended so you get expiry notices.
+#
+# ---------------------------------------------------------------------------
+
+# Global options — only non-default items are listed here
+{
+	# Email for Let's Encrypt cert expiry notifications.
+	# Set ACME_EMAIL in your root .env on the VPS; leave blank locally.
+	email {$ACME_EMAIL:}
+
+	# Disable Caddy's built-in HTTP→HTTPS redirects.
+	# When behind Cloudflare, Cloudflare's edge handles the HTTP→HTTPS
+	# redirect (via "Always Use HTTPS" in the CF dashboard). Without this,
+	# Caddy redirecting HTTP to HTTPS while CF connects back over HTTP
+	# (Full mode) causes an infinite redirect loop.
+	auto_https disable_redirects
+
+	servers {
+		# Trust Cloudflare's proxy IPs so Caddy reads the real client IP
+		# from X-Forwarded-For instead of logging Cloudflare's edge IP.
+		# IP ranges sourced from https://www.cloudflare.com/ips/
+		trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+	}
+}
+
+# ---------------------------------------------------------------------------
+# Main site block
+# ---------------------------------------------------------------------------
+{$DOMAIN:localhost} {
+
+	# Compress responses for the client
+	encode gzip zstd
+
+	# Proxy everything to the Next.js frontend.
+	# Caddy automatically forwards X-Forwarded-For, X-Forwarded-Proto, and
+	# X-Forwarded-Host — no need to set them manually.
+	reverse_proxy frontend:3000 {
+		# Forward Cloudflare's real-client-IP header to the upstream
+		header_up X-Real-IP {http.request.header.Cf-Connecting-Ip}
+
+		# Health check so Caddy only routes to a healthy upstream
+		health_uri      /
+		health_interval 10s
+		health_timeout  3s
+	}
+
+	# ------------------------------------------------------------------
+	# Security headers — comment out/adjust as needed
+	# ------------------------------------------------------------------
+	header {
+		# Prevent MIME-type sniffing
+		X-Content-Type-Options "nosniff"
+		# Basic clickjacking protection
+		X-Frame-Options "SAMEORIGIN"
+		# Remove Caddy's Server header to avoid leaking version info
+		-Server
+	}
+
+	# Route Caddy logs to stderr so Docker captures them
+	log {
+		output stderr
+		format console
+	}
+}
