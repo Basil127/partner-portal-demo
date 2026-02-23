@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Chat, ChatHistoryModal } from '@/components/chat';
 import { useChatContext } from '@/context/ChatContext';
@@ -21,11 +21,12 @@ export default function ChatPage() {
 	const router = useRouter();
 	const [chatId, setChatId] = useState(() => generateUUID());
 	const [refreshTrigger, setRefreshTrigger] = useState(0);
+	const hasNavigated = useRef(false);
 	const { isHistoryOpen, closeHistory, setNewChatHandler } = useChatContext();
 
 	const handleNewChat = useCallback(() => {
 		setChatId(generateUUID());
-
+		hasNavigated.current = false;
 		closeHistory();
 	}, [closeHistory]);
 
@@ -52,7 +53,11 @@ export default function ChatPage() {
 
 	const handleMessageSent = useCallback(() => {
 		setRefreshTrigger((prev) => prev + 1);
-	}, []);
+		if (!hasNavigated.current) {
+			hasNavigated.current = true;
+			window.history.pushState(null, '', `/chat/${chatId}`);
+		}
+	}, [chatId]);
 
 	return (
 		<>
