@@ -8,32 +8,18 @@ import { useChatContext } from '@/context/ChatContext';
 import { getApiChatsById } from '@/lib/api-client';
 
 /**
- * Resolve corrupted session-storage message arrays:
- * 1. Deduplicate by message ID — keep the last copy (most parts / most complete).
- * 2. Clamp any tool parts that are still "in-flight" (input-streaming / call)
- *    to an error state so they don't render as permanently-pending cards.
+ * Fix any tool parts that are still "in-flight" (input-streaming / call)
+ * to an error state so they don't render as permanently-pending cards.
+ * Used when restoring messages from the database.
  */
-function sanitizeStoredMessages(messages: UIMessage[]): UIMessage[] {
-	// Keep last occurrence of each ID
-	const seen = new Map<string, UIMessage>();
-	for (const msg of messages) {
-		seen.set(msg.id, msg);
-	}
-	const deduped = Array.from(seen.values());
-
-	// Fix stale tool parts
-	return deduped.map((msg) => {
-		if (!msg.parts) return msg;
-		const fixedParts = msg.parts.map((part: any) => {
-			if (!part.type?.startsWith('tool-')) return part;
-			const s = part.state;
-			// These states mean the stream was cut off — treat as error
-			if (s === 'call' || s === 'input-streaming') {
-				return { ...part, state: 'output-error', isError: true };
-			}
-			return part;
-		});
-		return { ...msg, parts: fixedParts };
+function sanitizeToolParts(parts: any[]): any[] {
+	return parts.map((part: any) => {
+		if (!part.type?.startsWith('tool-')) return part;
+		const s = part.state;
+		if (s === 'call' || s === 'input-streaming') {
+			return { ...part, state: 'output-error', isError: true };
+		}
+		return part;
 	});
 }
 
@@ -50,20 +36,6 @@ export default function ChatByIdPage() {
 	useEffect(() => {
 		async function loadChat() {
 			try {
-				// First try to restore full messages (with tool parts) from sessionStorage
-				const stored = sessionStorage.getItem(`chat-messages-${chatId}`);
-				if (stored) {
-					const parsed = JSON.parse(stored) as UIMessage[];
-					if (parsed.length > 0) {
-						// Deduplicate by ID (keep last occurrence — most up-to-date parts)
-						// and fix any stale pending tool parts that can never be resolved.
-						const deduped = sanitizeStoredMessages(parsed);
-						setInitialMessages(deduped);
-						setIsLoading(false);
-						return;
-					}
-				}
-
 				const { data, error } = await getApiChatsById({
 					path: { id: chatId },
 				});
@@ -71,11 +43,28 @@ export default function ChatByIdPage() {
 					setNotFound(true);
 					return;
 				}
-				const uiMessages: UIMessage[] = (data.messages ?? []).map((m) => ({
-					id: m.id ?? '',
-					role: (m.role ?? 'user') as UIMessage['role'],
-					parts: [{ type: 'text' as const, text: m.content ?? '' }],
-				}));
+				const uiMessages: UIMessage[] = (data.messages ?? []).map((m) => {
+					// Restore full parts array (tool invocations) if saved, otherwise fall back to plain text
+					let parts: UIMessage['parts'] | undefined = undefined;
+					if (m.parts) {
+						try {
+							const parsed = JSON.parse(m.parts);
+							if (Array.isArray(parsed) && parsed.length > 0) {
+								parts = sanitizeToolParts(parsed) as UIMessage['parts'];
+							}
+						} catch {
+							// fall through to text fallback
+						}
+					}
+					if (!parts) {
+						parts = [{ type: 'text' as const, text: m.content ?? '' }];
+					}
+					return {
+						id: m.id ?? '',
+						role: (m.role ?? 'user') as UIMessage['role'],
+						parts,
+					};
+				});
 				setInitialMessages(uiMessages);
 			} catch (err) {
 				console.error('Failed to load chat:', err);

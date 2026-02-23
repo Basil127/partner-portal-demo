@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import type { UIMessage } from 'ai';
-import { Bot, User, Wrench } from 'lucide-react';
+import { Bot, User, Sparkle } from 'lucide-react';
 import { ChatMarkdown } from './ChatMarkdown';
 import { MessageActions } from './MessageActions';
 import { BookingCard } from './BookingCard';
@@ -12,10 +12,61 @@ interface PreviewMessageProps {
 	sendMessage?: (msg: { text: string }) => void;
 }
 
-/** Tool names that get a special card UI — everything else shows a generic tool badge. */
+/** Tool names that get a special card UI â€” everything else shows a generic tool badge. */
 const BOOKING_TOOL_NAMES = new Set(['create_reservation', 'get_room_pricing']);
 
-/** Renders a tool invocation: either a booking card or a generic badge. */
+/**
+ * Strip internal model reasoning tokens that leak into displayed text.
+ * The model sometimes wraps chain-of-thought with "analysis" / "assistantfinal" markers.
+ * We only show the content after the last "assistantfinal" marker.
+ */
+function stripThinkingTokens(text: string): string {
+	const marker = 'assistantfinal';
+	const idx = text.lastIndexOf(marker);
+	if (idx !== -1) {
+		return text.slice(idx + marker.length).trimStart();
+	}
+	return text;
+}
+
+/** Renders a generic tool invocation row (non-booking tools). */
+function GenericToolRow({ part }: { part: any }) {
+	const toolName: string = part.toolName ?? part.type?.replace(/^tool-/, '') ?? '';
+	const state: string = part.state ?? 'call';
+	const isError: boolean = part.isError || state === 'output-error';
+
+	return (
+		<div className="tool-badge-enter flex w-full items-center gap-3 justify-start mb-2">
+			<div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-50 ring-1 ring-brand-200 dark:bg-brand-900/30 dark:ring-brand-700">
+				<Bot className="size-4 text-brand-600 dark:text-brand-400" />
+			</div>
+			<div
+				className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-all duration-200 ${
+					isError
+						? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+						: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+				}`}
+			>
+				<Sparkle className="size-3 shrink-0" />
+				<span
+					className={`font-medium 
+					${state === 'input-streaming' ? 'animate-pulse' : ''}`}
+				>
+					{toolName}
+				</span>
+				{state === 'input-streaming' || state === 'call' ? (
+					<span className="italic opacity-60">(calling)</span>
+				) : isError ? (
+					<span className="italic opacity-60">(error)</span>
+				) : (
+					<span className="italic opacity-60">(success)</span>
+				)}
+			</div>
+		</div>
+	);
+}
+
+/** Renders a booking tool: either a dedicated card or a generic row. */
 function ToolPart({
 	part,
 	sendMessage,
@@ -23,15 +74,12 @@ function ToolPart({
 	part: any;
 	sendMessage?: (msg: { text: string }) => void;
 }) {
-	// AI SDK v6: tool parts have type "tool-{toolName}", with `input`/`output` fields
 	const toolName: string = part.toolName ?? part.type?.replace(/^tool-/, '') ?? '';
 	const state: string = part.state ?? 'call';
-	// AI SDK v6 uses `input`/`output`; v5 uses `args`/`result`
 	const args = part.input ?? part.args;
 	const result = part.output ?? part.result;
 	const isError: boolean = part.isError ?? false;
 
-	// Map AI SDK v6 states to our card states
 	const cardState: 'call' | 'result' | 'partial-call' =
 		state === 'output-available'
 			? 'result'
@@ -41,46 +89,27 @@ function ToolPart({
 					? 'partial-call'
 					: 'call';
 
-	// Treat output-error as an error result even if isError flag not set
 	const effectiveIsError = isError || state === 'output-error';
 
-	// Booking / pricing — dedicated full-width card
-	if (BOOKING_TOOL_NAMES.has(toolName)) {
-		return (
-			<BookingCard
-				toolName={toolName}
-				state={cardState}
-				args={args}
-				result={result}
-				isError={effectiveIsError}
-				sendMessage={sendMessage}
-			/>
-		);
-	}
-
-	// Other tools — generic pill badge (stays inline)
 	return (
-		<div className="inline-flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-1.5 my-1 text-xs text-gray-600 dark:text-gray-400 max-w-full">
-			<Wrench className="size-3 shrink-0" />
-			<span className="font-medium">{toolName}</span>
-			{state !== 'output-available' && (
-				<span className="text-gray-400 dark:text-gray-500 italic">(calling…)</span>
-			)}
-			{state === 'output-available' && result != null && (
-				<span className="text-gray-400 dark:text-gray-500 truncate max-w-50">
-					→ {typeof result === 'string' ? result : JSON.stringify(result).slice(0, 80)}
-				</span>
-			)}
-		</div>
+		<BookingCard
+			toolName={toolName}
+			state={cardState}
+			args={args}
+			result={result}
+			isError={effectiveIsError}
+			sendMessage={sendMessage}
+		/>
 	);
 }
 
 export function PreviewMessage({ message, isLoading, sendMessage }: PreviewMessageProps) {
 	const parts = message.parts ?? [];
 
-	// Separate text parts (stay in bubble) from booking tool parts (rendered outside bubble at full width)
-	const textAndGenericParts: Array<{ index: number; part: any }> = [];
+	// Bucket parts into three categories (preserving source order via index)
+	const genericToolParts: Array<{ index: number; part: any }> = [];
 	const bookingToolParts: Array<{ index: number; part: any }> = [];
+	const textParts: Array<{ index: number; part: any }> = [];
 
 	parts.forEach((p: any, i: number) => {
 		if (p.type && p.type.startsWith('tool-')) {
@@ -88,26 +117,35 @@ export function PreviewMessage({ message, isLoading, sendMessage }: PreviewMessa
 			if (BOOKING_TOOL_NAMES.has(toolName)) {
 				bookingToolParts.push({ index: i, part: p });
 			} else {
-				textAndGenericParts.push({ index: i, part: p });
+				genericToolParts.push({ index: i, part: p });
 			}
-		} else {
-			textAndGenericParts.push({ index: i, part: p });
+		} else if (p.type === 'text') {
+			textParts.push({ index: i, part: p });
 		}
 	});
 
-	// Fallback: if message has no parts but has content, treat as text
-	const hasTextContent = textAndGenericParts.some(Boolean);
 	const fallbackContent =
-		!hasTextContent && typeof (message as any).content === 'string'
+		parts.length === 0 && typeof (message as any).content === 'string'
 			? (message as any).content
 			: null;
-	const hasAnyVisibleContent = hasTextContent || fallbackContent || bookingToolParts.length > 0;
+
+	const hasTextContent = textParts.length > 0;
+	const hasAnyVisibleContent =
+		hasTextContent || fallbackContent || bookingToolParts.length > 0 || genericToolParts.length > 0;
 
 	if (!hasAnyVisibleContent) return null;
 
 	return (
-		<div className="group w-full" data-role={message.role} data-testid={`message-${message.role}`}>
-			{/* Booking tool cards — aligned with assistant messages */}
+		<div
+			className="chat-message-enter group w-full"
+			data-role={message.role}
+			data-testid={`message-${message.role}`}
+		>
+			{/* Generic tool rows â€” each gets its own line with bot avatar */}
+			{message.role === 'assistant' &&
+				genericToolParts.map(({ index, part }) => <GenericToolRow key={index} part={part} />)}
+
+			{/* Booking tool cards â€” full-width with bot avatar */}
 			{bookingToolParts.map(({ index, part }) => (
 				<div key={index} className="flex w-full items-start gap-3 justify-start mb-3">
 					<div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-50 ring-1 ring-brand-200 dark:bg-brand-900/30 dark:ring-brand-700">
@@ -119,7 +157,7 @@ export function PreviewMessage({ message, isLoading, sendMessage }: PreviewMessa
 				</div>
 			))}
 
-			{/* Text / generic tool badges — inside message bubble */}
+			{/* Text bubble */}
 			{(hasTextContent || fallbackContent) && (
 				<div
 					className={`flex w-full items-start gap-3 ${
@@ -144,32 +182,30 @@ export function PreviewMessage({ message, isLoading, sendMessage }: PreviewMessa
 									: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
 							}`}
 						>
-							{textAndGenericParts.map(({ index, part: p }) => {
-								if (p.type === 'text') {
-									return (
-										<div key={index}>
-											{message.role === 'user' ? (
-												<p className="whitespace-pre-wrap">{p.text}</p>
-											) : (
-												<div className="prose prose-sm dark:prose-invert max-w-prose">
-													<ChatMarkdown content={p.text} />
-												</div>
-											)}
-										</div>
-									);
-								}
-								// Generic tool badge
-								if (p.type && p.type.startsWith('tool-')) {
-									return <ToolPart key={index} part={p} sendMessage={sendMessage} />;
-								}
-								return null;
+							{textParts.map(({ index, part: p }) => {
+								const displayText =
+									message.role === 'assistant' ? stripThinkingTokens(p.text) : p.text;
+								if (!displayText) return null;
+								return (
+									<div key={index}>
+										{message.role === 'user' ? (
+											<p className="whitespace-pre-wrap">{displayText}</p>
+										) : (
+											<div
+												className={`prose prose-sm dark:prose-invert max-w-prose${isLoading ? ' streaming-cursor' : ''}`}
+											>
+												<ChatMarkdown content={displayText} />
+											</div>
+										)}
+									</div>
+								);
 							})}
 							{fallbackContent &&
 								(message.role === 'user' ? (
 									<p className="whitespace-pre-wrap">{fallbackContent}</p>
 								) : (
 									<div className="prose prose-sm dark:prose-invert max-w-prose">
-										<ChatMarkdown content={fallbackContent} />
+										<ChatMarkdown content={stripThinkingTokens(fallbackContent)} />
 									</div>
 								))}
 						</div>

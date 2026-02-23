@@ -143,25 +143,85 @@ export async function setupAiRoutes(fastify: FastifyInstance, services: ServiceC
 	fastify.log.info('AI chat routes registered at /api/ai/chat');
 }
 
+/**
+ * Strips model internal reasoning tokens (analysis/assistantfinal markers) from displayed text.
+ */
+function stripThinkingTokens(text: string): string {
+	const marker = 'assistantfinal';
+	const idx = text.lastIndexOf(marker);
+	if (idx !== -1) {
+		return text.slice(idx + marker.length).trimStart();
+	}
+	return text;
+}
+
 async function saveAssistantResponse(
-	chatService: ServiceContainer['chatService'],
 	chatId: string,
 	result: { text: PromiseLike<string>; response: PromiseLike<{ messages: any[] }> },
 ) {
 	try {
 		const [text, response] = await Promise.all([result.text, result.response]);
-		// Find the last assistant message from the response to persist its parts
-		const assistantMessages = response?.messages?.filter((m: any) => m.role === 'assistant') ?? [];
-		const lastAssistant = assistantMessages[assistantMessages.length - 1];
-		const parts = lastAssistant?.parts;
+		const modelMessages: any[] = response?.messages ?? [];
 
-		// Save when there is text OR when there are tool-call parts (e.g. tool-only turns with no prose)
-		if (text || (Array.isArray(parts) && parts.length > 0)) {
+		// Reconstruct a single UIMessage parts array that mirrors what the AI SDK emits on the client.
+		// Model messages alternate: assistant (text + tool-calls) → tool (results) → assistant (text) …
+		// We flatten them all into one parts array so the full conversation turn is stored together.
+		const combinedParts: any[] = [];
+		// Track tool-call parts by ID so we can patch in the result when the tool message arrives.
+		const toolCallIndex = new Map<string, number>();
+
+		for (const msg of modelMessages) {
+			if (msg.role === 'assistant') {
+				const content = Array.isArray(msg.content) ? msg.content : [];
+				for (const part of content) {
+					if (part.type === 'text' && part.text) {
+						combinedParts.push({ type: 'text', text: part.text });
+					} else if (part.type === 'tool-call') {
+						const idx = combinedParts.length;
+						toolCallIndex.set(part.toolCallId, idx);
+						combinedParts.push({
+							type: `tool-${part.toolName}`,
+							toolName: part.toolName,
+							toolCallId: part.toolCallId,
+							state: 'call',
+							input: part.input ?? part.args ?? {},
+							output: null,
+							isError: false,
+						});
+					}
+				}
+			} else if (msg.role === 'tool') {
+				const content = Array.isArray(msg.content) ? msg.content : [];
+				for (const part of content) {
+					if (part.type === 'tool-result') {
+						const idx = toolCallIndex.get(part.toolCallId);
+						if (idx !== undefined) {
+							combinedParts[idx] = {
+								...combinedParts[idx],
+								state: part.isError ? 'output-error' : 'output-available',
+								output: part.output ?? part.result ?? null,
+								isError: !!part.isError,
+							};
+						}
+					}
+				}
+			}
+		}
+
+		// Strip internal reasoning tokens from text parts before saving
+		const cleanParts = combinedParts.map((p) =>
+			p.type === 'text' ? { ...p, text: stripThinkingTokens(p.text) } : p,
+		);
+		const cleanText = stripThinkingTokens(text);
+
+		// Save when there is text OR tool-call parts
+		const hasContent = cleanText || cleanParts.some((p) => p.type !== 'text' || p.text);
+		if (hasContent) {
 			await chatService.addMessage({
 				chatId,
 				role: 'assistant',
-				content: text,
-				parts: parts ? JSON.stringify(parts) : undefined,
+				content: cleanText,
+				parts: cleanParts.length > 0 ? JSON.stringify(cleanParts) : undefined,
 			});
 		}
 	} catch (error) {

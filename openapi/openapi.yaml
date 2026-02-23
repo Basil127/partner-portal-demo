@@ -2598,6 +2598,9 @@ paths:
                           type: string
                         content:
                           type: string
+                        parts:
+                          type: string
+                          nullable: true
                         createdAt:
                           type: string
         '404':

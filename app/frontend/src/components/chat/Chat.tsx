@@ -2,7 +2,7 @@
 
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, type UIMessage } from 'ai';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 // import { ChatHeader } from './ChatHeader';
 import { ChatInput } from './ChatInput';
 import { ChatMessages } from './ChatMessages';
@@ -13,8 +13,6 @@ interface ChatProps {
 	onNewChat?: () => void;
 	onMessageSent?: () => void;
 }
-
-const SESSION_KEY = (id: string) => `chat-messages-${id}`;
 
 export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 	const [input, setInput] = useState('');
@@ -34,20 +32,6 @@ export function Chat({ id, initialMessages = [], onMessageSent }: ChatProps) {
 			onMessageSent?.();
 		},
 	});
-
-	// Persist full messages (including tool parts) to sessionStorage.
-	// Only save when the stream is finished to avoid persisting intermediate
-	// duplicate-ID states that the AI SDK emits during multi-step streaming.
-	useEffect(() => {
-		if (status !== 'ready') return;
-		if (messages.length > 0) {
-			try {
-				sessionStorage.setItem(SESSION_KEY(id), JSON.stringify(messages));
-			} catch {
-				// ignore storage errors
-			}
-		}
-	}, [id, messages, status]);
 
 	const submitMessage = useCallback(() => {
 		const text = input.trim();

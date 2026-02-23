@@ -64,10 +64,7 @@ class PostgresAdapter implements DatabaseAdapter {
 		});
 
 		try {
-			const res = await adminPool.query(
-				`SELECT 1 FROM pg_database WHERE datname = $1`,
-				[dbName],
-			);
+			const res = await adminPool.query(`SELECT 1 FROM pg_database WHERE datname = $1`, [dbName]);
 			if (res.rowCount === 0) {
 				// CREATE DATABASE cannot run inside a transaction block
 				await adminPool.query(`CREATE DATABASE "${dbName}"`);

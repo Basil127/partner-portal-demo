@@ -919,3 +919,44 @@ span.flatpickr-weekday,
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
 }
+
+/* ── Chat message animations ──────────────────────────────── */
+@keyframes message-in {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes blink-cursor {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+}
+
+.chat-message-enter {
+	animation: message-in 0.18s ease-out both;
+}
+
+.streaming-cursor::after {
+	content: '|';
+	display: inline-block;
+	margin-left: 1px;
+	animation: blink-cursor 0.6s ease-in-out infinite;
+	color: currentColor;
+	line-height: 1;
+	vertical-align: -0.05em;
+}
+
+/* Smooth tool badge appearance */
+.tool-badge-enter {
+	animation: message-in 0.15s ease-out both;
+}

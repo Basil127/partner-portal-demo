@@ -1829,6 +1829,7 @@ export function setupRoutes(fastify: FastifyInstance, services: ServiceContainer
 									chatId: { type: 'string' },
 									role: { type: 'string' },
 									content: { type: 'string' },
+									parts: { type: 'string', nullable: true },
 									createdAt: { type: 'string' },
 								},
 							},
