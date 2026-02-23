@@ -1,4 +1,4 @@
-import { getApiChats, deleteApiChatsById } from '@/lib/api-client';
+import { getApiChats, deleteApiChatsById, patchApiChatsById } from '@/lib/api-client';
 import { serverClient } from '@/lib/chat/server-client';
 
 export async function GET(request: Request) {
@@ -14,6 +14,32 @@ export async function GET(request: Request) {
 		return Response.json(data);
 	} catch (error) {
 		console.error('Chat history API error:', error);
+		return new Response(JSON.stringify({ error: 'Internal server error' }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json' },
+		});
+	}
+}
+
+export async function PATCH(request: Request) {
+	try {
+		const { id, title } = await request.json();
+
+		if (!id || !title) {
+			return new Response(JSON.stringify({ error: 'Chat ID and title are required' }), {
+				status: 400,
+				headers: { 'Content-Type': 'application/json' },
+			});
+		}
+
+		const { data } = await patchApiChatsById({
+			path: { id },
+			body: { title: title.trim() },
+			client: serverClient,
+		});
+		return Response.json(data);
+	} catch (error) {
+		console.error('Chat rename API error:', error);
 		return new Response(JSON.stringify({ error: 'Internal server error' }), {
 			status: 500,
 			headers: { 'Content-Type': 'application/json' },

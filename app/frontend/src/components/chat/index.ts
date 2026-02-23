@@ -2,7 +2,7 @@ export { Chat } from './Chat';
 export { ChatGreeting } from './ChatGreeting';
 // export { ChatHeader } from './ChatHeader';
 export { ChatHistoryList } from './ChatHistoryList';
-export { ChatHistory } from './ChatHistory';
+export { ChatHistoryModal } from './ChatHistoryModal';
 export { ChatInput } from './ChatInput';
 export { ChatMarkdown } from './ChatMarkdown';
 export { ChatMessages } from './ChatMessages';

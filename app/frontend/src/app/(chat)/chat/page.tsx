@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Chat, ChatHistory } from '@/components/chat';
+import { Chat, ChatHistoryModal } from '@/components/chat';
 import { useChatContext } from '@/context/ChatContext';
 
 function generateUUID(): string {
@@ -64,13 +64,13 @@ export default function ChatPage() {
 				{/* </div> */}
 			</div>
 
-			<ChatHistory
-				isOpen={isHistoryOpen}
-				onClose={closeHistory}
+			<ChatHistoryModal
 				currentChatId={chatId}
 				onSelectChat={handleSelectChat}
 				onDeleteChat={handleDeleteChat}
 				refreshTrigger={refreshTrigger}
+				isOpen={isHistoryOpen}
+				onClose={closeHistory}
 			/>
 		</>
 	);

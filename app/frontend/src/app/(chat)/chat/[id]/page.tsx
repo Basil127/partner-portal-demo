@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import type { UIMessage } from 'ai';
-import { Chat, ChatHistory } from '@/components/chat';
+import { Chat, ChatHistoryModal } from '@/components/chat';
 import { useChatContext } from '@/context/ChatContext';
 import { getApiChatsById } from '@/lib/api-client';
 
@@ -156,7 +156,7 @@ export default function ChatByIdPage() {
 				</div>
 				{/* </div> */}
 			</div>
-			<ChatHistory
+			<ChatHistoryModal
 				isOpen={isHistoryOpen}
 				onClose={closeHistory}
 				currentChatId={chatId}

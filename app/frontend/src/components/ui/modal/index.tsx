@@ -8,6 +8,7 @@ interface ModalProps {
 	children: React.ReactNode;
 	showCloseButton?: boolean; // New prop to control close button visibility
 	isFullscreen?: boolean; // Default to false for backwards compatibility
+	align?: 'center' | 'top'; // Vertical alignment of the modal content
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -17,6 +18,7 @@ export const Modal: React.FC<ModalProps> = ({
 	className,
 	showCloseButton = true, // Default to true for backwards compatibility
 	isFullscreen = false,
+	align = 'center',
 }) => {
 	const modalRef = useRef<HTMLDivElement>(null);
 
@@ -54,15 +56,17 @@ export const Modal: React.FC<ModalProps> = ({
 		? 'w-full h-full'
 		: 'relative w-full rounded-3xl bg-white  dark:bg-gray-900';
 
+	const alignClass = align === 'top' ? 'items-start pt-16' : 'items-center';
+
 	return (
-		<div className="fixed inset-0 z-[99999] overflow-y-auto w-dvw h-dvw">
+		<div className="fixed inset-0 z-[99999] overflow-y-auto">
 			{!isFullscreen && (
 				<div
 					className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
 					onClick={onClose}
 				></div>
 			)}
-			<div className="flex min-h-full items-center justify-center p-4">
+			<div className={`flex min-h-full ${alignClass} justify-center p-4`}>
 				<div
 					ref={modalRef}
 					className={`${contentClasses} ${className}`}

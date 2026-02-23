@@ -3,6 +3,7 @@
 import { MessageSquare, Trash2, Clock } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import type { GetApiChatsResponse } from '@/lib/api-client';
+import { ChatHistory } from './ChatHistory';
 
 type ChatItem = NonNullable<NonNullable<GetApiChatsResponse>['chats']>[number];
 type ChatHistoryData = NonNullable<GetApiChatsResponse>;
@@ -92,34 +93,14 @@ export function ChatHistoryList({
 	return (
 		<div className="flex flex-col gap-1 p-2" data-testid="chat-history">
 			{chats.map((chat) => (
-				<button
+				<ChatHistory
+					chat={chat}
+					onSelectChat={onSelectChat}
+					onDeleteChat={onDeleteChat}
+					setChats={setChats}
+					isSelectedChat={chat.id === currentChatId}
 					key={chat.id}
-					onClick={() => onSelectChat(chat.id ?? '')}
-					className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
-						currentChatId === chat.id
-							? 'bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300'
-							: 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800'
-					}`}
-					type="button"
-					data-testid={`chat-history-item-${chat.id}`}
-				>
-					<MessageSquare className="size-4 shrink-0" />
-					<div className="min-w-0 flex-1">
-						<p className="truncate text-sm font-medium">{chat.title}</p>
-						<p className="flex items-center gap-1 text-xs opacity-60">
-							<Clock className="size-3" />
-							{formatDate(chat.updatedAt ?? '')}
-						</p>
-					</div>
-					<div
-						onClick={(e) => handleDelete(e, chat.id ?? '')}
-						className="shrink-0 rounded p-1 opacity-0 transition-opacity hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 dark:hover:bg-red-900/30"
-						title="Delete chat"
-						data-testid={`delete-chat-${chat.id}`}
-					>
-						<Trash2 className="size-3.5" />
-					</div>
-				</button>
+				/>
 			))}
 		</div>
 	);
