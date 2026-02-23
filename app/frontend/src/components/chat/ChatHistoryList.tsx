@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageSquare, Trash2, Clock } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import type { GetApiChatsResponse } from '@/lib/api-client';
 import { ChatHistory } from './ChatHistory';
@@ -41,34 +41,6 @@ export function ChatHistoryList({
 	useEffect(() => {
 		fetchChats();
 	}, [fetchChats, refreshTrigger]);
-
-	const handleDelete = async (e: React.MouseEvent, chatId: string) => {
-		e.stopPropagation();
-		try {
-			const res = await fetch(`/api/chat/history?id=${chatId}`, { method: 'DELETE' });
-			if (res.ok || res.status === 204) {
-				setChats((prev) => prev.filter((c) => c.id !== chatId));
-				onDeleteChat(chatId);
-			}
-		} catch (error) {
-			console.error('Failed to delete chat:', error);
-		}
-	};
-
-	const formatDate = (dateStr: string) => {
-		const date = new Date(dateStr);
-		const now = new Date();
-		const diffMs = now.getTime() - date.getTime();
-		const diffMins = Math.floor(diffMs / 60000);
-		const diffHours = Math.floor(diffMs / 3600000);
-		const diffDays = Math.floor(diffMs / 86400000);
-
-		if (diffMins < 1) return 'Just now';
-		if (diffMins < 60) return `${diffMins}m ago`;
-		if (diffHours < 24) return `${diffHours}h ago`;
-		if (diffDays < 7) return `${diffDays}d ago`;
-		return date.toLocaleDateString();
-	};
 
 	if (isLoading) {
 		return (

@@ -156,6 +156,7 @@ function stripThinkingTokens(text: string): string {
 }
 
 async function saveAssistantResponse(
+	chatService: ServiceContainer['chatService'],
 	chatId: string,
 	result: { text: PromiseLike<string>; response: PromiseLike<{ messages: any[] }> },
 ) {
