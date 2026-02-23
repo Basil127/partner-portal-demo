@@ -1,4 +1,26 @@
 services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    env_file:
+      - ./caddy/.env.production
+    environment:
+      # Set DOMAIN to your real hostname on your VPS (e.g. demo.example.com).
+      # Leave unset locally — Caddy defaults to "localhost" with its internal CA.
+      # Optionally set ACME_EMAIL for Let's Encrypt expiry notifications.
+      - DOMAIN=${DOMAIN:-localhost}
+      - ACME_EMAIL=${ACME_EMAIL:-}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # stores TLS certs — must survive re-deploys
+      - caddy_config:/config  # Caddy config cache
+    depends_on:
+      - frontend
+
   frontend:
     restart: unless-stopped
     build:
@@ -17,8 +39,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-    ports:
-      - "3000:3000"
+    # Port 3000 is intentionally NOT published here — Caddy is the only
+    # public entry point. Remove the comment below to expose it directly
+    # for local debugging: ports: ["3000:3000"]
     depends_on:
       - backend
   
@@ -91,3 +114,7 @@ volumes:
     name: OperaClone2-db-data
   backend-data:
     name: backend-data
+  caddy_data:
+    name: ohm-demo-caddy-data   # persists TLS certificates across re-deploys
+  caddy_config:
+    name: ohm-demo-caddy-config

@@ -1,4 +1,23 @@
 services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    environment:
+      # localhost — Caddy auto-generates a cert via its internal CA.
+      # Run `docker compose exec caddy caddy trust` once to add the CA to your
+      # system trust store so browsers don't show a certificate warning.
+      - DOMAIN=localhost
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+
   frontend:
     restart: unless-stopped
     develop:
@@ -23,8 +42,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-    ports:
-      - "3000:3000"
+    # Port 3000 is intentionally NOT published — Caddy is the entry point.
+    # Uncomment to access the frontend directly without Caddy:
+    # ports:
+    #   - "3000:3000"
     depends_on:
       - backend
   
@@ -42,7 +63,8 @@ services:
       # Override localhost values in .env.local with Docker service names
       - DB_HOST=OperaClone2-db
       - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
-      - CORS_ORIGINS=http://localhost:3000
+      # Include both the direct port and the Caddy-proxied URL in CORS origins
+      - CORS_ORIGINS=https://localhost,http://localhost
     ports:
       - "3001:3001"
     volumes:
@@ -108,3 +130,7 @@ volumes:
     name: OperaClone2-db-data
   backend-data:
     name: backend-data
+  caddy_data:
+    name: ohm-demo-caddy-data-local
+  caddy_config:
+    name: ohm-demo-caddy-config-local

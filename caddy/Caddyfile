@@ -1,0 +1,64 @@
+# ---------------------------------------------------------------------------
+# Caddyfile — OHM Demo reverse proxy
+#
+# Environment variables (set in docker-compose or your shell):
+#
+#   DOMAIN          The public hostname Caddy will serve.
+#                   • Locally: leave unset → defaults to "localhost"
+#                     (Caddy provisions a cert from its internal CA)
+#                   • On your VPS: set to your real domain, e.g. "demo.example.com"
+#                     (Caddy auto-obtains a Let's Encrypt cert)
+#
+#   ACME_EMAIL      (Optional, production only) Email for Let's Encrypt
+#                   registration — recommended so you get expiry notices.
+#
+# ---------------------------------------------------------------------------
+
+# Global options — only non-default items are listed here
+{
+	# Uncomment and set ACME_EMAIL on VPS for certificate expiry notifications:
+	# email {$ACME_EMAIL}
+
+	# In local/dev you may want to enable the admin API on a non-default port:
+	# admin off
+}
+
+# ---------------------------------------------------------------------------
+# Main site block
+# ---------------------------------------------------------------------------
+{$DOMAIN:localhost} {
+
+	# Compress responses for the client
+	encode gzip zstd
+
+	# Proxy everything to the Next.js frontend
+	reverse_proxy frontend:3000 {
+		# Pass the real client IP so backend logs are useful
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+
+		# Health check so Caddy only routes to a healthy upstream
+		health_uri      /
+		health_interval 10s
+		health_timeout  3s
+	}
+
+	# ------------------------------------------------------------------
+	# Security headers — comment out/adjust as needed
+	# ------------------------------------------------------------------
+	header {
+		# Prevent MIME-type sniffing
+		X-Content-Type-Options "nosniff"
+		# Basic clickjacking protection
+		X-Frame-Options "SAMEORIGIN"
+		# Remove Caddy's Server header to avoid leaking version info
+		-Server
+	}
+
+	# Route Caddy logs to stderr so Docker captures them
+	log {
+		output stderr
+		format console
+	}
+}
