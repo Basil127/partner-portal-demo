@@ -66,7 +66,9 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-# Root-level env files
+# Root .env ─ the shared config for DOMAIN, ACME_EMAIL, VERSION etc.
+#   .env.example  → committed template (copy to .env and fill in)
+#   .env          → your real values (never commit)
 .env
 .env.*
 !.env.example
@@ -76,6 +78,9 @@ test.env
 # app/**/.env.example is committed as a template)
 app/**/.env.local
 app/**/.env.production
+# Caddy per-environment env files (.env.example is committed as a note)
+caddy/.env.local
+caddy/.env.production
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

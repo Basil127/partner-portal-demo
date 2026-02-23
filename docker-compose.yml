@@ -6,12 +6,9 @@ services:
       - "80:80"
       - "443:443"
       - "443:443/udp"  # HTTP/3
-    env_file:
-      - ./caddy/.env.production
     environment:
-      # Set DOMAIN to your real hostname on your VPS (e.g. demo.example.com).
-      # Leave unset locally — Caddy defaults to "localhost" with its internal CA.
-      # Optionally set ACME_EMAIL for Let's Encrypt expiry notifications.
+      # Both values come from the root .env file (see .env.example).
+      # Docker Compose substitutes ${DOMAIN} and ${ACME_EMAIL} automatically.
       - DOMAIN=${DOMAIN:-localhost}
       - ACME_EMAIL=${ACME_EMAIL:-}
     volumes:
@@ -39,6 +36,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      # Exposes the public domain to the Next.js app (e.g. for allowed origins,
+      # canonical URLs). Sourced from the root .env file.
+      - NEXT_PUBLIC_DOMAIN=${DOMAIN:-localhost}
     # Port 3000 is intentionally NOT published here — Caddy is the only
     # public entry point. Remove the comment below to expose it directly
     # for local debugging: ports: ["3000:3000"]
@@ -55,6 +55,10 @@ services:
     env_file:
       - path: ./app/backend/.env.production
         required: true
+    environment:
+      # Allow requests from the public domain served by Caddy.
+      # ${DOMAIN} is substituted from the root .env file.
+      - CORS_ORIGINS=https://${DOMAIN:-localhost}
     ports:
       - "3001:3001"
     volumes:

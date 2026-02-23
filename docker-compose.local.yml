@@ -42,6 +42,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - NEXT_PUBLIC_DOMAIN=${DOMAIN:-localhost}
     # Port 3000 is intentionally NOT published — Caddy is the entry point.
     # Uncomment to access the frontend directly without Caddy:
     # ports:
@@ -63,8 +64,9 @@ services:
       # Override localhost values in .env.local with Docker service names
       - DB_HOST=OperaClone2-db
       - EXTERNAL_CLIENT_BASE_URL=http://mock-api:8000
-      # Include both the direct port and the Caddy-proxied URL in CORS origins
-      - CORS_ORIGINS=https://localhost,http://localhost
+      # Allow requests from Caddy-served localhost (https) and plain http for
+      # direct access. ${DOMAIN} comes from root .env (defaults to localhost).
+      - CORS_ORIGINS=https://${DOMAIN:-localhost},http://${DOMAIN:-localhost}
     ports:
       - "3001:3001"
     volumes:
