@@ -16,11 +16,38 @@
 
 # Global options — only non-default items are listed here
 {
-	# Uncomment and set ACME_EMAIL on VPS for certificate expiry notifications:
-	# email {$ACME_EMAIL}
+	# Email for Let's Encrypt cert expiry notifications.
+	# Set ACME_EMAIL in your root .env on the VPS; leave blank locally.
+	email {$ACME_EMAIL:}
 
-	# In local/dev you may want to enable the admin API on a non-default port:
-	# admin off
+	servers {
+		# Trust Cloudflare's proxy IPs so Caddy reads the real client IP
+		# from X-Forwarded-For instead of logging Cloudflare's edge IP.
+		# IP ranges sourced from https://www.cloudflare.com/ips/
+		trusted_proxies static \
+			173.245.48.0/20 \
+			103.21.244.0/22 \
+			103.22.200.0/22 \
+			103.31.4.0/22 \
+			141.101.64.0/18 \
+			108.162.192.0/18 \
+			190.93.240.0/20 \
+			188.114.96.0/20 \
+			197.234.240.0/22 \
+			198.41.128.0/17 \
+			162.158.0.0/15 \
+			104.16.0.0/13 \
+			104.24.0.0/14 \
+			172.64.0.0/13 \
+			131.0.72.0/22 \
+			2400:cb00::/32 \
+			2606:4700::/32 \
+			2803:f800::/32 \
+			2405:b500::/32 \
+			2405:8100::/32 \
+			2a06:98c0::/29 \
+			2c0f:f248::/32
+	}
 }
 
 # ---------------------------------------------------------------------------
@@ -31,12 +58,12 @@
 	# Compress responses for the client
 	encode gzip zstd
 
-	# Proxy everything to the Next.js frontend
+	# Proxy everything to the Next.js frontend.
+	# Caddy automatically forwards X-Forwarded-For, X-Forwarded-Proto, and
+	# X-Forwarded-Host — no need to set them manually.
 	reverse_proxy frontend:3000 {
-		# Pass the real client IP so backend logs are useful
-		header_up X-Real-IP {remote_host}
-		header_up X-Forwarded-For {remote_host}
-		header_up X-Forwarded-Proto {scheme}
+		# Forward Cloudflare's real-client-IP header to the upstream
+		header_up X-Real-IP {http.request.header.Cf-Connecting-Ip}
 
 		# Health check so Caddy only routes to a healthy upstream
 		health_uri      /
