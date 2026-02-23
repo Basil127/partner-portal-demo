@@ -20,6 +20,13 @@
 	# Set ACME_EMAIL in your root .env on the VPS; leave blank locally.
 	email {$ACME_EMAIL:}
 
+	# Disable Caddy's built-in HTTP→HTTPS redirects.
+	# When behind Cloudflare, Cloudflare's edge handles the HTTP→HTTPS
+	# redirect (via "Always Use HTTPS" in the CF dashboard). Without this,
+	# Caddy redirecting HTTP to HTTPS while CF connects back over HTTP
+	# (Full mode) causes an infinite redirect loop.
+	auto_https disable_redirects
+
 	servers {
 		# Trust Cloudflare's proxy IPs so Caddy reads the real client IP
 		# from X-Forwarded-For instead of logging Cloudflare's edge IP.
