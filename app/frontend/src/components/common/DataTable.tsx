@@ -21,6 +21,7 @@ interface DataTableProps<TData, TValue> {
 	sorting: SortingState;
 	onSortingChange: (sorting: SortingState) => void;
 	isLoading?: boolean;
+	className?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -31,7 +32,7 @@ export function DataTable<TData, TValue>({
 	onPaginationChange,
 	sorting,
 	onSortingChange,
-	isLoading,
+	isLoading
 }: DataTableProps<TData, TValue>) {
 	const table = useReactTable({
 		data,
@@ -61,9 +62,9 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<div className="space-y-4">
+		<div className={`space-y-4`}>
 			<div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/5 dark:bg-white/3">
-				<div className="max-w-full overflow-x-auto">
+				<div className="max-w-full overflow-x-auto no-scrollbar">
 					<Table>
 						<TableHeader className="border-b border-gray-100 dark:border-white/5">
 							{table.getHeaderGroups().map((headerGroup) => (

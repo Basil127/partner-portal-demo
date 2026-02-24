@@ -6,9 +6,9 @@
 
 :root {
 	--bg-main: #ffffff;
-	--primary: oklch(0.205 0 0);
+	--primary: #455EAB;
 	--primary-accent: #003e7e;
-	--secondary: oklch(0.97 0 0);
+	--secondary: #CAA46B;
 	--secondary-accent: #f26722;
 	--black: #101828;
 
@@ -71,10 +71,10 @@
 }
 
 .dark {
-	--bg-main: #0d0d0d; /* Neutral Gray-Black */
-	--primary: oklch(0.922 0 0);
+	--bg-main: #111111; /* Neutral Gray-Black */
+	--primary: #455EAB;
 	--primary-accent: #7a9cf0;
-	--secondary: oklch(0.269 0 0);
+	--secondary: #CAA46B;
 	--secondary-accent: #ff8c5a;
 	--black: #ffffff;
 

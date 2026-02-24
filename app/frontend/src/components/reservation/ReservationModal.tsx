@@ -50,7 +50,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 	};
 
 	const modal = (
-		<div className="fixed inset-0 z-50 flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+		<div className="fixed inset-0 z-50 flex items-start justify-center no-scrollbar min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 			{/* Background overlay */}
 			<div
 				className="fixed inset-0 bg-gray-500/50 transition-opacity"
@@ -93,7 +93,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 				)}
 
 				{/* Scrollable content */}
-				<div className="flex-1 overflow-y-scroll max-h-[65vh] px-6 py-5">{children}</div>
+				<div className="flex-1 overflow-y-scroll max-h-[65vh] px-6 py-5 no-scrollbar">{children}</div>
 
 				{/* Fixed footer */}
 				{footer && (

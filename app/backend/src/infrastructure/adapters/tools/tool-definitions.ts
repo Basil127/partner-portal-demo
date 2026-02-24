@@ -114,10 +114,44 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			},
 		},
 		{
+			name: 'compare_room_prices',
+			title: 'Compare Room Prices',
+			description:
+				'Fetches the price of a single room type at a hotel so you can COMPARE rates across different rooms or hotels. Use this tool when the user is still exploring options and has NOT yet decided which room to book. You may call it multiple times (once per room type). This tool is strictly for information gathering — it does NOT lead to a booking. NEVER use this tool when the user has already chosen a room and wants to proceed with booking — use get_room_pricing instead.',
+			inputSchema: z.object({
+				hotelCode: z.string().describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
+				arrivalDate: z.string().describe('Check-in date in YYYY-MM-DD format'),
+				departureDate: z.string().describe('Check-out date in YYYY-MM-DD format'),
+				adults: z.number().int().min(1).describe('Number of adult guests'),
+				children: z.number().int().min(0).optional().describe('Number of child guests'),
+				roomType: z.string().optional().describe('Room type code to get pricing for'),
+				ratePlanCode: z
+					.string()
+					.optional()
+					.describe(
+						'Rate plan code to get pricing for. Do not use unless the user explicitly asks for a specific rate plan.',
+					),
+			}),
+			execute: async (input) => {
+				return hotelShopService.getPropertyOffer(
+					{
+						hotelCode: input.hotelCode,
+						arrivalDate: input.arrivalDate,
+						departureDate: input.departureDate,
+						adults: input.adults,
+						children: input.children ?? 0,
+						roomType: input.roomType,
+						ratePlanCode: input.ratePlanCode,
+					},
+					DEFAULT_SHOP_HEADERS,
+				);
+			},
+		},
+		{
 			name: 'get_room_pricing',
 			title: 'Get Room Pricing',
 			description:
-				'Returns pricing and rate information for a specific hotel room type. Use this to show the user the price BEFORE creating a booking. Always fetch pricing before calling create_reservation so the user knows the cost.',
+				'Fetches the final price for a specific room the user has CHOSEN and is ready to book. This tool displays a detailed pricing card with a "Confirm Booking" button in the UI. ONLY call this tool when: (1) the user has already decided on a specific room, AND (2) you are about to ask for their final confirmation before creating the reservation. NEVER use this tool for price comparisons or exploration — use compare_room_prices for that. Call this tool exactly ONCE with the chosen room right before asking the user to confirm.',
 			inputSchema: z.object({
 				hotelCode: z.string().describe('The unique hotel code identifier (e.g. "HOTEL1", "LONPK")'),
 				arrivalDate: z.string().describe('Check-in date in YYYY-MM-DD format'),
@@ -151,7 +185,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			name: 'create_reservation',
 			title: 'Create Hotel Reservation',
 			description:
-				'Creates a new hotel reservation. IMPORTANT: You MUST call get_room_pricing first to show the user the price, and only call this tool AFTER the user has explicitly confirmed they want to proceed with the booking at that price. Gather all required fields through conversation before calling this tool.',
+				'Creates a new hotel reservation. IMPORTANT PREREQUISITES: (1) You MUST have already called get_room_pricing (not compare_room_prices) for the chosen room so the user can see the final pricing card. (2) You MUST wait for the user to explicitly confirm (say "yes" or click "Confirm Booking") BEFORE calling this tool. NEVER call create_reservation without first calling get_room_pricing for the same room. NEVER skip get_room_pricing even if you already called compare_room_prices.',
 			inputSchema: z.object({
 				hotelId: z
 					.string()
