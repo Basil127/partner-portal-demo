@@ -32,7 +32,7 @@ export function DataTable<TData, TValue>({
 	onPaginationChange,
 	sorting,
 	onSortingChange,
-	isLoading
+	isLoading,
 }: DataTableProps<TData, TValue>) {
 	const table = useReactTable({
 		data,

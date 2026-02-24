@@ -21,3 +21,4 @@ The application includes a dashboard for agents to view key metrics, manage thei
 
 ## Running Application
 Use npm run dev from the root of the repository to start the application in development mode. This will start all services (frontend, backend, mock API) (database should already be running on users pc).
+After making changes to backend or mock API you need to regenerate the OpenAPI contracts and types by running `npm run openapi:generate` from the root of the repository.

@@ -185,7 +185,7 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			name: 'create_reservation',
 			title: 'Create Hotel Reservation',
 			description:
-				'Creates a new hotel reservation. IMPORTANT PREREQUISITES: (1) You MUST have already called get_room_pricing (not compare_room_prices) for the chosen room so the user can see the final pricing card. (2) You MUST wait for the user to explicitly confirm (say "yes" or click "Confirm Booking") BEFORE calling this tool. NEVER call create_reservation without first calling get_room_pricing for the same room. NEVER skip get_room_pricing even if you already called compare_room_prices.',
+				'Creates a new hotel reservation. IMPORTANT PREREQUISITES: (1) You MUST have already called get_room_pricing (not compare_room_prices) for the chosen room so the user can see the final pricing card. (2) You MUST wait for the user to explicitly confirm (say "yes" or click "Confirm Booking") BEFORE calling this tool. NEVER call create_reservation without first calling get_room_pricing for the same room. NEVER skip get_room_pricing even if you already called compare_room_prices. CRITICAL: Call this tool EXACTLY ONCE per user confirmation. Whether it succeeds or fails, do NOT call it again in the same turn — always stop after this tool and report the result to the user.',
 			inputSchema: z.object({
 				hotelId: z
 					.string()
@@ -198,11 +198,20 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 				ratePlanCode: z.string().describe('Rate plan code (e.g. "BAR", "RACK", "CORP")'),
 				guests: z
 					.array(
-						z.object({
-							firstName: z.string().describe('Guest first name'),
-							lastName: z.string().describe('Guest last name'),
-							adult: z.boolean().describe('Is this guest an adult?'),
-						}),
+						z
+							.object({
+								// Accept both camelCase and hotel-jargon naming for robustness
+								firstName: z.string().optional().describe('Guest first name'),
+								givenName: z.string().optional().describe('Guest first name (alias)'),
+								lastName: z.string().optional().describe('Guest last name'),
+								surname: z.string().optional().describe('Guest last name (alias)'),
+								adult: z.boolean().optional().default(true).describe('Is this guest an adult?'),
+							})
+							.transform((g) => ({
+								firstName: g.firstName ?? g.givenName ?? '',
+								lastName: g.lastName ?? g.surname ?? '',
+								adult: g.adult ?? true,
+							})),
 					)
 					.min(1)
 					.describe('List of guests. The first entry is treated as the primary guest.'),
@@ -218,7 +227,8 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 			execute: async (input) => {
 				// Build as 'any' first since the mock API accepts a broader shape than
 				// the strict shared types (e.g. guestCounts as object, guaranteeCode field name)
-				const numberOfChildren = input.guests.filter((g: { adult: boolean }) => !g.adult).length;
+				type NormGuest = { firstName: string; lastName: string; adult: boolean };
+				const numberOfChildren = (input.guests as NormGuest[]).filter((g) => !g.adult).length;
 				const request: any = {
 					reservations: {
 						reservation: [
@@ -237,28 +247,23 @@ export function createToolDefinitions(deps: ToolDependencies): ToolDefinition[] 
 										guaranteeCode: input.guaranteeType ?? 'CC',
 									},
 								},
-								reservationGuests: input.guests.map(
-									(
-										guest: { firstName: string; lastName: string; email?: string; phone?: string },
-										idx: number,
-									) => ({
-										primary: idx === 0,
-										profileInfo: {
-											profile: {
-												customer: {
-													personName: [
-														{
-															givenName: guest.firstName,
-															surname: guest.lastName,
-														},
-													],
-												},
-												email: input.email,
-												phoneNumber: input.phone,
+								reservationGuests: (input.guests as NormGuest[]).map((guest, idx: number) => ({
+									primary: idx === 0,
+									profileInfo: {
+										profile: {
+											customer: {
+												personName: [
+													{
+														givenName: guest.firstName,
+														surname: guest.lastName,
+													},
+												],
 											},
+											email: input.email,
+											phoneNumber: input.phone,
 										},
-									}),
-								),
+									},
+								})),
 							},
 						],
 					},

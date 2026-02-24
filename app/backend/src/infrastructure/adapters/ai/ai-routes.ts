@@ -5,6 +5,7 @@ import {
 	convertToModelMessages,
 	tool,
 	stepCountIs,
+	hasToolCall,
 	type UIMessage,
 } from 'ai';
 import { getModel } from './providers.js';
@@ -63,9 +64,12 @@ export async function setupAiRoutes(fastify: FastifyInstance, services: ServiceC
 				await chatService.createChat({ id, title: 'New chat' });
 			}
 
-			// Save user message (deduplicate by ID)
+			// Save user message — deduplicate by ID to handle retries gracefully.
+			// Re-read existingChat AFTER potential creation so the message list is current.
+			// The DB INSERT also uses ON CONFLICT DO NOTHING as a final safety net.
 			if (lastMessage?.role === 'user' && lastMessageText) {
-				const existingMessageIds = existingChat?.messages?.map((m) => m.id) ?? [];
+				const chatAfterCreate = existingChat ?? (await chatService.getChatWithMessages(id));
+				const existingMessageIds = chatAfterCreate?.messages?.map((m) => m.id) ?? [];
 				if (!existingMessageIds.includes(lastMessage.id)) {
 					await chatService.addMessage({
 						id: lastMessage.id,
@@ -90,7 +94,7 @@ export async function setupAiRoutes(fastify: FastifyInstance, services: ServiceC
 				system: systemPrompt + `Today's date is: ${new Date().toISOString().split('T')[0]}.`,
 				messages: modelMessages,
 				tools: aiTools,
-				stopWhen: stepCountIs(5),
+				stopWhen: [stepCountIs(5), hasToolCall('create_reservation')],
 			});
 
 			// Save assistant response after stream completes (fire and forget)
@@ -144,15 +148,36 @@ export async function setupAiRoutes(fastify: FastifyInstance, services: ServiceC
 }
 
 /**
- * Strips model internal reasoning tokens (analysis/assistantfinal markers) from displayed text.
+ * Strips the model's internal reasoning markers from text before it is
+ * persisted to the DB or displayed to the user.
+ *
+ * This model emits chain-of-thought inline in its text stream using proprietary
+ * markers: analysis, assistantcommentary, assistantfinal.
+ *
+ * Strategy:
+ *  1. If "assistantfinal" is present → keep only what comes after the last one.
+ *  2. If thinking markers present but no "assistantfinal" → still streaming; discard.
+ *  3. Otherwise → strip bare "assistant" / marker words that leaked through.
  */
+const THINKING_MARKER_RE = /\b(assistantfinal|assistantcommentary|assistant)\b/gi;
+
 function stripThinkingTokens(text: string): string {
-	const marker = 'assistantfinal';
-	const idx = text.lastIndexOf(marker);
-	if (idx !== -1) {
-		return text.slice(idx + marker.length).trimStart();
+	const finalMarker = 'assistantfinal';
+	const finalIdx = text.lastIndexOf(finalMarker);
+	if (finalIdx !== -1) {
+		const after = text.slice(finalIdx + finalMarker.length).trimStart();
+		return after
+			.replace(THINKING_MARKER_RE, '')
+			.replace(/\s{2,}/g, ' ')
+			.trim();
 	}
-	return text;
+	if (text.includes('analysis') || text.includes('assistantcommentary')) {
+		return '';
+	}
+	return text
+		.replace(THINKING_MARKER_RE, '')
+		.replace(/\s{2,}/g, ' ')
+		.trim();
 }
 
 async function saveAssistantResponse(
@@ -200,7 +225,14 @@ async function saveAssistantResponse(
 							combinedParts[idx] = {
 								...combinedParts[idx],
 								state: part.isError ? 'output-error' : 'output-available',
-								output: part.output ?? part.result ?? null,
+								// AI SDK v5+ uses `output`; older builds may use `result`.
+								// Some SDK internals embed the raw value in `content` when it
+								// is not an array (bare scalar / object, not a content-part array).
+								output:
+									part.output ??
+									part.result ??
+									(part.content != null && !Array.isArray(part.content) ? part.content : null) ??
+									null,
 								isError: !!part.isError,
 							};
 						}
@@ -209,13 +241,12 @@ async function saveAssistantResponse(
 			}
 		}
 
-		// Strip internal reasoning tokens from text parts before saving
+		// Strip any reasoning markers that leaked into the text before persisting.
 		const cleanParts = combinedParts.map((p) =>
 			p.type === 'text' ? { ...p, text: stripThinkingTokens(p.text) } : p,
 		);
 		const cleanText = stripThinkingTokens(text);
 
-		// Save when there is text OR tool-call parts
 		const hasContent = cleanText || cleanParts.some((p) => p.type !== 'text' || p.text);
 		if (hasContent) {
 			await chatService.addMessage({

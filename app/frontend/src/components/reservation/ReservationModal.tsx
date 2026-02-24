@@ -93,7 +93,9 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 				)}
 
 				{/* Scrollable content */}
-				<div className="flex-1 overflow-y-scroll max-h-[65vh] px-6 py-5 no-scrollbar">{children}</div>
+				<div className="flex-1 overflow-y-scroll max-h-[65vh] px-6 py-5 no-scrollbar">
+					{children}
+				</div>
 
 				{/* Fixed footer */}
 				{footer && (

@@ -157,7 +157,10 @@ function PricingCard({
 	const nights = calcNights(args?.arrivalDate, args?.departureDate);
 
 	return (
-		<div className="w-full rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 shadow-sm">
+		<div
+			className="w-full rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 shadow-sm"
+			data-testid="pricing-card"
+		>
 			<div className="flex items-center gap-2 mb-3">
 				<Tag className="size-4 text-blue-600 dark:text-blue-400" />
 				<span className="font-semibold text-blue-900 dark:text-blue-100 text-sm">Room Pricing</span>
@@ -204,12 +207,13 @@ function PricingCard({
 						Pricing information unavailable for this selection.
 					</p>
 				)}
-				{sendMessage && (
+				{sendMessage && total && (
 					<div className="pt-3 border-t border-blue-200 dark:border-blue-700">
 						<Button
 							variant="primary"
 							size="sm"
 							className="w-full"
+							data-testid="confirm-booking-button"
 							onClick={() => sendMessage({ text: 'Yes, please confirm the booking' })}
 						>
 							Confirm Booking
@@ -239,7 +243,10 @@ function BookingProgressCard({ args }: { args?: Partial<BookingInput> }) {
 	const filledCount = filledStay.length + (guests.length > 0 ? 1 : 0);
 
 	return (
-		<div className="w-full rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-900/20 p-4 shadow-sm">
+		<div
+			className="w-full rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-900/20 p-4 shadow-sm"
+			data-testid="booking-progress-card"
+		>
 			<div className="flex items-center gap-2 mb-3">
 				<Loader2 className="size-4 text-brand-600 dark:text-brand-400 animate-spin" />
 				<span className="font-semibold text-brand-900 dark:text-brand-100 text-sm">
@@ -309,7 +316,10 @@ function BookingFailedCard({ result }: { result?: unknown }) {
 				'Reservation could not be created. Please check the details and try again.';
 
 	return (
-		<div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 my-2 shadow-sm max-w-md">
+		<div
+			className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 my-2 shadow-sm max-w-md"
+			data-testid="booking-failed-card"
+		>
 			<div className="flex items-center gap-2 mb-2">
 				<span className="text-red-600 dark:text-red-400 font-bold text-sm">❌ Booking Failed</span>
 			</div>
@@ -349,7 +359,10 @@ function BookingConfirmedCard({ result }: { result: ReservationResult }) {
 
 	return (
 		<>
-			<div className="w-full rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-gray-900 p-4 shadow-md">
+			<div
+				className="w-full rounded-xl border border-green-200 dark:border-green-800 bg-white dark:bg-gray-900 p-4 shadow-md"
+				data-testid="booking-confirmed-card"
+			>
 				{/* Header */}
 				<div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100 dark:border-gray-800">
 					<div className="flex items-center gap-2">
@@ -485,7 +498,10 @@ export function BookingCard({
 	if (toolName === 'get_room_pricing') {
 		if (state === 'call' || state === 'partial-call') {
 			return (
-				<div className="w-full rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 shadow-sm">
+				<div
+					className="w-full rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 shadow-sm"
+					data-testid="pricing-card-loading"
+				>
 					<div className="flex items-center gap-2">
 						<Loader2 className="size-4 text-blue-600 dark:text-blue-400 animate-spin" />
 						<span className="text-sm text-blue-700 dark:text-blue-300">Fetching room pricing…</span>
@@ -501,12 +517,19 @@ export function BookingCard({
 		if (state === 'call' || state === 'partial-call') {
 			return <BookingProgressCard args={args} />;
 		}
-		// Show failure card if SDK flagged an error OR if the result contains an error payload
+		// Show failure card if:
+		// 1. The AI SDK explicitly flagged this as an error (isError=true), OR
+		// 2. The result is an error-shaped payload returned by the tool (e.g. tool returned
+		//    { detail: "..." } without throwing, or returned a bare error string).
+		// We guard the result-shape checks behind `isError` so that a successful reservation
+		// that hypothetically shares a field name never triggers a false failure card.
 		const resultAny = result as any;
 		const hasErrorPayload =
-			resultAny?.detail ||
-			resultAny?.error ||
-			(typeof resultAny === 'string' && resultAny.length > 0 && !resultAny.startsWith('{'));
+			// For SDK-flagged errors: also check the result shape so BookingFailedCard
+			// can display a human-readable message from FastAPI's `detail` field.
+			(isError && (resultAny?.detail || resultAny?.error)) ||
+			// A bare error string returned by the tool (without throwing) also signals failure.
+			typeof resultAny === 'string';
 		if (isError || hasErrorPayload) {
 			return <BookingFailedCard result={result} />;
 		}

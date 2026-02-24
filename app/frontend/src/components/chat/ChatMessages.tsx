@@ -17,17 +17,25 @@ export function ChatMessages({ messages, status, sendMessage }: ChatMessagesProp
 		status,
 	});
 
+	// Deduplicate messages by id before rendering.
+	// During multi-step AI SDK streaming, the same message id can appear more than
+	// once in the array (one entry per step that is still being streamed). The later
+	// entry always has more complete data, so we keep the last occurrence of each id.
+	const seenIds = new Map<string, number>();
+	messages.forEach((msg, i) => seenIds.set(msg.id, i));
+	const dedupedMessages = messages.filter((msg, i) => seenIds.get(msg.id) === i);
+
 	return (
 		<div className="relative flex-1">
 			<div className="absolute inset-0 overflow-y-auto scroll-smooth" ref={containerRef}>
 				<div className="mx-auto flex min-w-0 max-w-4xl flex-col gap-4 px-4 md:gap-6">
-					{messages.length === 0 && <ChatGreeting />}
+					{dedupedMessages.length === 0 && <ChatGreeting />}
 
-					{messages.map((message, index) => (
+					{dedupedMessages.map((message, index) => (
 						<PreviewMessage
 							key={message.id}
 							message={message}
-							isLoading={status === 'streaming' && messages.length - 1 === index}
+							isLoading={status === 'streaming' && dedupedMessages.length - 1 === index}
 							sendMessage={sendMessage}
 						/>
 					))}

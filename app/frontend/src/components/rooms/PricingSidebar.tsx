@@ -27,7 +27,9 @@ export default function PricingSidebar({ hotelId, roomId, room }: PricingSidebar
 
 	const nights = Math.max(
 		1,
-		Math.floor((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)),
+		Math.floor(
+			(new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24),
+		),
 	);
 
 	useEffect(() => {
@@ -45,18 +47,18 @@ export default function PricingSidebar({ hotelId, roomId, room }: PricingSidebar
 		})
 			.then((resp) => {
 				const stay = resp.data?.roomStays?.[0];
-				const offers = stay?.offers as Array<{
-					roomType?: string;
-					total?: { amountBeforeTax?: number; amountAfterTax?: number; currencyCode?: string };
-				}> | undefined;
+				const offers = stay?.offers as
+					| Array<{
+							roomType?: string;
+							total?: { amountBeforeTax?: number; amountAfterTax?: number; currencyCode?: string };
+					  }>
+					| undefined;
 
 				if (!offers) return;
 
 				// The API strips underscores from room type codes (CC_DLX_GV → CCDLXGV)
 				const normalizedRoomId = roomId.replace(/_/g, '').toUpperCase();
-				const match = offers.find(
-					(o) => o.roomType?.toUpperCase() === normalizedRoomId,
-				);
+				const match = offers.find((o) => o.roomType?.toUpperCase() === normalizedRoomId);
 
 				if (match?.total) {
 					setPricing({
@@ -196,11 +198,7 @@ export default function PricingSidebar({ hotelId, roomId, room }: PricingSidebar
 							)}
 
 							<Link href={`/reservations/new?hotelId=${hotelId}&roomId=${roomId}`}>
-								<Button
-									variant="primary"
-									size="md"
-									className="w-full mt-4"
-								>
+								<Button variant="primary" size="md" className="w-full mt-4">
 									Continue
 								</Button>
 							</Link>

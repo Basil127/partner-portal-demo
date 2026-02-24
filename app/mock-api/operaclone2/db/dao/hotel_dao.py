@@ -90,7 +90,13 @@ class HotelDAO:
         query = select(RoomType).join(Hotel).where(Hotel.hotel_code == hotel_code)
 
         if room_type_filter:
-            query = query.where(RoomType.room_type == room_type_filter)
+            # Accept either the generic room_type code (e.g. "CLS_KNG") or
+            # the hotel-specific hotelRoomType code (e.g. "KNG_GV") so that
+            # callers using either identifier succeed.
+            query = query.where(
+                (RoomType.room_type == room_type_filter)
+                | (RoomType.hotel_room_type == room_type_filter)
+            )
 
         # Count query
         count_query = select(func.count()).select_from(query.subquery())

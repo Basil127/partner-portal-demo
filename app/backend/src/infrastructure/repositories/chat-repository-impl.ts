@@ -70,7 +70,8 @@ export class ChatRepositoryImpl implements ChatRepository {
 
 		await this.db.execute(
 			`INSERT INTO messages (id, chat_id, role, content, parts, created_at)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?)
+       ON CONFLICT (id) DO NOTHING`,
 			[id, data.chatId, data.role, data.content, data.parts ?? null, now.toISOString()],
 		);
 

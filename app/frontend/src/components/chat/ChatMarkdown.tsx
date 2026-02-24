@@ -7,6 +7,74 @@ interface ChatMarkdownProps {
 	content: string;
 }
 
+function preprocessMarkdown(text: string): string {
+	const lines = text.split('\n');
+	const fixed: string[] = [];
+
+	for (const line of lines) {
+		if (/^\s*\|/.test(line)) {
+			// This line is a table row. Check if it ends properly with '|'.
+			// If not, it likely has trailing prose — split it off.
+			const trimmed = line.trimEnd();
+			if (trimmed.endsWith('|')) {
+				fixed.push(line);
+			} else {
+				const lastPipe = trimmed.lastIndexOf('|');
+				if (lastPipe > 0) {
+					const tableRow = trimmed.substring(0, lastPipe + 1);
+					const trailing = trimmed.substring(lastPipe + 1).trim();
+					fixed.push(tableRow);
+					if (trailing) {
+						fixed.push(''); // blank line to end table block
+						fixed.push(trailing);
+					}
+				} else {
+					fixed.push(line);
+				}
+			}
+		} else {
+			// Non-table line — check if a table row is embedded after some heading text
+			const pipeIdx = line.indexOf('|');
+			if (pipeIdx > 0) {
+				const before = line.substring(0, pipeIdx).trim();
+				const fromPipe = line.substring(pipeIdx).trim();
+				const pipeCount = (fromPipe.match(/\|/g) || []).length;
+				if (pipeCount >= 2 && before.length > 0) {
+					if (before) fixed.push(before);
+					fixed.push('');
+					fixed.push(fromPipe);
+					continue;
+				}
+			}
+			fixed.push(line);
+		}
+	}
+
+	// Second pass: collapse blank lines between consecutive table rows and
+	// ensure a blank line before the first table row.
+	const result: string[] = [];
+	for (let i = 0; i < fixed.length; i++) {
+		const cur = fixed[i];
+		const prev = result[result.length - 1];
+		const next = fixed[i + 1];
+
+		const curIsTable = /^\s*\|/.test(cur);
+		const prevIsTable = prev !== undefined && /^\s*\|/.test(prev);
+
+		// Remove blank lines between table rows
+		if (cur === '' && prevIsTable && next !== undefined && /^\s*\|/.test(next)) {
+			continue;
+		}
+		// Ensure blank line before first table row
+		if (curIsTable && prev !== undefined && prev !== '' && !prevIsTable) {
+			result.push('');
+		}
+		result.push(cur);
+	}
+
+	return result.join('\n');
+}
+
 export function ChatMarkdown({ content }: ChatMarkdownProps) {
 	return (
 		<ReactMarkdown
@@ -73,7 +141,7 @@ export function ChatMarkdown({ content }: ChatMarkdownProps) {
 				),
 			}}
 		>
-			{content}
+			{preprocessMarkdown(content)}
 		</ReactMarkdown>
 	);
 }

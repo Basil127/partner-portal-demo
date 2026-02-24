@@ -8,8 +8,7 @@ const openrouter = createOpenRouter({
 });
 
 export function getModel(modelId?: string): LanguageModel {
-	return openrouter.chat(
-		modelId || config.ai.openrouterModel || 'openai/gpt-oss-120b:free',
-		{ parallelToolCalls: false },
-	) as unknown as LanguageModel;
+	return openrouter.chat(modelId || config.ai.openrouterModel || 'openai/gpt-oss-120b:free', {
+		parallelToolCalls: false,
+	}) as unknown as LanguageModel;
 }
