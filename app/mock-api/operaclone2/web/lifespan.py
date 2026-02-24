@@ -48,6 +48,8 @@ async def lifespan_setup(
     # Seed data
     await seed.seed_hotel(app.state.db_session_factory)
     await seed.seed_room(app.state.db_session_factory)
+    await seed.seed_casacook_hotel(app.state.db_session_factory)
+    await seed.seed_casacook_rooms(app.state.db_session_factory)
 
     yield
     await app.state.db_engine.dispose()

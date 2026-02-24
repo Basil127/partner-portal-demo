@@ -23,7 +23,7 @@ import {
 import {
 	zCancelReservationDetails,
 	// zCancelReservationRequest,
-	zCheckDistributionReservationsSummary,
+	// zCheckDistributionReservationsSummary,
 	// zCreateReservationRequest,
 	zReservationSummaryResponse,
 } from '../external-client/zod.gen.js';
@@ -35,6 +35,41 @@ import { config } from '../../../config/config.js';
  * The external mock-opera API returns datetime strings like "2026-01-28T06:10:20.083795"
  * without timezone, which z.iso.datetime() rejects.
  */
+
+/**
+ * Lenient datetime field: accepts any string (or null) instead of requiring strict ISO 8601
+ * with Z suffix, since the mock API returns naive datetimes without timezone info.
+ */
+const zLenientDatetime = z.optional(z.union([z.string(), z.null()]));
+
+const zLenientCheckDistributionReservationsSummary = z.object({
+	checkReservations: z.optional(
+		z.union([
+			z.array(
+				z.object({
+					hotelId: z.optional(z.union([z.string(), z.null()])),
+					channelCode: z.optional(z.union([z.string(), z.null()])),
+					enterpriseId: z.optional(z.union([z.string(), z.null()])),
+					arrivalDate: z.optional(z.union([z.string(), z.null()])),
+					departureDate: z.optional(z.union([z.string(), z.null()])),
+					creationDate: zLenientDatetime,
+					lastUpdateDate: zLenientDatetime,
+					cancellationDate: zLenientDatetime,
+					numberOfRooms: z.optional(z.union([z.number(), z.null()])),
+					reservationStatus: z.optional(z.union([z.string(), z.null()])),
+					confirmationId: z.optional(z.union([z.string(), z.null()])),
+					legNumber: z.optional(z.union([z.string(), z.null()])),
+					reservationId: z.optional(z.union([z.string(), z.null()])),
+					guestName: z.optional(z.union([z.string(), z.null()])),
+					creatorId: z.optional(z.union([z.string(), z.null()])),
+				}),
+			),
+			z.null(),
+		]),
+	),
+	hasMore: z.optional(z.union([z.boolean(), z.null()])),
+});
+
 const zLenientReservationListResponse = z.object({
 	reservations: z.optional(
 		z.union([
@@ -164,7 +199,7 @@ export const fetchReservationStatistics = async (
 		},
 		headers: buildHeaders(headers) as any,
 		responseValidator: async (data: unknown) => {
-			zCheckDistributionReservationsSummary.parse(data);
+			zLenientCheckDistributionReservationsSummary.parse(data);
 		},
 	});
 

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ComponentCard from '../common/ComponentCard';
 import { useBooking } from '@/context/BookingContext';
 import type { ContentRoomType } from '@/types/room';
 import Button from '../ui/button/Button';
 import Link from 'next/link';
+import { getApiHotelsByHotelCodeOffers } from '@/lib/api-client';
 
 interface PricingSidebarProps {
 	hotelId: string;
@@ -11,15 +12,72 @@ interface PricingSidebarProps {
 	room: ContentRoomType;
 }
 
+interface PricingData {
+	amountBeforeTax: number;
+	amountAfterTax: number;
+	currencyCode: string;
+}
+
 export default function PricingSidebar({ hotelId, roomId, room }: PricingSidebarProps) {
 	const { checkIn, checkOut, adults, children, setCheckIn, setCheckOut, setAdults, setChildren } =
 		useBooking();
 
-	const nights = Math.floor(
-		(new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24),
+	const [pricing, setPricing] = useState<PricingData | null>(null);
+	const [pricingLoading, setPricingLoading] = useState(false);
+
+	const nights = Math.max(
+		1,
+		Math.floor((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)),
 	);
-	const totalPrice = 100;
-	const totalWithTax = 110;
+
+	useEffect(() => {
+		if (!checkIn || !checkOut || !hotelId || !roomId) return;
+
+		setPricingLoading(true);
+		getApiHotelsByHotelCodeOffers({
+			path: { hotelCode: hotelId },
+			query: {
+				arrivalDate: checkIn,
+				departureDate: checkOut,
+				adults,
+				children,
+			},
+		})
+			.then((resp) => {
+				const stay = resp.data?.roomStays?.[0];
+				const offers = stay?.offers as Array<{
+					roomType?: string;
+					total?: { amountBeforeTax?: number; amountAfterTax?: number; currencyCode?: string };
+				}> | undefined;
+
+				if (!offers) return;
+
+				// The API strips underscores from room type codes (CC_DLX_GV → CCDLXGV)
+				const normalizedRoomId = roomId.replace(/_/g, '').toUpperCase();
+				const match = offers.find(
+					(o) => o.roomType?.toUpperCase() === normalizedRoomId,
+				);
+
+				if (match?.total) {
+					setPricing({
+						amountBeforeTax: match.total.amountBeforeTax ?? 0,
+						amountAfterTax: match.total.amountAfterTax ?? 0,
+						currencyCode: match.total.currencyCode ?? 'USD',
+					});
+				}
+			})
+			.catch(() => {
+				// Pricing unavailable — leave as null
+			})
+			.finally(() => {
+				setPricingLoading(false);
+			});
+	}, [checkIn, checkOut, hotelId, roomId, adults, children]);
+
+	const taxAmount = pricing
+		? Math.round((pricing.amountAfterTax - pricing.amountBeforeTax) * 100) / 100
+		: null;
+	const perNight = pricing ? Math.round((pricing.amountAfterTax / nights) * 100) / 100 : null;
 
 	return (
 		<div className="lg:sticky lg:top-6">
@@ -88,54 +146,60 @@ export default function PricingSidebar({ hotelId, roomId, room }: PricingSidebar
 					{/* Pricing Section */}
 					<div className="pt-6 border-t border-gray-200 dark:border-gray-700">
 						<div className="space-y-4">
-							<div className="flex items-baseline justify-between">
-								<div>
-									<div className="text-3xl font-bold text-gray-900 dark:text-white">
-										$ {(totalWithTax / nights).toFixed(2)}
+							{pricingLoading ? (
+								<div className="flex items-center justify-center py-4">
+									<div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-brand-500" />
+									<span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+										Loading pricing…
+									</span>
+								</div>
+							) : pricing ? (
+								<>
+									<div className="flex items-baseline justify-between">
+										<div>
+											<div className="text-3xl font-bold text-gray-900 dark:text-white">
+												{pricing.currencyCode} {perNight?.toFixed(2)}
+											</div>
+										</div>
+										<div className="text-right">
+											<p className="text-sm text-gray-600 dark:text-gray-400">
+												{nights} {nights === 1 ? 'night' : 'nights'}
+											</p>
+										</div>
 									</div>
-								</div>
-								<div className="text-right">
-									<p className="text-sm text-gray-600 dark:text-gray-400">
-										{nights} {nights === 1 ? 'night' : 'nights'}
-									</p>
-								</div>
-							</div>
 
-							<div className="space-y-2">
-								<div className="flex justify-between text-sm">
-									<span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-									<span className="font-medium text-gray-900 dark:text-white">${totalPrice}</span>
-								</div>
-								<div className="flex justify-between text-sm pb-4 border-b border-gray-200 dark:border-gray-700">
-									<span className="text-gray-600 dark:text-gray-400">Taxes & fees</span>
-									<span className="font-medium text-gray-900 dark:text-white">
-										${totalWithTax - totalPrice}
-									</span>
-								</div>
-								<div className="flex justify-between items-center pt-2">
-									<span className="font-semibold text-gray-900 dark:text-white">Total</span>
-									<span className="text-2xl font-bold text-gray-900 dark:text-white">
-										${totalWithTax}
-									</span>
-								</div>
-							</div>
+									<div className="space-y-2">
+										<div className="flex justify-between text-sm">
+											<span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+											<span className="font-medium text-gray-900 dark:text-white">
+												{pricing.currencyCode} {pricing.amountBeforeTax.toFixed(2)}
+											</span>
+										</div>
+										<div className="flex justify-between text-sm pb-4 border-b border-gray-200 dark:border-gray-700">
+											<span className="text-gray-600 dark:text-gray-400">Taxes & fees</span>
+											<span className="font-medium text-gray-900 dark:text-white">
+												{pricing.currencyCode} {taxAmount?.toFixed(2)}
+											</span>
+										</div>
+										<div className="flex justify-between items-center pt-2">
+											<span className="font-semibold text-gray-900 dark:text-white">Total</span>
+											<span className="text-2xl font-bold text-gray-900 dark:text-white">
+												{pricing.currencyCode} {pricing.amountAfterTax.toFixed(2)}
+											</span>
+										</div>
+									</div>
+								</>
+							) : (
+								<p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+									Pricing unavailable for selected dates
+								</p>
+							)}
 
 							<Link href={`/reservations/new?hotelId=${hotelId}&roomId=${roomId}`}>
 								<Button
 									variant="primary"
 									size="md"
 									className="w-full mt-4"
-									onClick={() => {
-										console.log('Continue', {
-											hotelId,
-											roomId,
-											checkIn,
-											checkOut,
-											adults,
-											children,
-											totalPrice: totalWithTax,
-										});
-									}}
 								>
 									Continue
 								</Button>

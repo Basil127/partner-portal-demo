@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     db_host: str = os.getenv("OPERACLONE2_DB_HOST", "localhost")
     db_port: int = int(os.getenv("OPERACLONE2_DB_PORT", 5432))
     db_user: str = os.getenv("OPERACLONE2_DB_USER", "OperaClone2")
-    db_pass: str = os.getenv("OPERACLONE2_DB_PASS", "OperaClone2")  # noqa: S105
+    db_pass: str = os.getenv("OPERACLONE2_DB_PASS", "OperaClone2")
     db_base: str = os.getenv("OPERACLONE2_DB_BASE", "OperaClone2")
     db_echo: bool = bool(os.getenv("OPERACLONE2_DB_ECHO", False))
 

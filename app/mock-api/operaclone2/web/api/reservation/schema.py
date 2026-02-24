@@ -122,7 +122,7 @@ class RoomStay(BaseModel):
     guarantee: Guarantee | None = None
     roomRates: list[RoomRate] | None = None
     guestCounts: GuestCounts | None = None
-    total: "RateTotal | None" = None
+    total: RateTotal | None = None
 
 
 class Reservation(BaseModel):
