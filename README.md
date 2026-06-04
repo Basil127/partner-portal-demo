@@ -174,6 +174,40 @@ DB_USER=postgres
 DB_PASSWORD=password
 ```
 
+## 🤖 MCP Server
+
+The backend exposes its hotel tools (content / reservations / shop lookups, plus `get_time`) over the **Model Context Protocol** using the Streamable HTTP transport at the `/mcp` endpoint. This lets MCP clients such as Claude Desktop call the same tools the in-app AI assistant uses.
+
+### Access token
+
+The `/mcp` endpoint is guarded by a simple shared secret (POC-grade, not real auth). Pass it as `Authorization: Bearer <token>` or an `x-mcp-token` header.
+
+- **Default token:** `ohm-demo-mcp-poc-token`
+- Override per deployment with the `MCP_AUTH_TOKEN` backend env var.
+
+### Connecting Claude Desktop
+
+The frontend only proxies `/api/*`, so `/mcp` is routed to the backend by Caddy directly (see `caddy/Caddyfile`). Add the server to `claude_desktop_config.json` (`%APPDATA%\Claude\claude_desktop_config.json` on Windows) using the `mcp-remote` bridge, then fully restart Claude Desktop:
+
+```json
+{
+  "mcpServers": {
+    "ohm-demo": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://hotel-b2b.zirora.com/mcp",
+        "--header",
+        "Authorization: Bearer ohm-demo-mcp-poc-token"
+      ]
+    }
+  }
+}
+```
+
+For local development point it at `http://localhost:3001/mcp` instead (requires the backend, mock-api, and database to be running).
+
 ## 📚 API Documentation
 
 The API follows RESTful conventions and is documented using OpenAPI 3.0.

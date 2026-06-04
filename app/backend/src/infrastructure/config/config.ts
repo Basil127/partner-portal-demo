@@ -54,4 +54,9 @@ export const config = {
 		openrouterApiKey: process.env.OPENROUTER_API_KEY || '',
 		openrouterModel: process.env.OPENROUTER_MODEL || 'openai/gpt-oss-120b:free',
 	},
+	mcp: {
+		// Simple shared-secret guard for the /mcp endpoint. This is a POC default —
+		// override with MCP_AUTH_TOKEN in any real deployment.
+		authToken: process.env.MCP_AUTH_TOKEN || 'ohm-demo-mcp-poc-token',
+	},
 };
